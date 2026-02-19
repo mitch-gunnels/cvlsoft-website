@@ -387,7 +387,7 @@ export default function Home() {
 
       <main id="top">
         {/* ── HERO ── */}
-        <section className="relative mx-auto grid max-w-7xl items-start gap-10 px-6 py-16 lg:min-h-[88vh] lg:grid-cols-[2fr_3fr] lg:gap-12 lg:py-0 lg:pt-24">
+        <section className="relative mx-auto grid max-w-7xl items-start gap-16 px-6 py-16 lg:min-h-[88vh] lg:grid-cols-[2fr_3fr] lg:gap-12 lg:py-0 lg:pt-24">
           {/* Background glows */}
           <div className="pointer-events-none absolute -left-40 top-0 -z-10 h-[500px] w-[600px] rounded-full bg-cyan-100/40 blur-[100px]" />
           <div className="pointer-events-none absolute -right-20 bottom-20 -z-10 h-[400px] w-[400px] rounded-full bg-indigo-100/30 blur-[100px]" />
@@ -399,7 +399,7 @@ export default function Home() {
           <div className="pointer-events-none absolute right-[10%] bottom-[25%] -z-10 h-1.5 w-1.5 rounded-full bg-cyan-500/50 float-slow" style={{ animationDelay: "4.5s" }} />
 
           {/* Text — 40% */}
-          <div className="reveal-up max-w-xl">
+          <div className="reveal-up mx-auto w-full max-w-xl text-center lg:mx-0 lg:text-left">
             <p className="inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
               ENTERPRISE AUTONOMY PLATFORM
             </p>
@@ -416,12 +416,12 @@ export default function Home() {
               Enterprise scale. Zero technical debt.
             </p>
 
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg">
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg lg:mx-0">
               Your operational knowledge becomes reusable super agents
               with deterministic controls and evidence-grade observability.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 hidden flex-wrap gap-3 lg:flex">
               <a
                 href="#demo"
                 onClick={() => handleCtaClick("hero_primary")}
@@ -441,6 +441,24 @@ export default function Home() {
 
           {/* Architecture diagram — 60% */}
           <ArchitectureDiagram />
+
+          {/* CTAs — below diagram on mobile only */}
+          <div className="flex flex-wrap justify-center gap-3 lg:hidden">
+            <a
+              href="#demo"
+              onClick={() => handleCtaClick("hero_primary")}
+              className="rounded-full bg-slate-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-950/20"
+            >
+              Request Demo
+            </a>
+            <a
+              href="#platform"
+              onClick={() => handleCtaClick("hero_secondary")}
+              className="rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition hover:border-slate-500"
+            >
+              How It Works
+            </a>
+          </div>
         </section>
 
         {/* ── INDUSTRY PROBLEM ── */}
@@ -481,7 +499,7 @@ export default function Home() {
           <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-100/25 blur-[80px]" />
 
           <h2 className="reveal-up text-3xl font-bold text-slate-950 md:text-5xl">
-            Why cvlSoft is different.
+            Why we are different.
           </h2>
           <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
             Others stitch together point solutions. We compile durable
