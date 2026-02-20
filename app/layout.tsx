@@ -19,7 +19,7 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "cvlSoft | AIOS — Enterprise Autonomy Without Automation Debt",
+  title: "AIOS by cvlSoft",
   description:
     "AIOS by cvlSoft transforms tribal knowledge and SOPs into safe, auditable autonomous execution with deterministic controls, connector fabric, and evidence-first observability.",
 };

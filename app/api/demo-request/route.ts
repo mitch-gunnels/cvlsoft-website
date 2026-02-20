@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/app/lib/mongodb";
-import { sendConfirmationEmail } from "@/app/lib/mailer";
+import { sendConfirmationEmail, sendNotificationEmail } from "@/app/lib/mailer";
 
 const WORK_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PERSONAL_DOMAINS = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com"];
@@ -75,11 +75,18 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     });
 
-    // Send confirmation email
+    // Send confirmation email to requester
     try {
       await sendConfirmationEmail(email, firstName);
     } catch (emailErr) {
       console.error("[mailer] Failed to send confirmation email:", emailErr);
+    }
+
+    // Send notification email to team
+    try {
+      await sendNotificationEmail({ firstName, lastName, email, phone, company });
+    } catch (emailErr) {
+      console.error("[mailer] Failed to send notification email:", emailErr);
     }
 
     return NextResponse.json({

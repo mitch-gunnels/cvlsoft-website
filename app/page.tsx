@@ -289,11 +289,6 @@ const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[]
     icon: <IconGrid className="h-5 w-5" />,
   },
   {
-    title: "Forward deploy teams",
-    description: "Our engineers embed with yours to drive adoption in real enterprise environments.",
-    icon: <IconRocket className="h-5 w-5" />,
-  },
-  {
     title: "Security & observability",
     description: "Deterministic policy gates, circuit breakers, ephemeral credentials, and evidence-grade audit trails.",
     icon: <IconShield className="h-5 w-5" />,
@@ -647,6 +642,21 @@ export default function Home() {
                 </article>
               ))}
             </div>
+
+            {/* Forward-deployed engineers — featured card */}
+            <article className="reveal-up mt-8 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-8 shadow-sm md:flex md:items-center md:gap-10 [animation-delay:500ms]">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
+                <IconRocket className="h-7 w-7" />
+              </div>
+              <div className="mt-4 md:mt-0">
+                <h3 className="text-lg font-bold text-slate-950">Forward-deployed AIOS engineers</h3>
+                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-600">
+                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
+                  directly with your team to deploy AIOS against real workflows, integrate with
+                  your existing systems, and drive measurable outcomes from day one.
+                </p>
+              </div>
+            </article>
           </div>
         </section>
 

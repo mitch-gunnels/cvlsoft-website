@@ -96,3 +96,27 @@ export async function sendConfirmationEmail(to: string, name: string): Promise<v
     html: buildConfirmationEmail(firstName),
   });
 }
+
+export async function sendNotificationEmail(data: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+}): Promise<void> {
+  await transporter.sendMail({
+    from: `"cvlSoft Website" <${process.env.SMTP_USER}>`,
+    to: "mgunnels@cvlsoft.net",
+    subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
+    html: `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
+  <h2 style="margin:0 0 16px;font-size:18px;color:#0f172a;">New AIOS Demo Request</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;color:#334155;">
+    <tr><td style="padding:8px 0;font-weight:600;width:100px;">Name</td><td style="padding:8px 0;">${data.firstName} ${data.lastName}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:600;">Email</td><td style="padding:8px 0;"><a href="mailto:${data.email}" style="color:#0e7490;">${data.email}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:600;">Phone</td><td style="padding:8px 0;">${data.phone || "—"}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:600;">Company</td><td style="padding:8px 0;">${data.company}</td></tr>
+  </table>
+</div>`,
+  });
+}
