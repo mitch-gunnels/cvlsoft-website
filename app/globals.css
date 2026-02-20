@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --bg-root: #f7f8fb;
-  --text-primary: #0f172a;
+  --bg-root: #050a14;
+  --text-primary: #e2e8f0;
   --font-ui: var(--font-body);
   --font-display: var(--font-heading);
   --font-code-ui: var(--font-code);
@@ -41,39 +41,92 @@ h6 {
   letter-spacing: -0.02em;
 }
 
-/* ── Background pattern ── */
+/* ── Background ── */
 
-.hero-noise {
+.grid-bg {
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
-/* ── Animations ── */
+/* ── Reveal animations ── */
 
 .reveal-up {
   opacity: 0;
-  transform: translateY(20px);
-  animation: reveal-up 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  transform: translateY(24px);
 }
 
-.hero-glow {
-  position: absolute;
-  inset: -20%;
-  z-index: 0;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(34, 211, 238, 0.15) 0%,
-    transparent 70%
-  );
-  filter: blur(60px);
+.reveal-up.in-view {
+  animation: reveal-up 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.reveal-scale.in-view {
+  animation: reveal-scale 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.reveal-left.in-view {
+  animation: reveal-left 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.reveal-right.in-view {
+  animation: reveal-right 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Glow pulse ── */
+
+.glow-pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+
+/* ── Float ── */
 
 .float-slow {
   animation: float 8s ease-in-out infinite;
 }
+
+.float-med {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* ── Shimmer line ── */
+
+.shimmer-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* ── Typing cursor ── */
+
+.cursor-blink::after {
+  content: "▊";
+  animation: blink 1s step-end infinite;
+  color: #22d3ee;
+  margin-left: 2px;
+}
+
+/* ── Keyframes ── */
 
 @keyframes reveal-up {
   to {
@@ -82,21 +135,87 @@ h6 {
   }
 }
 
+@keyframes reveal-scale {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes reveal-left {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes reveal-right {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+
 @keyframes float {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-14px);
   }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-up,
-  .float-slow {
+  .reveal-scale,
+  .reveal-left,
+  .reveal-right {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal-up.in-view,
+  .reveal-scale.in-view,
+  .reveal-left.in-view,
+  .reveal-right.in-view {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .glow-pulse,
+  .float-slow,
+  .float-med,
+  .shimmer-line {
+    animation: none;
+  }
+
+  .cursor-blink::after {
+    animation: none;
   }
 }
