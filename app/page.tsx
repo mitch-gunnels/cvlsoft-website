@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, type ReactNode, useMemo, useState } from "react";
+import { FormEvent, type ReactNode, useEffect, useMemo, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
@@ -253,16 +253,22 @@ function ArchitectureDiagram() {
 
 const PROBLEMS = [
   {
-    title: "Workflow sprawl",
-    description: "Every use case becomes bespoke logic. Fragile systems, zero reuse.",
+    stat: "~80% accuracy",
+    title: "Not good enough",
+    description:
+      "LLM agents fail 1 in 5 times. Regulated industries need 99.999%. AIOS\u2019s deterministic policy engine closes the gap.",
   },
   {
-    title: "Point solutions",
-    description: "Automation tied to individual apps. Breaks when environments shift.",
+    stat: "34%",
+    title: "Cite governance as #1 blocker",
+    description:
+      "Enterprises can\u2019t adopt agentic AI without audit trails, compliance gates, and kill switches. Most platforms bolt these on as afterthoughts.",
   },
   {
-    title: "Maintenance tax",
-    description: "Teams spend more time patching drift than delivering value.",
+    stat: "Lock-in",
+    title: "Every standalone is getting acquired",
+    description:
+      "Moveworks \u2192 ServiceNow. Aisera \u2192 Automation Anywhere. Adept \u2192 Amazon. AIOS is model-agnostic and vendor-independent.",
   },
 ];
 
@@ -310,6 +316,15 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const year = useMemo(() => new Date().getFullYear(), []);
+
+  useEffect(() => {
+    if (formStatus !== "success") return;
+    const timer = setTimeout(() => {
+      setFormStatus("idle");
+      setFormMessage("");
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [formStatus]);
 
   function handleCtaClick(location: string) {
     trackEvent("bold_claim_cta_click", { location });
@@ -425,7 +440,7 @@ export default function Home() {
 
       <main id="top">
         {/* ── HERO ── */}
-        <section className="relative mx-auto grid max-w-7xl items-start gap-16 px-6 py-16 lg:min-h-[88vh] lg:grid-cols-[2fr_3fr] lg:gap-12 lg:py-0 lg:pt-24">
+        <section className="relative mx-auto grid max-w-7xl items-start gap-16 px-6 py-16 lg:grid-cols-[2fr_3fr] lg:gap-12 lg:py-24">
           {/* Background glows */}
           <div className="pointer-events-none absolute -left-40 top-0 -z-10 h-[500px] w-[600px] rounded-full bg-cyan-100/40 blur-[100px]" />
           <div className="pointer-events-none absolute -right-20 bottom-20 -z-10 h-[400px] w-[400px] rounded-full bg-indigo-100/30 blur-[100px]" />
@@ -439,14 +454,15 @@ export default function Home() {
           {/* Text — 40% */}
           <div className="reveal-up mx-auto w-full max-w-xl text-center lg:mx-0 lg:text-left">
             <p className="inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
-              ENTERPRISE AUTONOMY PLATFORM
+              INTRODUCING <span className="font-bold">AIOS</span>
             </p>
 
             <h1 className="mt-7 text-5xl font-bold leading-[1.05] tracking-tight text-slate-950 md:text-6xl lg:text-7xl">
-              Agentic AI,{" "}
+              The operating system{" "}
               <br className="hidden sm:block" />
+              for{" "}
               <span className="bg-gradient-to-r from-cyan-600 to-cyan-400 bg-clip-text text-transparent">
-                done right.
+                agentic AI.
               </span>
             </h1>
 
@@ -455,7 +471,7 @@ export default function Home() {
             </p>
 
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg lg:mx-0">
-              Your operational knowledge becomes reusable super agents
+              AIOS transforms your operational knowledge into reusable super agents
               with deterministic controls and evidence-grade observability.
             </p>
 
@@ -520,49 +536,189 @@ export default function Home() {
               {PROBLEMS.map((item, index) => (
                 <article
                   key={item.title}
-                  className="reveal-up rounded-2xl border border-slate-200 border-l-4 border-l-rose-400 bg-slate-50 p-5"
+                  className="reveal-up rounded-2xl border border-slate-200 border-l-4 border-l-rose-400 bg-slate-50 p-6"
                   style={{ animationDelay: `${120 + 80 * index}ms` }}
                 >
-                  <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{item.description}</p>
+                  <p className="font-mono text-2xl font-bold tracking-tight text-rose-500">{item.stat}</p>
+                  <h3 className="mt-1 text-base font-semibold text-slate-900">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
+        {/* ── OBSERVATIONAL LEARNING ── */}
+        <section className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
+          <div className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-100/30 blur-[100px]" />
+
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            {/* Text — left */}
+            <div className="reveal-up flex flex-col justify-center">
+              <p className="self-start rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-700">
+                OBSERVATIONAL LEARNING
+              </p>
+              <h2 className="mt-6 text-3xl font-bold leading-snug text-slate-950 md:text-5xl md:leading-snug">
+                Your best operators&rsquo; knowledge{" "}
+                <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
+                  walks out the door
+                </span>{" "}
+                every day.
+              </h2>
+              <p className="mt-3 text-xl font-semibold text-cyan-700">
+                We capture it before it does.
+              </p>
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg">
+                AIOS learns from screen captures, click paths, and decision logic to
+                distill expert behavior into certified, reusable skills that any agent can
+                execute. No documentation sprints. Just operational truth, extracted and
+                deployed.
+              </p>
+            </div>
+
+            {/* Visual flow — right */}
+            <div className="reveal-up flex flex-col items-center gap-4 [animation-delay:150ms]">
+              {[
+                {
+                  step: "01",
+                  label: "Screen Capture",
+                  desc: "Observe real operator workflows across any application",
+                },
+                {
+                  step: "02",
+                  label: "Knowledge Extraction",
+                  desc: "AI distills tacit patterns, decision trees, and edge cases",
+                },
+                {
+                  step: "03",
+                  label: "Certified Skill",
+                  desc: "Validated, versioned skill ready for agent execution",
+                },
+              ].map((item, i) => (
+                <div key={item.step} className="flex w-full max-w-sm flex-col items-center">
+                  <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 font-mono text-sm font-bold text-cyan-600">
+                        {item.step}
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">{item.label}</p>
+                        <p className="text-xs leading-relaxed text-slate-500">{item.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {i < 2 && (
+                    <svg className="my-1 h-6 w-6 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5v14M19 12l-7 7-7-7" />
+                    </svg>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="platform" className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
+        <section id="platform" className="relative border-y border-slate-200/80 bg-gradient-to-b from-slate-50 to-white py-16 md:py-24">
           <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-100/20 blur-[100px]" />
           <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-100/25 blur-[80px]" />
 
-          <h2 className="reveal-up text-3xl font-bold text-slate-950 md:text-5xl">
-            Why we are different.
-          </h2>
-          <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
-            Others stitch together point solutions. We compile durable
-            operational capability from a core set of powerful super agents.
-          </p>
+          <div className="mx-auto max-w-7xl px-6">
+            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
+              THE PLATFORM
+            </p>
+            <h2 className="reveal-up mt-5 text-3xl font-bold text-slate-950 md:text-5xl [animation-delay:60ms]">
+              Why we are different.
+            </h2>
+            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
+              Others stitch together point solutions. We compile durable
+              operational capability from a core set of powerful super agents.
+            </p>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {DIFFERENTIATORS.map((item, index) => (
-              <article
-                key={item.title}
-                className="reveal-up rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50"
-                style={{ animationDelay: `${120 + 60 * index}ms` }}
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
-                  {item.icon}
-                </div>
-                <h3 className="mt-4 text-base font-semibold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
-              </article>
-            ))}
+            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {DIFFERENTIATORS.map((item, index) => (
+                <article
+                  key={item.title}
+                  className="reveal-up rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50"
+                  style={{ animationDelay: `${160 + 60 * index}ms` }}
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+                    {item.icon}
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-slate-900">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── COMPARISON TABLE ── */}
+        <section className="relative border-y border-slate-200/80 bg-white py-16 md:py-24">
+          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-cyan-100/30 blur-[80px]" />
+
+          <div className="mx-auto max-w-7xl px-6">
+            <h2 className="reveal-up text-3xl font-bold text-slate-950 md:text-5xl">
+              vs. the alternatives.
+            </h2>
+            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
+              See where AIOS fits against the options enterprises are
+              actually evaluating.
+            </p>
+
+            <div className="reveal-up mt-12 overflow-x-auto [animation-delay:150ms]">
+              <table className="w-full min-w-[700px] border-collapse text-sm">
+                <thead>
+                  <tr className="border-b-2 border-slate-200">
+                    <th className="py-3 pr-4 text-left font-semibold text-slate-500">Capability</th>
+                    <th className="px-4 py-3 text-center font-semibold text-cyan-700">AIOS</th>
+                    <th className="px-4 py-3 text-center font-semibold text-slate-500">Custom Agentic Frameworks</th>
+                    <th className="px-4 py-3 text-center font-semibold text-slate-500">RPA Vendors</th>
+                    <th className="px-4 py-3 text-center font-semibold text-slate-500">Cloud Platforms</th>
+                    <th className="pl-4 py-3 text-center font-semibold text-slate-500">Open-Source Frameworks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {([
+                    ["Tribal knowledge capture", "Yes", "No", "No", "No", "No"],
+                    ["Model agnostic", "Yes", "Varies", "No", "No", "Yes"],
+                    ["Legacy connectors (mainframe, terminal)", "Full", "Manual", "Partial", "API only", "None"],
+                    ["Deterministic policy engine", "Built-in", "DIY", "Limited", "Partial", "DIY"],
+                    ["Evidence-grade audit", "Built-in", "No", "Partial", "Partial", "No"],
+                    ["Zero maintenance debt", "Yes", "No", "No", "No", "No"],
+                  ] as const).map((row, i) => (
+                    <tr key={i} className="border-b border-slate-100">
+                      <td className="py-3.5 pr-4 font-medium text-slate-800">{row[0]}</td>
+                      {row.slice(1).map((cell, j) => {
+                        const isPositive = cell === "Yes" || cell === "Full" || cell === "Built-in";
+                        const isNegative = cell === "No" || cell === "None";
+                        return (
+                          <td
+                            key={j}
+                            className={`px-4 py-3.5 text-center font-medium ${
+                              j === 0
+                                ? isPositive
+                                  ? "text-cyan-700"
+                                  : "text-slate-400"
+                                : isNegative
+                                  ? "text-slate-300"
+                                  : "text-amber-600"
+                            }`}
+                          >
+                            {j === 0 && isPositive ? `\u2713 ${cell}` : cell}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
         {/* ── DEMO CTA ── */}
-        <section id="demo" className="mx-auto max-w-7xl px-6 pb-24">
+        <section id="demo" className="mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24">
           <div className="relative overflow-hidden rounded-3xl bg-slate-950 p-10 md:p-16">
             {/* Decorative orbs inside dark section */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-[60px]" />
@@ -636,7 +792,7 @@ export default function Home() {
                 {formStatus === "loading" ? "Submitting..." : "Request Demo"}
               </button>
               {formMessage ? (
-                <p className={`text-sm ${formStatus === "error" ? "text-rose-300" : "text-emerald-300"}`}>
+                <p className={`text-center text-sm ${formStatus === "error" ? "text-rose-300" : "text-emerald-300"}`}>
                   {formMessage}
                 </p>
               ) : null}

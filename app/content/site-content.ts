@@ -38,7 +38,7 @@ export const siteContent = {
     eyebrow: "Enterprise Autonomy Platform",
     headline: "Stop Building Brittle Agent Workflows",
     categoryStatement:
-      "cvlSoft turns tribal operational knowledge into safe autonomous execution.",
+      "AIOS turns tribal operational knowledge into safe autonomous execution.",
     contrarianStatement:
       "Most vendors hand-build custom agent flows that decay into maintenance debt.",
     thesis:
@@ -66,7 +66,7 @@ export const siteContent = {
     },
   ] satisfies IndustryMistake[],
   industryClose:
-    "Point solutions create automation debt. cvlSoft creates operational leverage.",
+    "Point solutions create automation debt. AIOS creates operational leverage.",
   differentiatorLine:
     "Others stitch flows. We compile durable capability.",
   differentiators: [

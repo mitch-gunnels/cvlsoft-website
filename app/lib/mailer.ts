@@ -10,9 +10,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const LOGO_B64 =
-  "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0iTTMyIDEwIEExOCAxOCAwIDEgMCAzMiAzOCIgc3Ryb2tlPSIjMGU3NDkwIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwIDE2IEExMiAxMiAwIDEgMCAzMCAzMiIgc3Ryb2tlPSIjMjJkM2VlIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yOCAyMSBBNiA2IDAgMSAwIDI4IDI3IiBzdHJva2U9IiM2N2U4ZjkiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+";
-
 function buildConfirmationEmail(firstName: string): string {
   return `
 <!DOCTYPE html>
@@ -25,18 +22,9 @@ function buildConfirmationEmail(firstName: string): string {
         <!-- Header -->
         <tr>
           <td style="background:#0f172a;padding:32px 40px;text-align:center;">
-            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-              <tr>
-                <td style="padding-right:12px;vertical-align:middle;">
-                  <img src="data:image/svg+xml;base64,${LOGO_B64}" width="36" height="36" alt="cvlSoft logo" style="display:block;" />
-                </td>
-                <td style="vertical-align:middle;">
-                  <span style="font-size:13px;font-weight:400;color:#94a3b8;">Converged Value Layer</span>
-                  <br/>
-                  <span style="font-size:16px;font-weight:700;color:#ffffff;letter-spacing:0.08em;font-family:'Courier New',monospace;">cvlSoft</span>
-                </td>
-              </tr>
-            </table>
+            <span style="font-size:13px;font-weight:400;color:#94a3b8;">Converged Value Layer</span>
+            <br/>
+            <span style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:0.10em;font-family:'Courier New',monospace;">cvlSoft</span>
           </td>
         </tr>
         <!-- Body -->
@@ -46,15 +34,15 @@ function buildConfirmationEmail(firstName: string): string {
               ${firstName},
             </h1>
             <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#475569;">
-              Thanks for your interest in cvlSoft. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
+              Thanks for your interest in AIOS. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
             </p>
 
             <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f0fdfa;border-radius:12px;width:100%;">
               <tr>
                 <td style="padding:24px;">
-                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What is cvlSoft?</p>
+                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What is AIOS?</p>
                   <p style="margin:8px 0 0;font-size:14px;line-height:1.8;color:#334155;">
-                    cvlSoft is an enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
+                    AIOS is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
                   </p>
                 </td>
               </tr>
@@ -76,16 +64,13 @@ function buildConfirmationEmail(firstName: string): string {
             <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#475569;">
               In the meantime, feel free to reply directly to this email with any questions or visit our website to learn more.
             </p>
-            <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto 0;text-align:center;">
               <tr>
                 <td style="background:#0f172a;border-radius:9999px;padding:12px 28px;">
                   <a href="https://www.cvlsoft.net" style="font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">Visit cvlsoft.net</a>
                 </td>
               </tr>
             </table>
-            <p style="margin:24px 0 0;font-size:14px;color:#334155;">
-              &mdash; The cvlSoft Team
-            </p>
           </td>
         </tr>
         <!-- Footer -->
@@ -109,7 +94,7 @@ export async function sendConfirmationEmail(to: string, name: string): Promise<v
   await transporter.sendMail({
     from: `"cvlSoft" <${process.env.SMTP_USER}>`,
     to,
-    subject: "cvlSoft Demo Request",
+    subject: "cvlSoft — AIOS Demo Request",
     html: buildConfirmationEmail(firstName),
   });
 }

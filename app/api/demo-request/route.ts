@@ -75,10 +75,12 @@ export async function POST(request: Request) {
       createdAt: new Date(),
     });
 
-    // Send confirmation email (non-blocking — don't fail the request if email fails)
-    sendConfirmationEmail(email, firstName).catch((err) =>
-      console.error("[mailer] Failed to send confirmation email:", err),
-    );
+    // Send confirmation email
+    try {
+      await sendConfirmationEmail(email, firstName);
+    } catch (emailErr) {
+      console.error("[mailer] Failed to send confirmation email:", emailErr);
+    }
 
     return NextResponse.json({
       ok: true,
