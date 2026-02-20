@@ -55,6 +55,9 @@ h6 {
 .reveal-up {
   opacity: 0;
   transform: translateY(20px);
+}
+
+.reveal-up.in-view {
   animation: reveal-up 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
@@ -82,6 +85,73 @@ h6 {
   }
 }
 
+/* Scale-in (differentiator cards) */
+.scale-in {
+  opacity: 0;
+  transform: scale(0.88) translateY(14px);
+}
+.scale-in.in-view {
+  animation: scale-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes scale-in {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Cascade (observational learning steps) */
+.cascade {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.cascade.in-view {
+  animation: cascade 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes cascade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Table row fade */
+.row-fade {
+  opacity: 0;
+}
+.row-fade.in-view {
+  animation: reveal-up 500ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Bar fill (funnel bars, stacked bar segments) */
+.bar-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.in-view .bar-fill {
+  transform: scaleX(1);
+}
+
+/* SVG line draw */
+.chart-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.in-view .chart-line {
+  stroke-dashoffset: 0;
+}
+
+/* SVG area fade (appears after lines draw) */
+.chart-area {
+  opacity: 0;
+  transition: opacity 1s ease 1.2s;
+}
+.in-view .chart-area {
+  opacity: 1;
+}
+
 @keyframes float {
   0%,
   100% {
@@ -94,9 +164,21 @@ h6 {
 
 @media (prefers-reduced-motion: reduce) {
   .reveal-up,
+  .scale-in,
+  .cascade,
+  .row-fade,
   .float-slow {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  .bar-fill {
+    transform: scaleX(1);
+  }
+  .chart-line {
+    stroke-dashoffset: 0;
+  }
+  .chart-area {
+    opacity: 1;
   }
 }

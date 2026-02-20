@@ -56,6 +56,16 @@ function IconShield({ className }: { className?: string }) {
   );
 }
 
+function IconUsers({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
 function IconLink({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -251,28 +261,26 @@ function ArchitectureDiagram() {
 
 /* ── Data ── */
 
-const PROBLEMS: { stat: string; title: string; description: ReactNode }[] = [
-  {
-    stat: "~80% accuracy",
-    title: "Not good enough",
-    description:
-      <>LLM agents fail 1 in 5 times. Regulated industries need 99.999%. <span className="font-bold">AIOS</span>&rsquo;s deterministic policy engine closes the gap.</>,
-  },
-  {
-    stat: "34%",
-    title: "Cite governance as #1 blocker",
-    description:
-      "Enterprises can\u2019t adopt agentic AI without audit trails, compliance gates, and kill switches. Most platforms bolt these on as afterthoughts.",
-  },
-  {
-    stat: "Lock-in",
-    title: "Every standalone is getting acquired",
-    description:
-      <>Moveworks &rarr; ServiceNow. Aisera &rarr; Automation Anywhere. Adept &rarr; Amazon. <span className="font-bold">AIOS</span> is model-agnostic and vendor-independent.</>,
-  },
+const FUNNEL_STAGES = [
+  { label: "Start AI initiative", pct: 100 },
+  { label: "Reach proof of concept", pct: 60 },
+  { label: "Reach pilot", pct: 20 },
+  { label: "Full production", pct: 5 },
+];
+
+const FAILURE_REASONS = [
+  { label: "Governance & compliance", pct: 34 },
+  { label: "Integration complexity", pct: 28 },
+  { label: "Accuracy below threshold", pct: 22 },
+  { label: "Maintenance & drift", pct: 16 },
 ];
 
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
+  {
+    title: "Persona-centric, not workflow-centric",
+    description: "We build around roles, not rigid flows. AIOS maps capabilities to personas so agents adapt to how your people actually work — not the other way around.",
+    icon: <IconUsers className="h-5 w-5" />,
+  },
   {
     title: "Observational learning",
     description: "We capture tacit operator behavior — not just what's documented, but how work actually gets done.",
@@ -311,6 +319,26 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const year = useMemo(() => new Date().getFullYear(), []);
+
+  /* Scroll-triggered reveal animations */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 },
+    );
+
+    document
+      .querySelectorAll(".reveal-up, .scale-in, .cascade, .row-fade")
+      .forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (formStatus !== "success") return;
@@ -508,35 +536,322 @@ export default function Home() {
         </section>
 
         {/* ── INDUSTRY PROBLEM ── */}
-        <section id="problem" className="relative border-y border-slate-200/80 bg-white px-6 py-20 md:py-24">
+        <section id="problem" className="relative border-y border-slate-200/80 bg-white py-20 md:py-24">
           <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 rounded-full bg-rose-100/40 blur-[80px]" />
 
-          <div className="mx-auto max-w-7xl">
-            <h2 className="reveal-up max-w-4xl text-3xl font-bold leading-snug text-slate-950 md:text-5xl md:leading-snug">
-              The industry is building{" "}
-              <span className="underline decoration-rose-400 decoration-[3px] underline-offset-4">
-                brittle, error-prone
-              </span>{" "}
-              agentic workflows at scale.
-            </h2>
-            <p className="reveal-up mt-5 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
-              Custom point solutions with a hidden maintenance cost that
-              compounds over time. Every new workflow is more debt.
+          <div className="mx-auto max-w-7xl px-6">
+            <p className="reveal-up inline-block rounded-full border border-rose-200 bg-rose-50 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-rose-600">
+              THE INDUSTRY PROBLEM
             </p>
 
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              {PROBLEMS.map((item, index) => (
+            <h2 className="reveal-up mt-6 max-w-4xl text-3xl font-bold leading-snug text-slate-950 md:text-5xl md:leading-snug [animation-delay:60ms]">
+              <span className="font-mono text-rose-500">95%</span> of enterprise AI{" "}
+              <span className="underline decoration-rose-400 decoration-[3px] underline-offset-4">
+                never reaches production.
+              </span>
+            </h2>
+
+            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
+              The agentic AI industry has structural problems that point
+              solutions can&rsquo;t fix. Here&rsquo;s the data.
+            </p>
+
+            {/* ── Attrition Funnel ── */}
+            <div className="reveal-up mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:160ms]">
+              <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+                CONCEPT &rarr; PRODUCTION
+              </p>
+              <p className="mt-3 text-base font-semibold text-slate-900 md:text-lg">
+                For every 100 enterprises that start an AI initiative,
+                only 5 ship to production.
+              </p>
+              <div className="mt-5 space-y-3">
+                {FUNNEL_STAGES.map((stage, i) => {
+                  const barColor = ["bg-slate-700", "bg-slate-400", "bg-amber-500", "bg-rose-500"][i];
+                  const numColor = ["text-slate-700", "text-slate-500", "text-amber-600", "text-rose-500"][i];
+                  return (
+                    <div key={stage.label}>
+                      <div className="mb-1 flex items-baseline gap-2">
+                        <span className={`font-mono text-sm font-bold ${numColor}`}>
+                          {stage.pct}%
+                        </span>
+                        <span className="text-xs font-medium text-slate-500">
+                          {stage.label}
+                        </span>
+                      </div>
+                      <div
+                        className={`bar-fill h-7 rounded-lg ${barColor}`}
+                        style={{ width: `${stage.pct}%`, minWidth: "16px", transitionDelay: `${400 + i * 200}ms` }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-4 text-xs text-slate-400">
+                Source: MIT Sloan Management Review &middot; Gartner
+              </p>
+            </div>
+
+            {/* ── Two-column: Why They Fail + Cost Over Time ── */}
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
+              {/* Failure breakdown */}
+              <div className="reveal-up rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:240ms]">
+                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+                  WHY THEY FAIL
+                </p>
+                <p className="mt-3 text-base font-semibold text-slate-900">
+                  Governance and integration account for 62% of all failures.
+                </p>
+
+                <div className="mt-5 flex h-6 gap-0.5 overflow-hidden rounded-lg">
+                  {FAILURE_REASONS.map((r, i) => {
+                    const color = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
+                    return (
+                      <div
+                        key={r.label}
+                        className={`bar-fill ${color}`}
+                        style={{ width: `${r.pct}%`, transitionDelay: `${500 + i * 150}ms` }}
+                      />
+                    );
+                  })}
+                </div>
+
+                <div className="mt-5 space-y-2.5">
+                  {FAILURE_REASONS.map((r, i) => {
+                    const dot = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
+                    return (
+                      <div
+                        key={r.label}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className={`h-2.5 w-2.5 rounded-full ${dot}`} />
+                          <span className="text-sm text-slate-600">{r.label}</span>
+                        </div>
+                        <span className="font-mono text-sm font-bold text-slate-700">
+                          {r.pct}%
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="mt-4 text-xs text-slate-400">
+                  Source: UC Berkeley &middot; Industry surveys
+                </p>
+              </div>
+
+              {/* Cost over time */}
+              <div className="reveal-up rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:320ms]">
+                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+                  TOTAL COST OF OWNERSHIP
+                </p>
+                <p className="mt-3 text-base font-semibold text-slate-900">
+                  Custom workflows compound cost. Reusable skills flatten it.
+                </p>
+
+                <svg
+                  viewBox="0 0 300 160"
+                  className="mt-5 w-full"
+                  role="img"
+                  aria-label="Cost comparison: custom workflows and RPA rise over 5 years while AIOS stays flat"
+                >
+                  {/* Gridlines */}
+                  {[35, 70, 105].map((y) => (
+                    <line
+                      key={y}
+                      x1="10"
+                      y1={y}
+                      x2="290"
+                      y2={y}
+                      stroke="#e2e8f0"
+                      strokeWidth="0.5"
+                    />
+                  ))}
+
+                  {/* Area fills — fade in after lines draw */}
+                  <path
+                    className="chart-area"
+                    d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8 L290,140 L10,140 Z"
+                    fill="#f43f5e"
+                    fillOpacity="0.06"
+                  />
+                  <path
+                    className="chart-area"
+                    d="M10,110 C80,114 155,120 220,122 S280,124 290,125 L290,140 L10,140 Z"
+                    fill="#0891b2"
+                    fillOpacity="0.06"
+                    style={{ transitionDelay: "1.4s" }}
+                  />
+
+                  {/* Custom workflows (rose — draws itself) */}
+                  <path
+                    className="chart-line"
+                    d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8"
+                    fill="none"
+                    stroke="#f43f5e"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    style={{ transitionDelay: "0.6s" }}
+                  />
+                  {/* RPA (amber — draws itself) */}
+                  <polyline
+                    className="chart-line"
+                    points="10,108 80,100 150,72 220,68 290,42"
+                    fill="none"
+                    stroke="#f59e0b"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ transitionDelay: "0.9s" }}
+                  />
+                  {/* AIOS (cyan — draws itself) */}
+                  <path
+                    className="chart-line"
+                    d="M10,110 C80,114 155,120 220,122 S280,124 290,125"
+                    fill="none"
+                    stroke="#0891b2"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    style={{ transitionDelay: "1.2s" }}
+                  />
+
+                  {/* Year labels */}
+                  {["Yr 1", "Yr 2", "Yr 3", "Yr 4", "Yr 5"].map((yr, i) => (
+                    <text
+                      key={yr}
+                      x={10 + i * 70}
+                      y={155}
+                      style={{
+                        fontSize: "9px",
+                        fill: "#94a3b8",
+                        fontFamily: "var(--font-code), monospace",
+                      }}
+                    >
+                      {yr}
+                    </text>
+                  ))}
+                  <text
+                    x="4"
+                    y="18"
+                    style={{
+                      fontSize: "8px",
+                      fill: "#94a3b8",
+                      fontFamily: "var(--font-code), monospace",
+                    }}
+                  >
+                    Cost &uarr;
+                  </text>
+                </svg>
+
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="h-0.5 w-5 rounded bg-rose-500" />
+                    <span className="text-xs text-slate-500">Custom workflows</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-0.5 w-5 rounded bg-amber-500" />
+                    <span className="text-xs text-slate-500">RPA</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-0.5 w-5 rounded bg-cyan-600" />
+                    <span className="text-xs font-semibold text-cyan-700">
+                      <span className="font-bold">AIOS</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── AIOS: The Antithesis ── */}
+            <div className="reveal-up mt-5 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-6 md:p-8 [animation-delay:400ms]">
+              <p className="text-lg font-bold text-slate-950">
+                <span className="font-bold">AIOS</span> is built for the 95%.
+              </p>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                <div>
+                  <p className="text-sm font-semibold text-cyan-700">
+                    Production from day one
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                    Forward-deployed engineers ship real workflows, not demos.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-cyan-700">
+                    Governance built in
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                    Policy engine, circuit breakers, and evidence-grade audit.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-cyan-700">
+                    Flat cost curve
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                    Reusable skills eliminate maintenance debt.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-cyan-700">
+                    &gt;99% accuracy
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                    Deterministic policy controls close the reliability gap.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
+        <section id="platform" className="relative border-y border-slate-200/80 bg-gradient-to-b from-slate-50 to-white py-16 md:py-24">
+          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-100/20 blur-[100px]" />
+          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-100/25 blur-[80px]" />
+
+          <div className="mx-auto max-w-7xl px-6">
+            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
+              THE PLATFORM
+            </p>
+            <h2 className="reveal-up mt-5 text-3xl font-bold text-slate-950 md:text-5xl [animation-delay:60ms]">
+              Why we are different.
+            </h2>
+            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
+              Others stitch together point solutions. We compile durable
+              operational capability from a core set of powerful super agents.
+            </p>
+
+            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {DIFFERENTIATORS.map((item, index) => (
                 <article
                   key={item.title}
-                  className="reveal-up rounded-2xl border border-slate-200 border-l-4 border-l-rose-400 bg-slate-50 p-6"
+                  className="scale-in rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50"
                   style={{ animationDelay: `${120 + 80 * index}ms` }}
                 >
-                  <p className="font-mono text-2xl font-bold tracking-tight text-rose-500">{item.stat}</p>
-                  <h3 className="mt-1 text-base font-semibold text-slate-900">{item.title}</h3>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
+                    {item.icon}
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-slate-900">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
                 </article>
               ))}
             </div>
+
+            {/* Forward-deployed engineers — featured card */}
+            <article className="reveal-up mt-8 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-8 shadow-sm md:flex md:items-center md:gap-10 [animation-delay:500ms]">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
+                <IconRocket className="h-7 w-7" />
+              </div>
+              <div className="mt-4 md:mt-0">
+                <h3 className="text-lg font-bold text-slate-950">Forward-deployed <span className="font-bold">AIOS</span> engineers</h3>
+                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-600">
+                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
+                  directly with your team to deploy <span className="font-bold">AIOS</span> against real workflows, integrate with
+                  your existing systems, and drive measurable outcomes from day one.
+                </p>
+              </div>
+            </article>
           </div>
         </section>
 
@@ -569,12 +884,12 @@ export default function Home() {
             </div>
 
             {/* Visual flow — right */}
-            <div className="reveal-up flex flex-col items-center gap-4 [animation-delay:150ms]">
+            <div className="flex flex-col items-center gap-4">
               {[
                 {
                   step: "01",
-                  label: "Screen Capture",
-                  desc: "Observe real operator workflows across any application",
+                  label: "Observational Learning",
+                  desc: "Observe real operator workflows across any set of applications; including legacy systems, mainframes, and swivel chair operations",
                 },
                 {
                   step: "02",
@@ -587,7 +902,7 @@ export default function Home() {
                   desc: "Validated, versioned skill ready for agent execution",
                 },
               ].map((item, i) => (
-                <div key={item.step} className="flex w-full max-w-sm flex-col items-center">
+                <div key={item.step} className="cascade flex w-full max-w-sm flex-col items-center" style={{ animationDelay: `${i * 300}ms` }}>
                   <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 font-mono text-sm font-bold text-cyan-600">
@@ -607,56 +922,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="platform" className="relative border-y border-slate-200/80 bg-gradient-to-b from-slate-50 to-white py-16 md:py-24">
-          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-100/20 blur-[100px]" />
-          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-100/25 blur-[80px]" />
-
-          <div className="mx-auto max-w-7xl px-6">
-            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
-              THE PLATFORM
-            </p>
-            <h2 className="reveal-up mt-5 text-3xl font-bold text-slate-950 md:text-5xl [animation-delay:60ms]">
-              Why we are different.
-            </h2>
-            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
-              Others stitch together point solutions. We compile durable
-              operational capability from a core set of powerful super agents.
-            </p>
-
-            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {DIFFERENTIATORS.map((item, index) => (
-                <article
-                  key={item.title}
-                  className="reveal-up rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50"
-                  style={{ animationDelay: `${160 + 60 * index}ms` }}
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
-                    {item.icon}
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-slate-900">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
-                </article>
-              ))}
-            </div>
-
-            {/* Forward-deployed engineers — featured card */}
-            <article className="reveal-up mt-8 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-8 shadow-sm md:flex md:items-center md:gap-10 [animation-delay:500ms]">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
-                <IconRocket className="h-7 w-7" />
-              </div>
-              <div className="mt-4 md:mt-0">
-                <h3 className="text-lg font-bold text-slate-950">Forward-deployed <span className="font-bold">AIOS</span> engineers</h3>
-                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-600">
-                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
-                  directly with your team to deploy <span className="font-bold">AIOS</span> against real workflows, integrate with
-                  your existing systems, and drive measurable outcomes from day one.
-                </p>
-              </div>
-            </article>
           </div>
         </section>
 
@@ -694,7 +959,7 @@ export default function Home() {
                     ["Evidence-grade audit", "Built-in", "No", "Partial", "Partial", "No"],
                     ["Zero maintenance debt", "Yes", "No", "No", "No", "No"],
                   ] as const).map((row, i) => (
-                    <tr key={i} className="border-b border-slate-100">
+                    <tr key={i} className="row-fade border-b border-slate-100" style={{ animationDelay: `${150 + i * 100}ms` }}>
                       <td className="py-3.5 pr-4 font-medium text-slate-800">{row[0]}</td>
                       {row.slice(1).map((cell, j) => {
                         const isPositive = cell === "Yes" || cell === "Full" || cell === "Built-in";
