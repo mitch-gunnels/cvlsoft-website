@@ -397,19 +397,19 @@ export default function ComingSoon() {
             <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/[0.08] blur-[80px]" />
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-indigo-500/[0.06] blur-[60px]" />
 
-            <div className="relative">
+            <div className="relative text-center">
               <p className="font-mono text-[11px] tracking-[0.22em] text-cyan-500">
                 EARLY ACCESS
               </p>
               <h2 className="mt-3 text-2xl font-bold text-white md:text-4xl">
                 Be first in line.
               </h2>
-              <p className="mt-3 max-w-lg text-base text-slate-400">
+              <p className="mx-auto mt-3 max-w-lg text-base text-slate-400">
                 We&rsquo;re onboarding a small group of design partners. Request early access
                 and a member of our team will reach out to schedule a walkthrough.
               </p>
 
-              <form className="mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
+              <form className="mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-3">
                   <input
                     type="text"
