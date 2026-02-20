@@ -251,12 +251,12 @@ function ArchitectureDiagram() {
 
 /* ── Data ── */
 
-const PROBLEMS = [
+const PROBLEMS: { stat: string; title: string; description: ReactNode }[] = [
   {
     stat: "~80% accuracy",
     title: "Not good enough",
     description:
-      "LLM agents fail 1 in 5 times. Regulated industries need 99.999%. AIOS\u2019s deterministic policy engine closes the gap.",
+      <>LLM agents fail 1 in 5 times. Regulated industries need 99.999%. <span className="font-bold">AIOS</span>&rsquo;s deterministic policy engine closes the gap.</>,
   },
   {
     stat: "34%",
@@ -268,7 +268,7 @@ const PROBLEMS = [
     stat: "Lock-in",
     title: "Every standalone is getting acquired",
     description:
-      "Moveworks \u2192 ServiceNow. Aisera \u2192 Automation Anywhere. Adept \u2192 Amazon. AIOS is model-agnostic and vendor-independent.",
+      <>Moveworks &rarr; ServiceNow. Aisera &rarr; Automation Anywhere. Adept &rarr; Amazon. <span className="font-bold">AIOS</span> is model-agnostic and vendor-independent.</>,
   },
 ];
 
@@ -463,7 +463,7 @@ export default function Home() {
             </p>
 
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg lg:mx-0">
-              AIOS transforms your operational knowledge into reusable super agents
+              <span className="font-bold">AIOS</span> transforms your operational knowledge into reusable super agents
               with deterministic controls and evidence-grade observability.
             </p>
 
@@ -561,7 +561,7 @@ export default function Home() {
                 We capture it before it does.
               </p>
               <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg">
-                AIOS learns from screen captures, click paths, and decision logic to
+                <span className="font-bold">AIOS</span> learns from screen captures, click paths, and decision logic to
                 distill expert behavior into certified, reusable skills that any agent can
                 execute. No documentation sprints. Just operational truth, extracted and
                 deployed.
@@ -649,10 +649,10 @@ export default function Home() {
                 <IconRocket className="h-7 w-7" />
               </div>
               <div className="mt-4 md:mt-0">
-                <h3 className="text-lg font-bold text-slate-950">Forward-deployed AIOS engineers</h3>
+                <h3 className="text-lg font-bold text-slate-950">Forward-deployed <span className="font-bold">AIOS</span> engineers</h3>
                 <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-600">
                   We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
-                  directly with your team to deploy AIOS against real workflows, integrate with
+                  directly with your team to deploy <span className="font-bold">AIOS</span> against real workflows, integrate with
                   your existing systems, and drive measurable outcomes from day one.
                 </p>
               </div>
@@ -669,7 +669,7 @@ export default function Home() {
               vs. the alternatives.
             </h2>
             <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
-              See where AIOS fits against the options enterprises are
+              See where <span className="font-bold">AIOS</span> fits against the options enterprises are
               actually evaluating.
             </p>
 
@@ -678,7 +678,7 @@ export default function Home() {
                 <thead>
                   <tr className="border-b-2 border-slate-200">
                     <th className="py-3 pr-4 text-left font-semibold text-slate-500">Capability</th>
-                    <th className="px-4 py-3 text-center font-semibold text-cyan-700">AIOS</th>
+                    <th className="px-4 py-3 text-center font-semibold text-cyan-700"><span className="font-bold">AIOS</span></th>
                     <th className="px-4 py-3 text-center font-semibold text-slate-500">Custom Agentic Frameworks</th>
                     <th className="px-4 py-3 text-center font-semibold text-slate-500">RPA Vendors</th>
                     <th className="px-4 py-3 text-center font-semibold text-slate-500">Cloud Platforms</th>

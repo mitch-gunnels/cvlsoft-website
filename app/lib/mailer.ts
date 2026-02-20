@@ -32,15 +32,15 @@ function buildConfirmationEmail(firstName: string): string {
               ${firstName},
             </h1>
             <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#475569;">
-              Thanks for your interest in AIOS. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
+              Thanks for your interest in <strong>AIOS</strong>. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
             </p>
 
             <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f0fdfa;border-radius:12px;width:100%;">
               <tr>
                 <td style="padding:24px;">
-                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What is AIOS?</p>
+                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;">What is <strong>AIOS</strong>?</p>
                   <p style="margin:8px 0 0;font-size:14px;line-height:1.8;color:#334155;">
-                    AIOS is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
+                    <strong>AIOS</strong> is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
                   </p>
                 </td>
               </tr>
@@ -110,7 +110,7 @@ export async function sendNotificationEmail(data: {
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
     html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
-  <h2 style="margin:0 0 16px;font-size:18px;color:#0f172a;">New AIOS Demo Request</h2>
+  <h2 style="margin:0 0 16px;font-size:18px;color:#0f172a;">New <strong>AIOS</strong> Demo Request</h2>
   <table style="width:100%;border-collapse:collapse;font-size:14px;color:#334155;">
     <tr><td style="padding:8px 0;font-weight:600;width:100px;">Name</td><td style="padding:8px 0;">${data.firstName} ${data.lastName}</td></tr>
     <tr><td style="padding:8px 0;font-weight:600;">Email</td><td style="padding:8px 0;"><a href="mailto:${data.email}" style="color:#0e7490;">${data.email}</a></td></tr>
