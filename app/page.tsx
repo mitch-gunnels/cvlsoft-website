@@ -26,11 +26,15 @@ const CAPABILITIES = [
   },
 ];
 
-/* ── Floating particles ── */
+/* ── Floating particles (client-only to avoid hydration mismatch) ── */
 
 function Particles() {
-  const particles = useMemo(
-    () =>
+  const [particles, setParticles] = useState<
+    { id: number; left: string; top: string; size: number; delay: string; duration: string; opacity: number }[]
+  >([]);
+
+  useEffect(() => {
+    setParticles(
       Array.from({ length: 28 }, (_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
@@ -40,8 +44,10 @@ function Particles() {
         duration: `${5 + Math.random() * 6}s`,
         opacity: 0.15 + Math.random() * 0.35,
       })),
-    [],
-  );
+    );
+  }, []);
+
+  if (particles.length === 0) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
