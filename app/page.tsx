@@ -415,10 +415,7 @@ export default function Home() {
               <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round"/>
               <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
             </svg>
-            <span>
-              <span className="text-slate-500">Converged Value Layer</span>{" "}
-              <span className="font-mono tracking-[0.12em]">(cvlSoft)</span>
-            </span>
+            <span className="font-mono tracking-[0.12em]">cvlSoft</span>
           </a>
           <div className="flex items-center gap-8">
             <a href="#problem" className="hidden text-sm font-medium text-slate-600 transition hover:text-slate-950 md:block">

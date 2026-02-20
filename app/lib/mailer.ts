@@ -22,8 +22,6 @@ function buildConfirmationEmail(firstName: string): string {
         <!-- Header -->
         <tr>
           <td style="background:#0f172a;padding:32px 40px;text-align:center;">
-            <span style="font-size:13px;font-weight:400;color:#94a3b8;">Converged Value Layer</span>
-            <br/>
             <span style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:0.10em;font-family:'Courier New',monospace;">cvlSoft</span>
           </td>
         </tr>
@@ -78,7 +76,7 @@ function buildConfirmationEmail(firstName: string): string {
           <td style="padding:24px 40px;border-top:1px solid #e2e8f0;text-align:center;">
             <a href="https://www.cvlsoft.net" style="font-size:12px;color:#0e7490;text-decoration:none;">www.cvlsoft.net</a>
             <p style="margin:8px 0 0;font-size:12px;color:#94a3b8;">
-              Converged Value Layer &middot; Enterprise Autonomy Platform
+              cvlSoft &middot; Enterprise Autonomy Platform
             </p>
           </td>
         </tr>
