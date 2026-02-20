@@ -9,8 +9,8 @@
 }
 
 @theme inline {
-  --color-background: var(--bg-root);
-  --color-foreground: var(--text-primary);
+  --color-background: #050a14;
+  --color-foreground: #e2e8f0;
   --font-sans: var(--font-ui);
   --font-mono: var(--font-code-ui);
 }
