@@ -1,0 +1,115 @@
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT ?? 465),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+const LOGO_B64 =
+  "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0iTTMyIDEwIEExOCAxOCAwIDEgMCAzMiAzOCIgc3Ryb2tlPSIjMGU3NDkwIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwIDE2IEExMiAxMiAwIDEgMCAzMCAzMiIgc3Ryb2tlPSIjMjJkM2VlIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yOCAyMSBBNiA2IDAgMSAwIDI4IDI3IiBzdHJva2U9IiM2N2U4ZjkiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+";
+
+function buildConfirmationEmail(firstName: string): string {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#f7f8fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f8fb;padding:40px 20px;">
+    <tr><td align="center">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.06);">
+        <!-- Header -->
+        <tr>
+          <td style="background:#0f172a;padding:32px 40px;text-align:center;">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+              <tr>
+                <td style="padding-right:12px;vertical-align:middle;">
+                  <img src="data:image/svg+xml;base64,${LOGO_B64}" width="36" height="36" alt="cvlSoft logo" style="display:block;" />
+                </td>
+                <td style="vertical-align:middle;">
+                  <span style="font-size:13px;font-weight:400;color:#94a3b8;">Converged Value Layer</span>
+                  <br/>
+                  <span style="font-size:16px;font-weight:700;color:#ffffff;letter-spacing:0.08em;font-family:'Courier New',monospace;">cvlSoft</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:40px;">
+            <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;">
+              ${firstName},
+            </h1>
+            <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#475569;">
+              Thanks for your interest in cvlSoft. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
+            </p>
+
+            <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f0fdfa;border-radius:12px;width:100%;">
+              <tr>
+                <td style="padding:24px;">
+                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What is cvlSoft?</p>
+                  <p style="margin:8px 0 0;font-size:14px;line-height:1.8;color:#334155;">
+                    cvlSoft is an enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:12px;width:100%;margin-top:16px;">
+              <tr>
+                <td style="padding:24px;">
+                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What to expect</p>
+                  <ul style="margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.8;color:#334155;">
+                    <li>A brief intro call to understand your use case</li>
+                    <li>A live platform walkthrough using your scenarios</li>
+                    <li>A clear next-steps plan &mdash; no pressure</li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+
+            <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#475569;">
+              In the meantime, feel free to reply directly to this email with any questions or visit our website to learn more.
+            </p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+              <tr>
+                <td style="background:#0f172a;border-radius:9999px;padding:12px 28px;">
+                  <a href="https://www.cvlsoft.net" style="font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">Visit cvlsoft.net</a>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:24px 0 0;font-size:14px;color:#334155;">
+              &mdash; The cvlSoft Team
+            </p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="padding:24px 40px;border-top:1px solid #e2e8f0;text-align:center;">
+            <a href="https://www.cvlsoft.net" style="font-size:12px;color:#0e7490;text-decoration:none;">www.cvlsoft.net</a>
+            <p style="margin:8px 0 0;font-size:12px;color:#94a3b8;">
+              Converged Value Layer &middot; Enterprise Autonomy Platform
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
+export async function sendConfirmationEmail(to: string, name: string): Promise<void> {
+  const firstName = name.split(" ")[0] || "there";
+  await transporter.sendMail({
+    from: `"cvlSoft" <${process.env.SMTP_USER}>`,
+    to,
+    subject: "cvlSoft Demo Request",
+    html: buildConfirmationEmail(firstName),
+  });
+}

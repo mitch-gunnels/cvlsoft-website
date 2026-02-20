@@ -302,7 +302,10 @@ const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[]
 /* ── Page ── */
 
 export default function Home() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
@@ -314,18 +317,50 @@ export default function Home() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setFormStatus("loading");
+    setFormStatus("idle");
     setFormMessage("");
+
+    // Client-side validation
+    if (!firstName.trim()) {
+      setFormStatus("error");
+      setFormMessage("Please enter your first name.");
+      return;
+    }
+    if (!lastName.trim()) {
+      setFormStatus("error");
+      setFormMessage("Please enter your last name.");
+      return;
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFormStatus("error");
+      setFormMessage("Please enter a valid email address.");
+      return;
+    }
+    const domain = email.split("@")[1]?.toLowerCase();
+    if (["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com"].includes(domain)) {
+      setFormStatus("error");
+      setFormMessage("Please use a company email so we can route your request correctly.");
+      return;
+    }
+    if (!company.trim()) {
+      setFormStatus("error");
+      setFormMessage("Please enter your company name.");
+      return;
+    }
+
+    setFormStatus("loading");
 
     try {
       const response = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          firstName,
+          lastName,
           email,
+          phone,
           company,
           source: "website_v2",
-          timestamp: new Date().toISOString(),
         }),
       });
 
@@ -340,7 +375,10 @@ export default function Home() {
 
       setFormStatus("success");
       setFormMessage(data.message ?? "Thanks. We will follow up to schedule your demo.");
+      setFirstName("");
+      setLastName("");
       setEmail("");
+      setPhone("");
       setCompany("");
     } catch {
       setFormStatus("error");
@@ -363,7 +401,7 @@ export default function Home() {
               <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
             </svg>
             <span>
-              <span className="text-slate-500">Converged Value Layer Software</span>{" "}
+              <span className="text-slate-500">Converged Value Layer</span>{" "}
               <span className="font-mono tracking-[0.12em]">(cvlSoft)</span>
             </span>
           </a>
@@ -538,6 +576,28 @@ export default function Home() {
             </p>
 
             <form className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                  className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  placeholder="First name"
+                />
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  placeholder="Last name"
+                />
+              </div>
               <input
                 id="email"
                 name="email"
@@ -549,13 +609,23 @@ export default function Home() {
                 placeholder="Work email"
               />
               <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                placeholder="Phone (optional)"
+              />
+              <input
                 id="company"
                 name="company"
                 type="text"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
+                required
                 className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                placeholder="Company (optional)"
+                placeholder="Company"
               />
               <button
                 type="submit"
