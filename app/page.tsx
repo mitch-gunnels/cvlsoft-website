@@ -142,12 +142,13 @@ function ArchitectureDiagram() {
           <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
             <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="#0f172a" floodOpacity="0.07" />
           </filter>
-          {/* Animation motion paths (invisible) */}
+          {/* Motion paths */}
           <path id="dot-top" d="M300,80 L300,160" />
           <path id="dot-left" d="M185,222 L238,222" />
           <path id="dot-right" d="M362,222 L415,222" />
-          <path id="dot-bottom-out" d="M300,284 L300,364" />
-          <path id="dot-bottom-in" d="M300,364 L300,284" />
+          {/* Bottom I/O dual lanes — Core initiates */}
+          <path id="out-bottom" d="M297,284 L297,364" />
+          <path id="in-bottom" d="M303,364 L303,284" />
         </defs>
 
         {/* Pulse rings */}
@@ -165,14 +166,17 @@ function ArchitectureDiagram() {
         <line x1="300" y1="80" x2="300" y2="160" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
         <line x1="185" y1="222" x2="238" y2="222" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
         <line x1="362" y1="222" x2="415" y2="222" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
-        <line x1="300" y1="284" x2="300" y2="364" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
+        {/* Bottom — dual I/O lanes offset ±3 */}
+        <line x1="297" y1="284" x2="297" y2="364" stroke="#22d3ee" strokeOpacity="0.20" strokeWidth="1.5" />
+        <line x1="303" y1="284" x2="303" y2="364" stroke="#22d3ee" strokeOpacity="0.20" strokeWidth="1.5" />
 
         {/* Connection terminals */}
         {[[300,160],[300,80],[362,222],[415,222],[300,284],[300,364],[238,222],[185,222]].map(([cx,cy],i) => (
           <circle key={i} cx={cx} cy={cy} r="2.5" fill="#22d3ee" opacity="0.4" />
         ))}
 
-        {/* Animated dots — Policy Engine → Core (inward) */}
+        {/* ── Original dots: top, left, right ── */}
+        {/* Policy Engine → Core (inward) */}
         <circle r="3" fill="#22d3ee" opacity="0.8">
           <animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#dot-top" /></animateMotion>
         </circle>
@@ -184,13 +188,21 @@ function ArchitectureDiagram() {
         <circle r="3" fill="#22d3ee" opacity="0.8">
           <animateMotion dur="2.6s" begin="0.8s" repeatCount="indefinite"><mpath href="#dot-right" /></animateMotion>
         </circle>
-        {/* Core → Connectors (outward) */}
+
+        {/* ── Bottom I/O: Core initiates, multiple dots per lane ── */}
+        {/* OUT lane (left line) — Core → Connectors, dots flowing down */}
         <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#dot-bottom-out" /></animateMotion>
+          <animateMotion dur="2s" begin="0s" repeatCount="indefinite"><mpath href="#out-bottom" /></animateMotion>
         </circle>
-        {/* Connectors → Core (inward) */}
-        <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite"><mpath href="#dot-bottom-in" /></animateMotion>
+        <circle r="2.5" fill="#22d3ee" opacity="0.5">
+          <animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath href="#out-bottom" /></animateMotion>
+        </circle>
+        {/* IN lane (right line) — Connectors → Core, dots flowing up */}
+        <circle r="3" fill="#67e8f9" opacity="0.8">
+          <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite"><mpath href="#in-bottom" /></animateMotion>
+        </circle>
+        <circle r="2.5" fill="#67e8f9" opacity="0.5">
+          <animateMotion dur="2s" begin="1.5s" repeatCount="indefinite"><mpath href="#in-bottom" /></animateMotion>
         </circle>
 
         {/* Center glow */}
