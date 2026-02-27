@@ -486,7 +486,7 @@ export default function Home() {
           {/* Text — 40% */}
           <div className="reveal-up mx-auto w-full max-w-xl text-center lg:mx-0 lg:text-left">
             <p className="inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
-              INTRODUCING <span className="font-bold">AIOS</span> — AUTONOMOUS INTELLIGENCE OPERATING SYSTEM
+              INTRODUCING <span className="font-bold">AIOS</span>
             </p>
 
             <h1 className="mt-7 text-5xl font-bold leading-[1.05] tracking-tight text-slate-950 md:text-6xl lg:text-7xl">
@@ -503,7 +503,7 @@ export default function Home() {
             </p>
 
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg lg:mx-0">
-              <span className="font-bold">AIOS</span> transforms your operational knowledge into reusable super agents
+              <span className="font-bold">AIOS</span> (Autonomous Intelligence Operating System) transforms your operational knowledge into reusable super agents
               with deterministic controls and evidence-grade observability.
             </p>
 
