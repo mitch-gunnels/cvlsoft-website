@@ -40,7 +40,7 @@ function buildConfirmationEmail(firstName: string): string {
                 <td style="padding:24px;">
                   <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;">What is <strong>AIOS</strong>?</p>
                   <p style="margin:8px 0 0;font-size:14px;line-height:1.8;color:#334155;">
-                    <strong>AIOS</strong> is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
+                    <strong>AIOS</strong> (Autonomous Intelligence Operating System) is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
                   </p>
                 </td>
               </tr>

@@ -19,9 +19,9 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AIOS by cvlSoft",
+  title: "AIOS by cvlSoft — Autonomous Intelligence Operating System",
   description:
-    "AIOS by cvlSoft transforms tribal knowledge and SOPs into safe, auditable autonomous execution with deterministic controls, connector fabric, and evidence-first observability.",
+    "AIOS (Autonomous Intelligence Operating System) by cvlSoft transforms tribal knowledge and SOPs into safe, auditable autonomous execution with deterministic controls, connector fabric, and evidence-first observability.",
 };
 
 export default function RootLayout({
