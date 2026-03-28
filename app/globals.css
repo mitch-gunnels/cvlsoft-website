@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg-root: #f7f8fb;
-  --text-primary: #0f172a;
+  --bg-root: #050a14;
+  --text-primary: #e2e8f0;
   --font-ui: var(--font-body);
   --font-display: var(--font-heading);
   --font-code-ui: var(--font-code);
 }
 
 @theme inline {
-  --color-background: #f7f8fb;
-  --color-foreground: #0f172a;
+  --color-background: #050a14;
+  --color-foreground: #e2e8f0;
   --font-sans: var(--font-ui);
   --font-mono: var(--font-code-ui);
 }
@@ -38,45 +38,128 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display), sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-weight: 300;
 }
 
-/* ── Background pattern ── */
+/* ── Background grid ── */
 
-.hero-noise {
+.grid-bg {
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
-/* ── Animations ── */
+/* ── Reveal animations ── */
 
 .reveal-up {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(24px);
 }
 
 .reveal-up.in-view {
-  animation: reveal-up 800ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: reveal-up 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hero-glow {
-  position: absolute;
-  inset: -20%;
-  z-index: 0;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(34, 211, 238, 0.15) 0%,
-    transparent 70%
-  );
-  filter: blur(60px);
+.scale-in {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.scale-in.in-view {
+  animation: scale-in 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cascade {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.cascade.in-view {
+  animation: cascade 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.row-fade {
+  opacity: 0;
+}
+
+.row-fade.in-view {
+  animation: reveal-up 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Bar fill (funnel bars, stacked bar segments) ── */
+
+.bar-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.in-view .bar-fill {
+  transform: scaleX(1);
+}
+
+/* ── SVG line draw ── */
+
+.chart-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.in-view .chart-line {
+  stroke-dashoffset: 0;
+}
+
+.chart-area {
+  opacity: 0;
+  transition: opacity 1s ease 1.2s;
+}
+
+.in-view .chart-area {
+  opacity: 1;
+}
+
+/* ── Feature illustration crossfade ── */
+
+.feature-fade-enter {
+  animation: feature-fade-in 500ms ease forwards;
+}
+
+@keyframes feature-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Glow & float ── */
+
+.glow-pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
 }
 
 .float-slow {
   animation: float 8s ease-in-out infinite;
 }
+
+/* ── Scrollytelling timeline ── */
+
+.feature-step {
+  min-height: 120vh;
+}
+
+.timeline-progress {
+  transition: height 0.3s ease-out;
+  background: linear-gradient(to bottom, #22d3ee, #0891b2);
+}
+
+/* ── Keyframes ── */
 
 @keyframes reveal-up {
   to {
@@ -85,14 +168,6 @@ h6 {
   }
 }
 
-/* Scale-in (differentiator cards) */
-.scale-in {
-  opacity: 0;
-  transform: scale(0.88) translateY(14px);
-}
-.scale-in.in-view {
-  animation: scale-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
 @keyframes scale-in {
   to {
     opacity: 1;
@@ -100,14 +175,6 @@ h6 {
   }
 }
 
-/* Cascade (observational learning steps) */
-.cascade {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.cascade.in-view {
-  animation: cascade 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
 @keyframes cascade {
   to {
     opacity: 1;
@@ -115,50 +182,23 @@ h6 {
   }
 }
 
-/* Table row fade */
-.row-fade {
-  opacity: 0;
-}
-.row-fade.in-view {
-  animation: reveal-up 500ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* Bar fill (funnel bars, stacked bar segments) */
-.bar-fill {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.in-view .bar-fill {
-  transform: scaleX(1);
-}
-
-/* SVG line draw */
-.chart-line {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  transition: stroke-dashoffset 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.in-view .chart-line {
-  stroke-dashoffset: 0;
-}
-
-/* SVG area fade (appears after lines draw) */
-.chart-area {
-  opacity: 0;
-  transition: opacity 1s ease 1.2s;
-}
-.in-view .chart-area {
-  opacity: 1;
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
 }
 
 @keyframes float {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-14px);
   }
 }
 
@@ -167,7 +207,8 @@ h6 {
   .scale-in,
   .cascade,
   .row-fade,
-  .float-slow {
+  .float-slow,
+  .glow-pulse {
     animation: none;
     opacity: 1;
     transform: none;

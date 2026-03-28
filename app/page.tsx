@@ -1,7 +1,13 @@
 "use client";
 
-import { FormEvent, type ReactNode, useEffect, useMemo, useState } from "react";
+import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { trackEvent } from "@/app/lib/analytics";
+
+const LearningLoopPlayer = dynamic(() => import("@/app/components/remotion/LearningLoopPlayer"), { ssr: false });
+const CognitiveCorePlayer = dynamic(() => import("@/app/components/remotion/CognitiveCorePlayer"), { ssr: false });
+const TacitKnowledgePlayer = dynamic(() => import("@/app/components/remotion/TacitKnowledgePlayer"), { ssr: false });
+const SecurityPosturePlayer = dynamic(() => import("@/app/components/remotion/SecurityPosturePlayer"), { ssr: false });
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
@@ -75,198 +81,197 @@ function IconLink({ className }: { className?: string }) {
   );
 }
 
-/* ── Architecture diagram ── */
+/* ── Section scroll indicator (sticky dot + line) ── */
 
-const NODE_LABEL: React.CSSProperties = {
-  fontSize: "9px",
-  fontWeight: 600,
-  letterSpacing: "0.1em",
-  fill: "#334155",
-};
-
-const CORE_LABEL: React.CSSProperties = {
-  fontSize: "9.5px",
-  fontWeight: 700,
-  letterSpacing: "0.12em",
-  fill: "#0e7490",
-};
-
-const SUB_LABEL: React.CSSProperties = {
-  fontSize: "7px",
-  fontWeight: 600,
-  letterSpacing: "0.06em",
-  fill: "#475569",
-};
-
-const POLICY_ITEMS = [
-  { label: "CSO", cx: 153 },
-  { label: "SOX CONTROLS", cx: 251 },
-  { label: "DATA REDACTION", cx: 349 },
-  { label: "CONSTITUTIONS", cx: 447 },
-];
-
-const KNOWLEDGE_ITEMS = [
-  { label: "SOPS / MP", cx: 12 },
-  { label: "RUNBOOKS", cx: 110 },
-  { label: "SCREEN CAPTURE", cx: 208 },
-];
-
-const CONNECTOR_ITEMS = [
-  { label: "MAINFRAME", cx: 108 },
-  { label: "SHARED DBS", cx: 204 },
-  { label: "APIS", cx: 300 },
-  { label: "ERP / SAP", cx: 396 },
-  { label: "LEGACY ECOSYSTEM", cx: 492 },
-];
-
-function ArchitectureDiagram() {
+function SectionScrollLine() {
   return (
-    <div className="reveal-up relative [animation-delay:200ms]">
-      <div className="hero-glow" />
+    <div className="pointer-events-none absolute left-[175px] top-0 bottom-0 z-20 hidden lg:block">
+      {/* Vertical line spanning full section */}
+      <div className="absolute left-[4px] top-0 bottom-0 w-px bg-white/[0.10]" />
+      {/* Dot container: starts 160px below section top, stretches to bottom so sticky has room */}
+      <div className="absolute left-0 top-[160px] bottom-0 overflow-visible">
+        <div className="sticky top-[150px] h-0">
+          <div className="h-[10px] w-[10px] rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Hero generative wave art ── */
+
+function HeroWave() {
+  /* Paths from LangGraph's actual SVG, recolored to cyan with staggered pulse animations */
+  const rightPaths = [
+    "M515 315.071C823.527 315.071 853.487 619.089 1056.54 619.089C1230.97 619.089 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 610.748 1056.54 610.748C1230.97 610.748 1321.64 315.071 1572.07 315.071",
+    "M515 315.07C823.527 315.07 853.487 598.698 1056.54 598.698C1230.97 598.698 1321.64 315.07 1572.07 315.07",
+    "M515 315.07C823.527 315.07 853.487 584.794 1056.54 584.794C1230.97 584.794 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 565.33 1056.54 565.33C1230.97 565.33 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 540.304 1056.54 540.304C1230.97 540.304 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 506.936 1056.54 506.936C1230.97 506.936 1321.64 315.07 1572.07 315.07",
+    "M515 315.07C823.527 315.07 853.487 468.934 1056.54 468.934C1230.97 468.934 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 424.443 1056.54 424.443C1230.97 424.443 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 371.611 1056.54 371.611C1230.97 371.611 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 315.071 1056.54 315.071C1230.97 315.071 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 258.53 1056.54 258.53C1230.97 258.53 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 204.771 1056.54 204.771C1230.97 204.771 1321.64 315.071 1572.07 315.071",
+    "M515 315.07C823.527 315.07 853.487 160.28 1056.54 160.28C1230.97 160.28 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 122.278 1056.54 122.278C1230.97 122.278 1321.64 315.071 1572.07 315.071",
+    "M515 315.07C823.527 315.07 853.487 89.8369 1056.54 89.8369C1230.97 89.8369 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 64.811 1056.54 64.811C1230.97 64.811 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 45.3467 1056.54 45.3466C1230.97 45.3466 1321.64 315.071 1572.07 315.071",
+    "M515 315.071C823.527 315.071 853.487 31.4433 1056.54 31.4433C1230.97 31.4433 1321.64 315.071 1572.07 315.071",
+    "M515 315.07C823.527 315.07 853.487 19.3935 1056.54 19.3935C1230.97 19.3935 1321.64 315.07 1572.07 315.07",
+    "M515 315.071C823.527 315.071 853.487 11.0517 1056.54 11.0517C1230.97 11.0517 1321.64 315.071 1572.07 315.071",
+  ];
+
+  const leftPaths = [
+    "M0.427716 314.859C159.246 314.859 174.668 455.394 279.193 455.394C368.982 455.394 415.656 314.859 544.571 314.859",
+    "M0.427716 314.859C159.246 314.859 174.668 451.538 279.193 451.538C368.982 451.538 415.656 314.859 544.571 314.859",
+    "M0.427717 314.859C159.246 314.859 174.668 445.968 279.193 445.968C368.982 445.968 415.656 314.859 544.571 314.859",
+    "M0.427718 314.859C159.246 314.859 174.668 439.541 279.193 439.541C368.982 439.541 415.656 314.859 544.571 314.859",
+    "M0.427719 314.86C159.246 314.86 174.668 430.543 279.193 430.543C368.982 430.543 415.656 314.86 544.571 314.859",
+    "M0.427721 314.86C159.246 314.86 174.668 418.975 279.193 418.975C368.982 418.975 415.656 314.86 544.571 314.86",
+    "M0.427723 314.859C159.246 314.859 174.668 403.55 279.193 403.55C368.982 403.55 415.656 314.859 544.571 314.859",
+    "M0.427725 314.859C159.246 314.859 174.668 385.983 279.193 385.983C368.982 385.983 415.656 314.859 544.571 314.859",
+    "M0.427728 314.859C159.246 314.859 174.668 365.417 279.193 365.417C368.982 365.417 415.656 314.859 544.571 314.859",
+    "M0.427731 314.859C159.246 314.859 174.668 340.995 279.193 340.995C368.982 340.995 415.656 314.859 544.571 314.859",
+    "M0.427734 314.859C159.246 314.859 174.668 314.859 279.193 314.859C368.982 314.859 415.656 314.859 544.571 314.859",
+    "M0.427738 314.859C159.246 314.859 174.668 288.723 279.193 288.723C368.982 288.723 415.656 314.859 544.571 314.859",
+    "M0.427741 314.859C159.246 314.859 174.668 263.873 279.193 263.873C368.982 263.873 415.656 314.859 544.571 314.859",
+    "M0.427744 314.859C159.246 314.859 174.668 243.307 279.193 243.307C368.982 243.307 415.656 314.859 544.571 314.859",
+    "M0.427746 314.859C159.246 314.859 174.668 225.74 279.193 225.74C368.982 225.74 415.656 314.859 544.571 314.859",
+    "M0.427748 314.859C159.246 314.859 174.668 210.744 279.193 210.744C368.982 210.744 415.656 314.859 544.571 314.859",
+    "M0.42775 314.859C159.246 314.859 174.668 199.175 279.193 199.175C368.982 199.175 415.656 314.859 544.571 314.859",
+    "M0.427751 314.859C159.246 314.859 174.668 190.178 279.193 190.178C368.982 190.178 415.656 314.859 544.571 314.859",
+    "M0.427752 314.859C159.246 314.859 174.668 183.751 279.193 183.751C368.982 183.751 415.656 314.859 544.571 314.859",
+    "M0.427752 314.859C159.246 314.859 174.668 178.181 279.193 178.181C368.982 178.181 415.656 314.859 544.571 314.859",
+    "M0.427753 314.859C159.246 314.859 174.668 174.325 279.193 174.325C368.982 174.325 415.656 314.859 544.571 314.859",
+  ];
+
+  /* Pick a few paths for traveling dots */
+  const dotPathIndices = [2, 6, 10, 14, 18];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      {/* Focal glow at convergence point */}
+      <div className="absolute left-[30%] top-1/2 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.08] blur-[80px]" />
+      <div className="absolute right-[10%] top-1/2 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-cyan-500/[0.05] blur-[100px]" />
+
       <svg
-        viewBox="-50 -5 700 510"
+        viewBox="0 0 1573 630"
         fill="none"
-        className="relative z-10 mx-auto w-full"
-        role="img"
-        aria-label="Architecture: Agnostic Agent Core connected to Operational Knowledge, Policy Engine, Evidence/Observability, and Connectors Layer"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute right-[20%] top-1/2 h-[96%] w-[54%] -translate-y-1/2"
+        aria-hidden="true"
       >
-        <defs>
-          <radialGradient id="core-glow">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="core-fill">
-            <stop offset="0%" stopColor="#ecfeff" />
-            <stop offset="100%" stopColor="#cffafe" />
-          </radialGradient>
-          <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
-            <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="#0f172a" floodOpacity="0.07" />
-          </filter>
-          {/* Motion paths */}
-          <path id="dot-top" d="M300,80 L300,160" />
-          <path id="dot-left" d="M185,222 L238,222" />
-          <path id="dot-right" d="M362,222 L415,222" />
-          {/* Bottom I/O dual lanes — Core initiates */}
-          <path id="out-bottom" d="M297,284 L297,364" />
-          <path id="in-bottom" d="M303,364 L303,284" />
-        </defs>
+        {/* Left wave group (smaller, tighter curves) */}
+        <g>
+          {leftPaths.map((d, i) => {
+            const distFromCenter = Math.abs(i - 10) / 10;
+            const baseOpacity = 0.08 + (1 - distFromCenter) * 0.15;
+            return (
+              <path key={`l${i}`} d={d} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" fill="none" strokeOpacity={baseOpacity}>
+                <animate
+                  attributeName="stroke-opacity"
+                  values={`${baseOpacity};${baseOpacity * 2.5};${baseOpacity}`}
+                  dur={`${5 + (i % 7) * 0.6}s`}
+                  begin={`${i * 0.15}s`}
+                  repeatCount="indefinite"
+                />
+              </path>
+            );
+          })}
+        </g>
 
-        {/* Pulse rings */}
-        <circle cx="300" cy="222" r="100" stroke="#22d3ee" strokeOpacity="0.07" strokeWidth="1">
-          <animate attributeName="stroke-opacity" values="0.05;0.14;0.05" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="300" cy="222" r="140" stroke="#22d3ee" strokeOpacity="0.05" strokeWidth="1">
-          <animate attributeName="stroke-opacity" values="0.03;0.09;0.03" dur="4s" begin="0.7s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="300" cy="222" r="185" stroke="#22d3ee" strokeOpacity="0.03" strokeWidth="1">
-          <animate attributeName="stroke-opacity" values="0.02;0.06;0.02" dur="4s" begin="1.4s" repeatCount="indefinite" />
-        </circle>
+        {/* Right wave group (larger, wider curves) */}
+        <g>
+          {rightPaths.map((d, i) => {
+            const distFromCenter = Math.abs(i - 10) / 10;
+            const baseOpacity = 0.06 + (1 - distFromCenter) * 0.18;
+            return (
+              <path key={`r${i}`} d={d} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" fill="none" strokeOpacity={baseOpacity}>
+                <animate
+                  attributeName="stroke-opacity"
+                  values={`${baseOpacity};${baseOpacity * 2.2};${baseOpacity}`}
+                  dur={`${4 + (i % 5) * 0.8}s`}
+                  begin={`${i * 0.12}s`}
+                  repeatCount="indefinite"
+                />
+              </path>
+            );
+          })}
+        </g>
 
-        {/* Visible connection lines */}
-        <line x1="300" y1="80" x2="300" y2="160" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
-        <line x1="185" y1="222" x2="238" y2="222" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
-        <line x1="362" y1="222" x2="415" y2="222" stroke="#22d3ee" strokeOpacity="0.25" strokeWidth="1.5" />
-        {/* Bottom — dual I/O lanes offset ±3 */}
-        <line x1="297" y1="284" x2="297" y2="364" stroke="#22d3ee" strokeOpacity="0.20" strokeWidth="1.5" />
-        <line x1="303" y1="284" x2="303" y2="364" stroke="#22d3ee" strokeOpacity="0.20" strokeWidth="1.5" />
-
-        {/* Connection terminals */}
-        {[[300,160],[300,80],[362,222],[415,222],[300,284],[300,364],[238,222],[185,222]].map(([cx,cy],i) => (
-          <circle key={i} cx={cx} cy={cy} r="2.5" fill="#22d3ee" opacity="0.4" />
-        ))}
-
-        {/* ── Original dots: top, left, right ── */}
-        {/* Policy Engine → Core (inward) */}
-        <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#dot-top" /></animateMotion>
-        </circle>
-        {/* Operational Knowledge → Core (inward) */}
-        <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2.8s" begin="0.4s" repeatCount="indefinite"><mpath href="#dot-left" /></animateMotion>
-        </circle>
-        {/* Core → Evidence/Observability (outward) */}
-        <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2.6s" begin="0.8s" repeatCount="indefinite"><mpath href="#dot-right" /></animateMotion>
-        </circle>
-
-        {/* ── Bottom I/O: Core initiates, multiple dots per lane ── */}
-        {/* OUT lane (left line) — Core → Connectors, dots flowing down */}
-        <circle r="3" fill="#22d3ee" opacity="0.8">
-          <animateMotion dur="2s" begin="0s" repeatCount="indefinite"><mpath href="#out-bottom" /></animateMotion>
-        </circle>
-        <circle r="2.5" fill="#22d3ee" opacity="0.5">
-          <animateMotion dur="2s" begin="1s" repeatCount="indefinite"><mpath href="#out-bottom" /></animateMotion>
-        </circle>
-        {/* IN lane (right line) — Connectors → Core, dots flowing up */}
-        <circle r="3" fill="#67e8f9" opacity="0.8">
-          <animateMotion dur="2s" begin="0.5s" repeatCount="indefinite"><mpath href="#in-bottom" /></animateMotion>
-        </circle>
-        <circle r="2.5" fill="#67e8f9" opacity="0.5">
-          <animateMotion dur="2s" begin="1.5s" repeatCount="indefinite"><mpath href="#in-bottom" /></animateMotion>
-        </circle>
-
-        {/* Center glow */}
-        <circle cx="300" cy="222" r="88" fill="url(#core-glow)">
-          <animate attributeName="r" values="84;92;84" dur="4s" repeatCount="indefinite" />
-        </circle>
-
-        {/* Center node — Agnostic Agent Core */}
-        <circle cx="300" cy="222" r="62" fill="url(#core-fill)" stroke="#22d3ee" strokeOpacity="0.3" strokeWidth="1.5" filter="url(#shadow)" />
-        <text x="300" y="216" textAnchor="middle" dominantBaseline="middle" style={CORE_LABEL}>AGNOSTIC</text>
-        <text x="300" y="232" textAnchor="middle" dominantBaseline="middle" style={CORE_LABEL}>AGENT CORE</text>
-
-        {/* Top — Policy Engine */}
-        <rect x="243" y="36" width="114" height="44" rx="10" fill="white" stroke="#e2e8f0" strokeWidth="1.5" filter="url(#shadow)" />
-        <text x="300" y="60" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>POLICY ENGINE</text>
-
-        {/* Policy sub-items fan (above) */}
-        <circle cx="300" cy="36" r="2" fill="#94a3b8" opacity="0.5" />
-        {POLICY_ITEMS.map((item) => (
-          <g key={item.label}>
-            <line x1="300" y1="36" x2={item.cx} y2="26" stroke="#94a3b8" strokeOpacity="0.3" strokeWidth="1" strokeDasharray="3 2" />
-            <circle cx={item.cx} cy="26" r="1.5" fill="#94a3b8" opacity="0.4" />
-            <rect x={item.cx - 45} y="2" width="90" height="22" rx="6" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
-            <text x={item.cx} y="15" textAnchor="middle" dominantBaseline="middle" style={SUB_LABEL}>{item.label}</text>
+        {/* Traveling dots along select right-side paths */}
+        {dotPathIndices.map((idx) => (
+          <g key={`dot-r-${idx}`}>
+            <path id={`rpath-${idx}`} d={rightPaths[idx]} fill="none" />
+            <circle r="3" fill="#22d3ee" opacity="0.7">
+              <animateMotion dur={`${7 + (idx % 3) * 2}s`} begin={`${idx * 0.4}s`} repeatCount="indefinite">
+                <mpath href={`#rpath-${idx}`} />
+              </animateMotion>
+            </circle>
           </g>
         ))}
 
-        {/* Right — Evidence / Observability */}
-        <rect x="415" y="197" width="150" height="50" rx="10" fill="white" stroke="#e2e8f0" strokeWidth="1.5" filter="url(#shadow)" />
-        <text x="490" y="216" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>EVIDENCE /</text>
-        <text x="490" y="232" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>OBSERVABILITY</text>
-
-        {/* Bottom — Connectors Layer */}
-        <rect x="238" y="364" width="124" height="50" rx="10" fill="white" stroke="#e2e8f0" strokeWidth="1.5" filter="url(#shadow)" />
-        <text x="300" y="384" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>CONNECTORS</text>
-        <text x="300" y="400" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>LAYER</text>
-
-        {/* Left — Operational Knowledge */}
-        <rect x="35" y="197" width="150" height="50" rx="10" fill="white" stroke="#e2e8f0" strokeWidth="1.5" filter="url(#shadow)" />
-        <text x="110" y="216" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>OPERATIONAL</text>
-        <text x="110" y="232" textAnchor="middle" dominantBaseline="middle" style={NODE_LABEL}>KNOWLEDGE</text>
-
-        {/* Op Knowledge sub-items fan (below) */}
-        <circle cx="110" cy="247" r="2" fill="#94a3b8" opacity="0.5" />
-        {KNOWLEDGE_ITEMS.map((item) => (
-          <g key={item.label}>
-            <line x1="110" y1="247" x2={item.cx} y2="264" stroke="#94a3b8" strokeOpacity="0.3" strokeWidth="1" strokeDasharray="3 2" />
-            <circle cx={item.cx} cy="264" r="1.5" fill="#94a3b8" opacity="0.4" />
-            <rect x={item.cx - 45} y="266" width="90" height="22" rx="6" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
-            <text x={item.cx} y="279" textAnchor="middle" dominantBaseline="middle" style={SUB_LABEL}>{item.label}</text>
-          </g>
-        ))}
-
-        {/* Connector sub-items fan */}
-        <circle cx="300" cy="414" r="2" fill="#94a3b8" opacity="0.5" />
-        {CONNECTOR_ITEMS.map((item) => (
-          <g key={item.label}>
-            <line x1="300" y1="414" x2={item.cx} y2="450" stroke="#94a3b8" strokeOpacity="0.3" strokeWidth="1" strokeDasharray="3 2" />
-            <circle cx={item.cx} cy="450" r="1.5" fill="#94a3b8" opacity="0.4" />
-            <rect x={item.cx - 45} y="452" width="90" height="22" rx="6" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1" />
-            <text x={item.cx} y="465" textAnchor="middle" dominantBaseline="middle" style={SUB_LABEL}>{item.label}</text>
+        {/* Traveling dots along select left-side paths */}
+        {dotPathIndices.map((idx) => (
+          <g key={`dot-l-${idx}`}>
+            <path id={`lpath-${idx}`} d={leftPaths[idx]} fill="none" />
+            <circle r="2.5" fill="#67e8f9" opacity="0.5">
+              <animateMotion dur={`${5 + (idx % 3) * 1.5}s`} begin={`${idx * 0.3 + 1}s`} repeatCount="indefinite">
+                <mpath href={`#lpath-${idx}`} />
+              </animateMotion>
+            </circle>
           </g>
         ))}
       </svg>
+    </div>
+  );
+}
+
+/* ── Floating particles ── */
+
+function Particles() {
+  const [particles, setParticles] = useState<
+    { id: number; left: string; top: string; size: number; delay: string; duration: string; opacity: number }[]
+  >([]);
+
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        size: 1.5 + Math.random() * 3,
+        delay: `${Math.random() * 6}s`,
+        duration: `${5 + Math.random() * 6}s`,
+        opacity: 0.15 + Math.random() * 0.35,
+      })),
+    );
+  }, []);
+
+  if (particles.length === 0) return null;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="float-slow absolute rounded-full bg-cyan-400"
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            opacity: p.opacity,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -289,33 +294,28 @@ const FAILURE_REASONS = [
 
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
   {
-    title: "Persona-centric, not workflow-centric",
-    description: "We build around roles, not rigid flows. AIOS maps capabilities to personas so agents adapt to how your people actually work — not the other way around.",
-    icon: <IconUsers className="h-5 w-5" />,
-  },
-  {
-    title: "Observational learning",
-    description: "We capture tacit operator behavior — not just what's documented, but how work actually gets done.",
-    icon: <IconEye className="h-5 w-5" />,
-  },
-  {
-    title: "Core super agents",
-    description: "A reusable agent system ingests operational knowledge. No more building one-off workflows for every use case.",
+    title: "One brain. Every workflow.",
+    description: "Traditional platforms build a separate agent for every task — hundreds of brittle bots you have to maintain. AIOS operates like a single brilliant employee: one cognitive engine that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
     icon: <IconCpu className="h-5 w-5" />,
   },
   {
-    title: "Composable SME layer",
-    description: "Subject matter experts compose outcomes directly. Zero agentic AI expertise required.",
+    title: "AIOS interviews your experts",
+    description: "AIOS conducts voice interviews just like a human, using seven science-backed elicitation techniques to understand how your experts complete complex tasks. While they talk, AIOS captures their screen, detects decision signals, and automatically builds certified, executable agentic workflows from what it learns.",
+    icon: <IconEye className="h-5 w-5" />,
+  },
+  {
+    title: "Self-evolving autonomous agents",
+    description: "Every execution makes the system smarter. A three-role memory engine — Generator, Reflector, Curator — captures outcomes, surfaces patterns, and persists validated insights as reusable knowledge. No manual retraining. No prompt tuning. Continuous autonomous improvement.",
     icon: <IconGrid className="h-5 w-5" />,
   },
   {
-    title: "Security & observability",
-    description: "Deterministic policy gates, circuit breakers, ephemeral credentials, and evidence-grade audit trails.",
+    title: "Security first posture.",
+    description: "Every action is blocked unless an explicit policy allows it. A deterministic policy engine with allow/deny controls, global and per-execution kill switches that halt instantly, and human-in-the-loop approval gates with compliance-grade audit logging.",
     icon: <IconShield className="h-5 w-5" />,
   },
   {
-    title: "Connector fabric",
-    description: "API, database, event queue, RPA, terminal, and browser — unified under one execution contract.",
+    title: "Universal connector fabric",
+    description: "Hundreds of connectors — REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace — unified under one execution contract. Add a connector and every cognitive agent uses it immediately.",
     icon: <IconLink className="h-5 w-5" />,
   },
 ];
@@ -330,7 +330,10 @@ export default function Home() {
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const [activeFeature, setActiveFeature] = useState(0);
   const year = useMemo(() => new Date().getFullYear(), []);
+  const featureObserverRef = useRef<IntersectionObserver | null>(null);
 
   /* Scroll-triggered reveal animations */
   useEffect(() => {
@@ -343,13 +346,37 @@ export default function Home() {
           }
         });
       },
-      { threshold: 0.15 },
+      { threshold: 0.12 },
     );
 
     document
       .querySelectorAll(".reveal-up, .scale-in, .cascade, .row-fade")
       .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  /* Navbar scroll shadow */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Scrollytelling feature observer */
+  useEffect(() => {
+    featureObserverRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute("data-feature-index"));
+            if (!isNaN(idx)) setActiveFeature(idx);
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: "-20% 0px -20% 0px" },
+    );
+    document.querySelectorAll("[data-feature-index]").forEach((el) => featureObserverRef.current?.observe(el));
+    return () => featureObserverRef.current?.disconnect();
   }, []);
 
   useEffect(() => {
@@ -370,7 +397,6 @@ export default function Home() {
     setFormStatus("idle");
     setFormMessage("");
 
-    // Client-side validation
     if (!firstName.trim()) {
       setFormStatus("error");
       setFormMessage("Please enter your first name.");
@@ -438,31 +464,41 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-[var(--bg-root)] text-[var(--text-primary)]">
-      <div className="hero-noise pointer-events-none fixed inset-0 -z-20" />
+    <div className="relative min-h-screen overflow-x-clip bg-[var(--bg-root)] text-slate-300">
+      {/* Grid background */}
+      <div className="grid-bg pointer-events-none fixed inset-0 -z-20" />
+
+      {/* Ambient glows */}
+      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[800px] w-[1200px] -translate-x-1/2 rounded-full bg-cyan-500/[0.06] blur-[140px]" />
+      <div className="pointer-events-none absolute -right-40 top-40 -z-10 h-[500px] w-[500px] rounded-full bg-indigo-500/[0.04] blur-[120px]" />
+
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a href="#top" className="flex items-center gap-3 text-sm font-semibold text-slate-950">
-            <svg viewBox="0 0 48 48" fill="none" className="h-8 w-8" aria-hidden="true">
+      <header className="sticky top-0 z-30 px-10 pt-2 sm:px-14 lg:px-[88px]">
+        <nav className={`mx-auto flex items-center justify-between rounded-md px-6 py-4.5 backdrop-blur-xl transition-all duration-300 ${
+          scrolled
+            ? "border border-white/[0.10] bg-[#050a14]/70"
+            : "border border-transparent bg-transparent"
+        }`}>
+          <a href="#top" className="flex items-center gap-3">
+            <svg viewBox="0 0 48 48" fill="none" className="h-7 w-7" aria-hidden="true">
               <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
               <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round"/>
               <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
             </svg>
-            <span className="font-mono tracking-[0.12em]">cvlSoft</span>
+            <span className="text-sm font-medium tracking-tight text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
           </a>
           <div className="flex items-center gap-8">
-            <a href="#problem" className="hidden text-sm font-medium text-slate-600 transition hover:text-slate-950 md:block">
+            <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               The Problem
             </a>
-            <a href="#platform" className="hidden text-sm font-medium text-slate-600 transition hover:text-slate-950 md:block">
+            <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Platform
             </a>
             <a
               href="#demo"
               onClick={() => handleCtaClick("header")}
-              className="rounded-full bg-slate-950 px-5 py-2.5 text-xs font-semibold tracking-[0.12em] text-white transition hover:bg-slate-800"
+              className="rounded-md border border-white/[0.10] bg-cyan-400 px-5 py-2 text-xs font-semibold tracking-[0.08em] text-slate-950 transition hover:bg-cyan-300"
             >
               REQUEST DEMO
             </a>
@@ -472,127 +508,175 @@ export default function Home() {
 
       <main id="top">
         {/* ── HERO ── */}
-        <section className="relative mx-auto grid max-w-7xl items-start gap-16 px-6 py-16 lg:grid-cols-[2fr_3fr] lg:gap-12 lg:py-24">
-          {/* Background glows */}
-          <div className="pointer-events-none absolute -left-40 top-0 -z-10 h-[500px] w-[600px] rounded-full bg-cyan-100/40 blur-[100px]" />
-          <div className="pointer-events-none absolute -right-20 bottom-20 -z-10 h-[400px] w-[400px] rounded-full bg-indigo-100/30 blur-[100px]" />
+        <section className="relative min-h-[70vh] overflow-hidden">
 
-          {/* Floating decorative elements */}
-          <div className="pointer-events-none absolute left-[12%] top-[18%] -z-10 h-2 w-2 rounded-full bg-cyan-400/60 float-slow" />
-          <div className="pointer-events-none absolute right-[20%] top-[12%] -z-10 h-3 w-3 rounded-full border border-cyan-300/50 float-slow" style={{ animationDelay: "1.5s" }} />
-          <div className="pointer-events-none absolute left-[8%] bottom-[15%] -z-10 h-2.5 w-2.5 rounded-full bg-indigo-300/40 float-slow" style={{ animationDelay: "3s" }} />
-          <div className="pointer-events-none absolute right-[10%] bottom-[25%] -z-10 h-1.5 w-1.5 rounded-full bg-cyan-500/50 float-slow" style={{ animationDelay: "4.5s" }} />
+          {/* Content */}
+          <div className="relative z-10 px-6 pb-24 pt-16 sm:px-10 lg:pb-32 lg:pl-[120px] lg:pr-[112px] lg:pt-24">
+            <div className="max-w-2xl">
+              <h1 className="reveal-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
+                The operating system{" "}
+                <br className="hidden sm:block" />
+                for{" "}
+                <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">
+                  agentic AI.
+                </span>
+              </h1>
 
-          {/* Text — 40% */}
-          <div className="reveal-up mx-auto w-full max-w-xl text-center lg:mx-0 lg:text-left">
-            <p className="inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
-              INTRODUCING <span className="font-bold">AIOS</span>
-            </p>
+              <p className="reveal-up mt-8 max-w-lg text-base leading-relaxed text-slate-400 md:text-lg [animation-delay:100ms]" style={{ fontFamily: "var(--font-code), monospace" }}>
+                Transform your operational knowledge — SOPs, runbooks, tribal expertise — into
+                safe, auditable autonomous execution. No brittle workflows. No automation debt.
+              </p>
 
-            <h1 className="mt-7 text-5xl font-bold leading-[1.05] tracking-tight text-slate-950 md:text-6xl lg:text-7xl">
-              The operating system{" "}
-              <br className="hidden sm:block" />
-              for{" "}
-              <span className="bg-gradient-to-r from-cyan-600 to-cyan-400 bg-clip-text text-transparent">
-                agentic AI.
-              </span>
-            </h1>
-
-            <p className="mt-4 text-xl font-semibold tracking-tight text-slate-800 md:text-2xl">
-              Enterprise scale. Zero technical debt.
-            </p>
-
-            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg lg:mx-0">
-              <span className="font-bold">AIOS</span> (Autonomous Intelligence Operating System) transforms your operational knowledge into reusable super agents
-              with deterministic controls and evidence-grade observability.
-            </p>
-
-            <div className="mt-8 hidden flex-wrap gap-3 lg:flex">
-              <a
-                href="#demo"
-                onClick={() => handleCtaClick("hero_primary")}
-                className="rounded-full bg-slate-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-950/20"
-              >
-                Request Demo
-              </a>
-              <a
-                href="#platform"
-                onClick={() => handleCtaClick("hero_secondary")}
-                className="rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition hover:border-slate-500"
-              >
-                How It Works
-              </a>
+              <div className="reveal-up mt-10 flex flex-wrap gap-3 [animation-delay:200ms]">
+                <a
+                  href="#demo"
+                  onClick={() => handleCtaClick("hero_primary")}
+                  className="rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20"
+                >
+                  Request Demo
+                </a>
+                <a
+                  href="#platform"
+                  onClick={() => handleCtaClick("hero_secondary")}
+                  className="rounded-md border border-slate-600 px-7 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
+                >
+                  How It Works
+                </a>
+              </div>
             </div>
-          </div>
-
-          {/* Architecture diagram — 60% */}
-          <ArchitectureDiagram />
-
-          {/* CTAs — below diagram on mobile only */}
-          <div className="flex flex-wrap justify-center gap-3 lg:hidden">
-            <a
-              href="#demo"
-              onClick={() => handleCtaClick("hero_primary")}
-              className="rounded-full bg-slate-950 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-950/20"
-            >
-              Request Demo
-            </a>
-            <a
-              href="#platform"
-              onClick={() => handleCtaClick("hero_secondary")}
-              className="rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold text-slate-900 transition hover:border-slate-500"
-            >
-              How It Works
-            </a>
           </div>
         </section>
 
-        {/* ── INDUSTRY PROBLEM ── */}
-        <section id="problem" className="relative border-y border-slate-200/80 bg-white py-20 md:py-24">
-          <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 rounded-full bg-rose-100/40 blur-[80px]" />
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-          <div className="mx-auto max-w-7xl px-6">
-            <p className="reveal-up inline-block rounded-full border border-rose-200 bg-rose-50 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-rose-600">
+        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
+        <section id="platform" className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <SectionScrollLine />
+          {/* Top fade */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          {/* Bottom fade */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-500/[0.04] blur-[100px]" />
+          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-500/[0.05] blur-[80px]" />
+
+          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+              THE PLATFORM
+            </p>
+            <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              Why we are different.
+            </h2>
+            <p className="reveal-up mt-5 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:120ms]">
+              The industry builds an agent for every task. AIOS builds
+              cognition — adaptive intelligence that reasons about any workflow,
+              selects any tool, and scales without maintenance debt.
+            </p>
+
+            {/* Feature rows — each with its own illustration box */}
+            <div className="mt-20 space-y-32">
+              {DIFFERENTIATORS.map((item, i) => {
+                const illustrations = [
+                  /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
+                  /* 1: Tacit knowledge (Remotion) */ <TacitKnowledgePlayer key="i1" />,
+                  /* 2: Cognitive core (Remotion) */ <CognitiveCorePlayer key="i2" />,
+                  /* 3: Learning loop (Remotion) */ <LearningLoopPlayer key="i3" />,
+                  /* 4: Security (Remotion) */ <SecurityPosturePlayer key="i4" />,
+                  /* 5: Connector */ <svg key="i5" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="35" fill="#0d1322" stroke="#22d3ee" strokeOpacity="0.3" strokeWidth="1.5"/><text x="200" y="147" textAnchor="middle" fill="#22d3ee" fontSize="7" fontWeight="700" letterSpacing="0.08em">UNIFIED</text><text x="200" y="159" textAnchor="middle" fill="#22d3ee" fontSize="7" fontWeight="700" letterSpacing="0.08em">CONTRACT</text>{[{l:"API",a:0},{l:"DATABASE",a:60},{l:"MAINFRAME",a:120},{l:"TERMINAL",a:180},{l:"BROWSER",a:240},{l:"EVENT QUEUE",a:300}].map((c,j)=>{const r=120;const rad=(c.a-90)*(Math.PI/180);const cx=200+r*Math.cos(rad);const cy=150+r*Math.sin(rad);return(<g key={c.l}><line x1="200" y1="150" x2={cx} y2={cy} stroke="#22d3ee" strokeOpacity="0.12" strokeWidth="1"/><rect x={cx-38} y={cy-12} width="76" height="24" rx="6" fill="#0a1628" stroke="#1e293b" strokeWidth="1"/><text x={cx} y={cy+2} textAnchor="middle" fill="#94a3b8" fontSize="7" fontWeight="600" letterSpacing="0.05em">{c.l}</text><circle r="2.5" fill="#22d3ee" opacity="0.7"><animateMotion dur={`${2.5+j*0.2}s`} begin={`${j*0.3}s`} repeatCount="indefinite" path={`M200,150 L${cx},${cy}`}/></circle><circle r="2" fill="#67e8f9" opacity="0.5"><animateMotion dur={`${2.8+j*0.2}s`} begin={`${j*0.3+1}s`} repeatCount="indefinite" path={`M${cx},${cy} L200,150`}/></circle></g>);})}<circle cx="200" cy="150" r="35" stroke="#22d3ee" strokeOpacity="0.1" fill="none" strokeWidth="1"><animate attributeName="r" values="35;50;35" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.1;0.02;0.1" dur="3s" repeatCount="indefinite"/></circle></svg>,
+                ];
+
+                return (
+                  <div key={item.title} className="reveal-up grid items-center gap-10 lg:grid-cols-[5fr_6fr]" style={{ animationDelay: `${i * 60}ms` }}>
+                    {/* Text — vertically centered, horizontally centered between line and box */}
+                    <div className="flex flex-col items-start justify-center px-4 py-8 lg:mx-auto lg:px-0">
+                      <h3 className="max-w-md text-2xl font-light tracking-[-0.02em] text-white md:text-[36px] md:leading-[1.15]">{item.title}</h3>
+                      <p className="mt-6 max-w-md text-[15px] leading-relaxed text-slate-400">{item.description}</p>
+                      <a href="#demo" className="mt-8 inline-flex w-fit items-center gap-2 rounded-md border border-slate-600 px-5 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white">
+                        Learn more <span className="text-xs">&#8599;</span>
+                      </a>
+                    </div>
+                    {/* Illustration box */}
+                    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020]">
+                      <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
+                      <div className="flex aspect-[16/10] items-center justify-center p-10">
+                        {illustrations[[2, 1, 3, 4, 5][i]]}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Forward-deployed engineers — featured card */}
+            <article className="reveal-up mt-16 rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-8 md:flex md:items-center md:gap-10 [animation-delay:500ms]">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+                <IconRocket className="h-7 w-7" />
+              </div>
+              <div className="mt-4 md:mt-0">
+                <h3 className="text-lg font-normal text-white">Forward-deployed AIOS engineers</h3>
+                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-400">
+                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
+                  directly with your team to deploy AIOS against real workflows, integrate with
+                  your existing systems, and drive measurable outcomes from day one.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* ── INDUSTRY PROBLEM ── */}
+        <section id="problem" className="relative py-24 md:py-32">
+          <SectionScrollLine />
+          {/* Top fade */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 rounded-full bg-rose-500/[0.06] blur-[80px]" />
+
+          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-rose-500/20 bg-rose-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-rose-400">
               THE INDUSTRY PROBLEM
             </p>
 
-            <h2 className="reveal-up mt-6 max-w-4xl text-3xl font-bold leading-snug text-slate-950 md:text-5xl md:leading-snug [animation-delay:60ms]">
-              <span className="font-mono text-rose-500">95%</span> of enterprise AI{" "}
+            <h2 className="reveal-up mt-6 max-w-4xl text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
+              <span className="font-mono font-medium text-rose-400">95%</span> of enterprise AI{" "}
               <span className="underline decoration-rose-400 decoration-[3px] underline-offset-4">
                 never reaches production.
               </span>
             </h2>
 
-            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
+            <p className="reveal-up mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:120ms]">
               The agentic AI industry has structural problems that point
               solutions can&rsquo;t fix. Here&rsquo;s the data.
             </p>
 
-            {/* ── Attrition Funnel ── */}
-            <div className="reveal-up mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:160ms]">
-              <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+            {/* Attrition Funnel */}
+            <div className="reveal-up mt-12 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:160ms]">
+              <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
                 CONCEPT &rarr; PRODUCTION
               </p>
-              <p className="mt-3 text-base font-semibold text-slate-900 md:text-lg">
+              <p className="mt-3 text-base font-medium text-slate-200 md:text-lg">
                 For every 100 enterprises that start an AI initiative,
                 only 5 ship to production.
               </p>
               <div className="mt-5 space-y-3">
                 {FUNNEL_STAGES.map((stage, i) => {
                   const barColor = ["bg-slate-700", "bg-slate-400", "bg-amber-500", "bg-rose-500"][i];
-                  const numColor = ["text-slate-700", "text-slate-500", "text-amber-600", "text-rose-500"][i];
+                  const numColor = ["text-slate-300", "text-slate-400", "text-amber-500", "text-rose-400"][i];
                   return (
                     <div key={stage.label}>
                       <div className="mb-1 flex items-baseline gap-2">
-                        <span className={`font-mono text-sm font-bold ${numColor}`}>
+                        <span className={`font-mono text-sm font-medium ${numColor}`}>
                           {stage.pct}%
                         </span>
-                        <span className="text-xs font-medium text-slate-500">
+                        <span className="text-xs text-slate-500">
                           {stage.label}
                         </span>
                       </div>
                       <div
-                        className={`bar-fill h-7 rounded-lg ${barColor}`}
+                        className={`bar-fill h-7 rounded-md ${barColor}`}
                         style={{ width: `${stage.pct}%`, minWidth: "16px", transitionDelay: `${400 + i * 200}ms` }}
                       />
                     </div>
@@ -604,18 +688,18 @@ export default function Home() {
               </p>
             </div>
 
-            {/* ── Two-column: Why They Fail + Cost Over Time ── */}
+            {/* Two-column: Why They Fail + Cost Over Time */}
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
               {/* Failure breakdown */}
-              <div className="reveal-up rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:240ms]">
-                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:240ms]">
+                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
                   WHY THEY FAIL
                 </p>
-                <p className="mt-3 text-base font-semibold text-slate-900">
+                <p className="mt-3 text-base font-medium text-slate-200">
                   Governance and integration account for 62% of all failures.
                 </p>
 
-                <div className="mt-5 flex h-6 gap-0.5 overflow-hidden rounded-lg">
+                <div className="mt-5 flex h-6 gap-0.5 overflow-hidden rounded-md">
                   {FAILURE_REASONS.map((r, i) => {
                     const color = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
                     return (
@@ -632,15 +716,12 @@ export default function Home() {
                   {FAILURE_REASONS.map((r, i) => {
                     const dot = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
                     return (
-                      <div
-                        key={r.label}
-                        className="flex items-center justify-between"
-                      >
+                      <div key={r.label} className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                           <div className={`h-2.5 w-2.5 rounded-full ${dot}`} />
-                          <span className="text-sm text-slate-600">{r.label}</span>
+                          <span className="text-sm text-slate-400">{r.label}</span>
                         </div>
-                        <span className="font-mono text-sm font-bold text-slate-700">
+                        <span className="font-mono text-sm font-medium text-slate-300">
                           {r.pct}%
                         </span>
                       </div>
@@ -653,11 +734,11 @@ export default function Home() {
               </div>
 
               {/* Cost over time */}
-              <div className="reveal-up rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8 [animation-delay:320ms]">
-                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-400">
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:320ms]">
+                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
                   TOTAL COST OF OWNERSHIP
                 </p>
-                <p className="mt-3 text-base font-semibold text-slate-900">
+                <p className="mt-3 text-base font-medium text-slate-200">
                   Custom workflows compound cost. Reusable skills flatten it.
                 </p>
 
@@ -667,90 +748,23 @@ export default function Home() {
                   role="img"
                   aria-label="Cost comparison: custom workflows and RPA rise over 5 years while AIOS stays flat"
                 >
-                  {/* Gridlines */}
                   {[35, 70, 105].map((y) => (
-                    <line
-                      key={y}
-                      x1="10"
-                      y1={y}
-                      x2="290"
-                      y2={y}
-                      stroke="#e2e8f0"
-                      strokeWidth="0.5"
-                    />
+                    <line key={y} x1="10" y1={y} x2="290" y2={y} stroke="#1e293b" strokeWidth="0.5" />
                   ))}
 
-                  {/* Area fills — fade in after lines draw */}
-                  <path
-                    className="chart-area"
-                    d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8 L290,140 L10,140 Z"
-                    fill="#f43f5e"
-                    fillOpacity="0.06"
-                  />
-                  <path
-                    className="chart-area"
-                    d="M10,110 C80,114 155,120 220,122 S280,124 290,125 L290,140 L10,140 Z"
-                    fill="#0891b2"
-                    fillOpacity="0.06"
-                    style={{ transitionDelay: "1.4s" }}
-                  />
+                  <path className="chart-area" d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8 L290,140 L10,140 Z" fill="#f43f5e" fillOpacity="0.06" />
+                  <path className="chart-area" d="M10,110 C80,114 155,120 220,122 S280,124 290,125 L290,140 L10,140 Z" fill="#0891b2" fillOpacity="0.06" style={{ transitionDelay: "1.4s" }} />
 
-                  {/* Custom workflows (rose — draws itself) */}
-                  <path
-                    className="chart-line"
-                    d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8"
-                    fill="none"
-                    stroke="#f43f5e"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    style={{ transitionDelay: "0.6s" }}
-                  />
-                  {/* RPA (amber — draws itself) */}
-                  <polyline
-                    className="chart-line"
-                    points="10,108 80,100 150,72 220,68 290,42"
-                    fill="none"
-                    stroke="#f59e0b"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ transitionDelay: "0.9s" }}
-                  />
-                  {/* AIOS (cyan — draws itself) */}
-                  <path
-                    className="chart-line"
-                    d="M10,110 C80,114 155,120 220,122 S280,124 290,125"
-                    fill="none"
-                    stroke="#0891b2"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    style={{ transitionDelay: "1.2s" }}
-                  />
+                  <path className="chart-line" d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8" fill="none" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" style={{ transitionDelay: "0.6s" }} />
+                  <polyline className="chart-line" points="10,108 80,100 150,72 220,68 290,42" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transitionDelay: "0.9s" }} />
+                  <path className="chart-line" d="M10,110 C80,114 155,120 220,122 S280,124 290,125" fill="none" stroke="#0891b2" strokeWidth="3" strokeLinecap="round" style={{ transitionDelay: "1.2s" }} />
 
-                  {/* Year labels */}
                   {["Yr 1", "Yr 2", "Yr 3", "Yr 4", "Yr 5"].map((yr, i) => (
-                    <text
-                      key={yr}
-                      x={10 + i * 70}
-                      y={155}
-                      style={{
-                        fontSize: "9px",
-                        fill: "#94a3b8",
-                        fontFamily: "var(--font-code), monospace",
-                      }}
-                    >
+                    <text key={yr} x={10 + i * 70} y={155} style={{ fontSize: "9px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
                       {yr}
                     </text>
                   ))}
-                  <text
-                    x="4"
-                    y="18"
-                    style={{
-                      fontSize: "8px",
-                      fill: "#94a3b8",
-                      fontFamily: "var(--font-code), monospace",
-                    }}
-                  >
+                  <text x="4" y="18" style={{ fontSize: "8px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
                     Cost &uarr;
                   </text>
                 </svg>
@@ -765,201 +779,142 @@ export default function Home() {
                     <span className="text-xs text-slate-500">RPA</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-0.5 w-5 rounded bg-cyan-600" />
-                    <span className="text-xs font-semibold text-cyan-700">
-                      <span className="font-bold">AIOS</span>
-                    </span>
+                    <div className="h-0.5 w-5 rounded bg-cyan-500" />
+                    <span className="text-xs font-medium text-cyan-400">AIOS</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* ── AIOS: The Antithesis ── */}
-            <div className="reveal-up mt-5 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-6 md:p-8 [animation-delay:400ms]">
-              <p className="text-lg font-bold text-slate-950">
-                <span className="font-bold">AIOS</span> is built for the 95%.
+            {/* AIOS: The Antithesis */}
+            <div className="reveal-up mt-5 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:400ms]">
+              <p className="text-lg font-medium text-white">
+                AIOS is built for the 95%.
               </p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                <div>
-                  <p className="text-sm font-semibold text-cyan-700">
-                    Production from day one
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                    Forward-deployed engineers ship real workflows, not demos.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-cyan-700">
-                    Governance built in
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                    Policy engine, circuit breakers, and evidence-grade audit.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-cyan-700">
-                    Flat cost curve
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                    Reusable skills eliminate maintenance debt.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-cyan-700">
-                    &gt;99% accuracy
-                  </p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                    Deterministic policy controls close the reliability gap.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="platform" className="relative border-y border-slate-200/80 bg-gradient-to-b from-slate-50 to-white py-16 md:py-24">
-          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-100/20 blur-[100px]" />
-          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-100/25 blur-[80px]" />
-
-          <div className="mx-auto max-w-7xl px-6">
-            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-slate-600">
-              THE PLATFORM
-            </p>
-            <h2 className="reveal-up mt-5 text-3xl font-bold text-slate-950 md:text-5xl [animation-delay:60ms]">
-              Why we are different.
-            </h2>
-            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:120ms]">
-              Others stitch together point solutions. We compile durable
-              operational capability from a core set of powerful super agents.
-            </p>
-
-            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {DIFFERENTIATORS.map((item, index) => (
-                <article
-                  key={item.title}
-                  className="scale-in rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50"
-                  style={{ animationDelay: `${120 + 80 * index}ms` }}
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600">
-                    {item.icon}
+                {[
+                  { title: "Production from day one", desc: "Forward-deployed engineers ship real workflows, not demos." },
+                  { title: "Governance built in", desc: "Policy engine, circuit breakers, and evidence-grade audit." },
+                  { title: "Flat cost curve", desc: "Reusable skills eliminate maintenance debt." },
+                  { title: ">99% accuracy", desc: "Deterministic policy controls close the reliability gap." },
+                ].map((item) => (
+                  <div key={item.title}>
+                    <p className="text-sm font-medium text-cyan-400">{item.title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-slate-500">{item.desc}</p>
                   </div>
-                  <h3 className="mt-4 text-base font-semibold text-slate-900">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
-                </article>
-              ))}
+                ))}
+              </div>
             </div>
-
-            {/* Forward-deployed engineers — featured card */}
-            <article className="reveal-up mt-8 rounded-2xl border border-cyan-200 bg-gradient-to-r from-cyan-50 to-white p-8 shadow-sm md:flex md:items-center md:gap-10 [animation-delay:500ms]">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
-                <IconRocket className="h-7 w-7" />
-              </div>
-              <div className="mt-4 md:mt-0">
-                <h3 className="text-lg font-bold text-slate-950">Forward-deployed <span className="font-bold">AIOS</span> engineers</h3>
-                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-600">
-                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
-                  directly with your team to deploy <span className="font-bold">AIOS</span> against real workflows, integrate with
-                  your existing systems, and drive measurable outcomes from day one.
-                </p>
-              </div>
-            </article>
           </div>
         </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── OBSERVATIONAL LEARNING ── */}
-        <section className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
-          <div className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-100/30 blur-[100px]" />
+        <section className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <SectionScrollLine />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-500/[0.05] blur-[100px]" />
 
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Text — left */}
-            <div className="reveal-up flex flex-col justify-center">
-              <p className="self-start rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-700">
-                OBSERVATIONAL LEARNING
-              </p>
-              <h2 className="mt-6 text-3xl font-bold leading-snug text-slate-950 md:text-5xl md:leading-snug">
-                Your best operators&rsquo; knowledge{" "}
-                <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
-                  walks out the door
-                </span>{" "}
-                every day.
-              </h2>
-              <p className="mt-3 text-xl font-semibold text-cyan-700">
-                We capture it before it does.
-              </p>
-              <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-600 md:text-lg">
-                <span className="font-bold">AIOS</span> learns from screen captures, click paths, and decision logic to
-                distill expert behavior into certified, reusable skills that any agent can
-                execute. No documentation sprints. Just operational truth, extracted and
-                deployed.
-              </p>
-            </div>
+          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+              {/* Text — left */}
+              <div className="reveal-up flex flex-col justify-center">
+                <p className="self-start rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+                  OBSERVATIONAL LEARNING
+                </p>
+                <h2 className="mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white">
+                  Your best operators&rsquo; knowledge{" "}
+                  <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
+                    walks out the door
+                  </span>{" "}
+                  every day.
+                </h2>
+                <p className="mt-3 text-xl font-normal text-cyan-400">
+                  We capture it before it does.
+                </p>
+                <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-400 md:text-lg">
+                  AIOS learns from screen captures, click paths, and decision logic to
+                  distill expert behavior into certified, reusable skills that any agent can
+                  execute. No documentation sprints. Just operational truth, extracted and
+                  deployed.
+                </p>
+              </div>
 
-            {/* Visual flow — right */}
-            <div className="flex flex-col items-center gap-4">
-              {[
-                {
-                  step: "01",
-                  label: "Observational Learning",
-                  desc: "Observe real operator workflows across any set of applications; including legacy systems, mainframes, and swivel chair operations",
-                },
-                {
-                  step: "02",
-                  label: "Knowledge Extraction",
-                  desc: "AI distills tacit patterns, decision trees, and edge cases",
-                },
-                {
-                  step: "03",
-                  label: "Certified Skill",
-                  desc: "Validated, versioned skill ready for agent execution",
-                },
-              ].map((item, i) => (
-                <div key={item.step} className="cascade flex w-full max-w-sm flex-col items-center" style={{ animationDelay: `${i * 300}ms` }}>
-                  <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-50 font-mono text-sm font-bold text-cyan-600">
-                        {item.step}
-                      </span>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-                        <p className="text-xs leading-relaxed text-slate-500">{item.desc}</p>
+              {/* Visual flow — right */}
+              <div className="flex flex-col items-center gap-4">
+                {[
+                  {
+                    step: "01",
+                    label: "Observational Learning",
+                    desc: "Observe real operator workflows across any set of applications; including legacy systems, mainframes, and swivel chair operations",
+                  },
+                  {
+                    step: "02",
+                    label: "Knowledge Extraction",
+                    desc: "AI distills tacit patterns, decision trees, and edge cases",
+                  },
+                  {
+                    step: "03",
+                    label: "Certified Skill",
+                    desc: "Validated, versioned skill ready for agent execution",
+                  },
+                ].map((item, i) => (
+                  <div key={item.step} className="cascade flex w-full max-w-sm flex-col items-center" style={{ animationDelay: `${i * 300}ms` }}>
+                    <div className="w-full rounded-lg border border-white/[0.06] bg-white/[0.03] p-5 transition hover:bg-white/[0.05]">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-500/10 font-mono text-sm font-medium text-cyan-400">
+                          {item.step}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium text-slate-200">{item.label}</p>
+                          <p className="text-xs leading-relaxed text-slate-500">{item.desc}</p>
+                        </div>
                       </div>
                     </div>
+                    {i < 2 && (
+                      <svg className="my-1 h-6 w-6 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 5v14M19 12l-7 7-7-7" />
+                      </svg>
+                    )}
                   </div>
-                  {i < 2 && (
-                    <svg className="my-1 h-6 w-6 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 5v14M19 12l-7 7-7-7" />
-                    </svg>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ── COMPARISON TABLE ── */}
-        <section className="relative border-y border-slate-200/80 bg-white py-16 md:py-24">
-          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-cyan-100/30 blur-[80px]" />
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-          <div className="mx-auto max-w-7xl px-6">
-            <h2 className="reveal-up text-3xl font-bold text-slate-950 md:text-5xl">
+        {/* ── COMPARISON TABLE ── */}
+        <section className="relative py-24 md:py-32">
+          <SectionScrollLine />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-cyan-500/[0.04] blur-[80px]" />
+
+          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <h2 className="reveal-up text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
               vs. the alternatives.
             </h2>
-            <p className="reveal-up mt-4 max-w-2xl text-lg text-slate-600 [animation-delay:80ms]">
-              See where <span className="font-bold">AIOS</span> fits against the options enterprises are
+            <p className="reveal-up mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:80ms]">
+              See where AIOS fits against the options enterprises are
               actually evaluating.
             </p>
 
             <div className="reveal-up mt-12 overflow-x-auto [animation-delay:150ms]">
               <table className="w-full min-w-[700px] border-collapse text-sm">
                 <thead>
-                  <tr className="border-b-2 border-slate-200">
-                    <th className="py-3 pr-4 text-left font-semibold text-slate-500">Capability</th>
-                    <th className="px-4 py-3 text-center font-semibold text-cyan-700"><span className="font-bold">AIOS</span></th>
-                    <th className="px-4 py-3 text-center font-semibold text-slate-500">Custom Agentic Frameworks</th>
-                    <th className="px-4 py-3 text-center font-semibold text-slate-500">RPA Vendors</th>
-                    <th className="px-4 py-3 text-center font-semibold text-slate-500">Cloud Platforms</th>
-                    <th className="pl-4 py-3 text-center font-semibold text-slate-500">Open-Source Frameworks</th>
+                  <tr className="border-b border-white/[0.08]">
+                    <th className="py-3 pr-4 text-left font-medium text-slate-500">Capability</th>
+                    <th className="px-4 py-3 text-center font-medium text-cyan-400">AIOS</th>
+                    <th className="px-4 py-3 text-center font-medium text-slate-500">Custom Agentic Frameworks</th>
+                    <th className="px-4 py-3 text-center font-medium text-slate-500">RPA Vendors</th>
+                    <th className="px-4 py-3 text-center font-medium text-slate-500">Cloud Platforms</th>
+                    <th className="pl-4 py-3 text-center font-medium text-slate-500">Open-Source Frameworks</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -971,8 +926,8 @@ export default function Home() {
                     ["Evidence-grade audit", "Built-in", "No", "Partial", "Partial", "No"],
                     ["Zero maintenance debt", "Yes", "No", "No", "No", "No"],
                   ] as const).map((row, i) => (
-                    <tr key={i} className="row-fade border-b border-slate-100" style={{ animationDelay: `${150 + i * 100}ms` }}>
-                      <td className="py-3.5 pr-4 font-medium text-slate-800">{row[0]}</td>
+                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${150 + i * 100}ms` }}>
+                      <td className="py-3.5 pr-4 font-medium text-slate-300">{row[0]}</td>
                       {row.slice(1).map((cell, j) => {
                         const isPositive = cell === "Yes" || cell === "Full" || cell === "Built-in";
                         const isNegative = cell === "No" || cell === "None";
@@ -982,11 +937,11 @@ export default function Home() {
                             className={`px-4 py-3.5 text-center font-medium ${
                               j === 0
                                 ? isPositive
-                                  ? "text-cyan-700"
-                                  : "text-slate-400"
+                                  ? "text-cyan-400"
+                                  : "text-slate-600"
                                 : isNegative
-                                  ? "text-slate-300"
-                                  : "text-amber-600"
+                                  ? "text-slate-700"
+                                  : "text-amber-500"
                             }`}
                           >
                             {j === 0 && isPositive ? `\u2713 ${cell}` : cell}
@@ -1001,14 +956,19 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
         {/* ── DEMO CTA ── */}
-        <section id="demo" className="mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24">
-          <div className="relative overflow-hidden rounded-3xl bg-slate-950 p-10 md:p-16">
-            {/* Decorative orbs inside dark section */}
+        <section id="demo" className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          <div className="mx-auto max-w-7xl px-6 sm:px-10">
+          <div className="relative overflow-hidden rounded-lg border border-white/[0.06] bg-[#0d1322] p-10 md:p-16">
+            {/* Decorative orbs */}
             <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-[60px]" />
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-indigo-500/10 blur-[60px]" />
 
-            <h2 className="relative text-center text-3xl font-bold text-white md:text-5xl">
+            <h2 className="relative text-center text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
               See it in your environment.
             </h2>
             <p className="relative mt-4 text-center text-base text-slate-400">
@@ -1024,7 +984,7 @@ export default function Home() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
-                  className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                   placeholder="First name"
                 />
                 <input
@@ -1034,7 +994,7 @@ export default function Home() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
-                  className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                   placeholder="Last name"
                 />
               </div>
@@ -1045,7 +1005,7 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                 placeholder="Work email"
               />
               <input
@@ -1054,7 +1014,7 @@ export default function Home() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                 placeholder="Phone (optional)"
               />
               <input
@@ -1064,32 +1024,52 @@ export default function Home() {
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 required
-                className="rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white placeholder-slate-500 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                 placeholder="Company"
               />
-              <button
-                type="submit"
-                disabled={formStatus === "loading"}
-                onClick={() => handleCtaClick("demo_form")}
-                className="mt-2 rounded-full bg-cyan-400 px-8 py-3.5 text-sm font-semibold text-slate-900 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {formStatus === "loading" ? "Submitting..." : "Request Demo"}
-              </button>
+              <div className="mt-2 flex gap-3">
+                <button
+                  type="submit"
+                  disabled={formStatus === "loading"}
+                  onClick={() => handleCtaClick("demo_form")}
+                  className="flex-1 rounded-md bg-cyan-400 px-8 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {formStatus === "loading" ? "Submitting..." : "Request Demo"}
+                </button>
+                <a
+                  href="#platform"
+                  className="rounded-md border border-slate-600 px-6 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
+                >
+                  Learn More
+                </a>
+              </div>
               {formMessage ? (
-                <p className={`text-center text-sm ${formStatus === "error" ? "text-rose-300" : "text-emerald-300"}`}>
+                <p className={`text-center text-sm ${formStatus === "error" ? "text-rose-400" : "text-emerald-400"}`}>
                   {formMessage}
                 </p>
               ) : null}
             </form>
           </div>
+          </div>
         </section>
       </main>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-slate-200 bg-white py-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 text-xs text-slate-500 md:flex-row">
-          <p>&copy; {year} cvlSoft</p>
-          <p>Enterprise autonomy without automation debt.</p>
+      <footer className="border-t border-white/[0.04] py-8">
+        <div className="flex flex-col items-center justify-between gap-3 px-6 sm:px-10 md:flex-row lg:px-[60px]">
+          <div className="flex items-center gap-3">
+            <svg viewBox="0 0 48 48" fill="none" className="h-5 w-5" aria-hidden="true">
+              <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+              <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round" />
+              <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+            </svg>
+            <span className="font-mono text-xs tracking-[0.12em] text-slate-600">
+              &copy; {year} cvlSoft
+            </span>
+          </div>
+          <p className="font-mono text-[10px] tracking-wider text-slate-700">
+            Enterprise autonomy without automation debt.
+          </p>
         </div>
       </footer>
     </div>

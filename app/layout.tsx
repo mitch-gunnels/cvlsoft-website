@@ -5,6 +5,7 @@ import "./globals.css";
 const headingFont = Space_Grotesk({
   variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const bodyFont = Manrope({
