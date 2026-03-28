@@ -552,7 +552,7 @@ export default function Home() {
             <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
               Why we are different.
             </h2>
-            <p className="reveal-up mt-5 mb-16 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+            <p className="reveal-up mt-5 mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               The industry builds an agent for every task. AIOS builds
               cognition — adaptive intelligence that reasons about any workflow,
               selects any tool, and scales without maintenance debt.
@@ -560,7 +560,7 @@ export default function Home() {
             </p>
 
             {/* Feature rows — each with its own illustration box */}
-            <div className="mt-32 space-y-32">
+            <div className="mt-32 space-y-64">
               {DIFFERENTIATORS.map((item, i) => {
                 const illustrations = [
                   /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
@@ -610,6 +610,45 @@ export default function Home() {
                 </p>
               </div>
             </article>
+
+            {/* ── Outcomes-based pricing ── */}
+            <div className="reveal-up mt-32 [animation-delay:600ms]">
+              <p className="inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+                PRICING
+              </p>
+              <h2 className="mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
+                We make money when you make money.
+              </h2>
+              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl">
+                No per-seat licenses. No per-connector fees. AIOS uses outcome-based pricing:
+                you pay a low platform fee to keep the lights on, plus a per-task fee for every
+                successful execution. Failed tasks are free. Always.
+              </p>
+
+              <div className="mt-12 grid gap-5 sm:grid-cols-3">
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
+                  <p className="font-mono text-sm font-semibold text-emerald-400">Platform Fee</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                    A deliberately low monthly fee covering infrastructure, connectors,
+                    security stack, and unlimited users. Not a profit center.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
+                  <p className="font-mono text-sm font-semibold text-emerald-400">Per-Task Outcomes</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                    Each workflow has a per-task price anchored to 20-40% of what you&rsquo;d pay
+                    a human. You save 60-80% on every successful task. Token costs baked in.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
+                  <p className="font-mono text-sm font-semibold text-emerald-400">Failed = Free</p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                    If a task fails, escalates, or gets killed, you pay nothing.
+                    AIOS only earns when it delivers. Our incentives are your incentives.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
