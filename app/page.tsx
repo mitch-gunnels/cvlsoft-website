@@ -84,15 +84,18 @@ function IconLink({ className }: { className?: string }) {
 
 /* ── Section scroll indicator (sticky dot + line) ── */
 
-function SectionScrollLine() {
+function SectionScrollLine({ color = "cyan" }: { color?: "cyan" | "emerald" | "rose" } = {}) {
+  const styles = {
+    cyan: "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]",
+    emerald: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.6)]",
+    rose: "bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.6)]",
+  };
   return (
     <div className="pointer-events-none absolute left-[175px] top-0 bottom-0 z-20 hidden lg:block">
-      {/* Vertical line spanning full section */}
       <div className="absolute left-[4px] top-0 bottom-0 w-px bg-white/[0.10]" />
-      {/* Dot container: starts 160px below section top, stretches to bottom so sticky has room */}
       <div className="absolute left-0 top-[160px] bottom-0 overflow-visible">
         <div className="sticky top-[150px] h-0">
-          <div className="h-[10px] w-[10px] rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]" />
+          <div className={`h-[10px] w-[10px] rounded-full ${styles[color]}`} />
         </div>
       </div>
     </div>
@@ -467,8 +470,11 @@ export default function Home() {
             <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Platform
             </a>
+            <a href="#pricing" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Pricing
+            </a>
             <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              The Problem
+              Problem
             </a>
             <a
               href="#demo"
@@ -611,43 +617,91 @@ export default function Home() {
               </div>
             </article>
 
-            {/* ── Outcomes-based pricing ── */}
-            <div className="reveal-up mt-32 [animation-delay:600ms]">
-              <p className="inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
-                PRICING
-              </p>
-              <h2 className="mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-                We make money when you make money.
-              </h2>
-              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl">
-                No per-seat licenses. No per-connector fees. AIOS uses outcome-based pricing:
-                you pay a low platform fee to keep the lights on, plus a per-task fee for every
-                successful execution. Failed tasks are free. Always.
-              </p>
+          </div>
+        </section>
 
-              <div className="mt-12 grid gap-5 sm:grid-cols-3">
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
-                  <p className="font-mono text-sm font-semibold text-emerald-400">Platform Fee</p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                    A deliberately low monthly fee covering infrastructure, connectors,
-                    security stack, and unlimited users. Not a profit center.
-                  </p>
-                </div>
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
-                  <p className="font-mono text-sm font-semibold text-emerald-400">Per-Task Outcomes</p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                    Each workflow has a per-task price anchored to 20-40% of what you&rsquo;d pay
-                    a human. You save 60-80% on every successful task. Token costs baked in.
-                  </p>
-                </div>
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.03] p-6">
-                  <p className="font-mono text-sm font-semibold text-emerald-400">Failed = Free</p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                    If a task fails, escalates, or gets killed, you pay nothing.
-                    AIOS only earns when it delivers. Our incentives are your incentives.
-                  </p>
-                </div>
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* ── PRICING ── */}
+        <section id="pricing" className="relative py-24 md:py-32">
+          <SectionScrollLine color="emerald" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-emerald-500/[0.04] blur-[80px]" />
+
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+              PRICING
+            </p>
+            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              We make money when you make money.
+            </h2>
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              You pay for successful outcomes. Failed tasks are free. Always.
+              No per-seat licenses. No per-connector fees. Just the floor cost of running
+              your tenant.
+            </p>
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:180ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Floor Cost Only</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  Your platform fee covers the bare cost of running your tenant.
+                  Infrastructure, connectors, tokens, security, unlimited users. No margin added.
+                </p>
               </div>
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:240ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Per-Task Outcomes</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  Each workflow has a per-task price anchored to 20-40% of what you&rsquo;d pay
+                  a human. You save 60-80% on every successful task. Token costs baked in.
+                </p>
+              </div>
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:300ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Failed = Free</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  If a task fails, escalates, or gets killed, you pay nothing.
+                  AIOS only earns when it delivers. Our incentives are your incentives.
+                </p>
+              </div>
+            </div>
+
+            {/* Task tier table */}
+            <div className="reveal-up mt-12 overflow-x-auto [animation-delay:360ms]">
+              <p className="mb-4 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+                TASK PRICING BY COMPLEXITY
+              </p>
+              <table className="w-full min-w-[600px] border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-white/[0.08]">
+                    <th className="py-3 pr-4 text-left font-medium text-slate-500">Tier</th>
+                    <th className="px-4 py-3 text-left font-medium text-slate-500">What it replaces</th>
+                    <th className="px-4 py-3 text-right font-medium text-emerald-400">Per task*</th>
+                    <th className="pl-4 py-3 text-right font-medium text-slate-500">You save**</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {([
+                    ["Micro", "Quick lookup, classification, routing", "$1 – $2", "60–80%"],
+                    ["Standard", "Data processing, ticket handling, extraction", "$3 – $8", "60–80%"],
+                    ["Complex", "Report generation, compliance check, multi-step analysis", "$15 – $40", "60–80%"],
+                    ["Expert", "Investigation, multi-system orchestration, audit prep", "$75 – $150", "60–80%"],
+                    ["Strategic", "End-to-end process, multi-day human equivalent", "$200 – $500", "60–80%"],
+                  ] as const).map((row, i) => (
+                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${360 + i * 80}ms` }}>
+                      <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row[0]}</td>
+                      <td className="px-4 py-3.5 text-slate-400">{row[1]}</td>
+                      <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row[2]}</td>
+                      <td className="pl-4 py-3.5 text-right font-mono text-slate-500">{row[3]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-4 text-xs leading-relaxed text-slate-500">
+                *Per-task fees are anchored to 20–40% of what you&rsquo;d pay a human for the same work. Pricing is agreed upon during onboarding.<br />
+                **Savings estimated versus fully loaded human cost for equivalent work.
+              </p>
             </div>
           </div>
         </section>
@@ -657,7 +711,7 @@ export default function Home() {
 
         {/* ── INDUSTRY PROBLEM ── */}
         <section id="problem" className="relative py-24 md:py-32">
-          <SectionScrollLine />
+          <SectionScrollLine color="rose" />
           {/* Top fade */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
@@ -926,50 +980,58 @@ export default function Home() {
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
             <h2 className="reveal-up text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              vs. the alternatives.
+              AIOS vs. the alternatives.
             </h2>
-            <p className="reveal-up mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:80ms]">
-              See where AIOS fits against the options enterprises are
-              actually evaluating.
+            <p className="reveal-up mt-4 max-w-3xl text-lg leading-relaxed text-slate-400 [animation-delay:80ms]">
+              Every other platform builds a separate agent for every task. AIOS builds cognition.
+              Here&rsquo;s how that changes everything.
             </p>
 
             <div className="reveal-up mt-12 overflow-x-auto [animation-delay:150ms]">
-              <table className="w-full min-w-[700px] border-collapse text-sm">
+              <table className="w-full min-w-[900px] border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-white/[0.08]">
                     <th className="py-3 pr-4 text-left font-medium text-slate-500">Capability</th>
-                    <th className="px-4 py-3 text-center font-medium text-cyan-400">AIOS</th>
-                    <th className="px-4 py-3 text-center font-medium text-slate-500">Custom Agentic Frameworks</th>
-                    <th className="px-4 py-3 text-center font-medium text-slate-500">RPA Vendors</th>
-                    <th className="px-4 py-3 text-center font-medium text-slate-500">Cloud Platforms</th>
-                    <th className="pl-4 py-3 text-center font-medium text-slate-500">Open-Source Frameworks</th>
+                    <th className="px-3 py-3 text-center font-medium text-cyan-400">AIOS</th>
+                    <th className="px-3 py-3 text-center font-medium text-slate-500">AgentForce*</th>
+                    <th className="px-3 py-3 text-center font-medium text-slate-500">LangGraph / CrewAI*</th>
+                    <th className="px-3 py-3 text-center font-medium text-slate-500">RPA (UiPath, AA)*</th>
+                    <th className="pl-3 py-3 text-center font-medium text-slate-500">Cloud AI (AWS, Azure)*</th>
                   </tr>
                 </thead>
                 <tbody>
                   {([
-                    ["Tribal knowledge capture", "Yes", "No", "No", "No", "No"],
-                    ["Model agnostic", "Yes", "Varies", "No", "No", "Yes"],
-                    ["Legacy connectors (mainframe, terminal)", "Full", "Manual", "Partial", "API only", "None"],
-                    ["Deterministic policy engine", "Built-in", "DIY", "Limited", "Partial", "DIY"],
-                    ["Evidence-grade audit", "Built-in", "No", "Partial", "Partial", "No"],
-                    ["Zero maintenance debt", "Yes", "No", "No", "No", "No"],
+                    ["Agent architecture", "Single cognitive core", "Agent per task", "Agent per task", "Bot per process", "Agent templates"],
+                    ["Adding new capabilities", "Add connector, done", "Build new agent", "Write new code", "Build new bot", "New template"],
+                    ["Tacit knowledge capture", "AI interviews + screen capture", "No", "No", "No", "No"],
+                    ["Self-improving memory", "Built-in (ACE)", "No", "No", "No", "No"],
+                    ["LLM flexibility", "Any provider — switch by config", "BYOLLM available, ecosystem-centric", "Abstraction layer, eng effort to switch", "N/A", "Multi-model (within ecosystem)"],
+                    ["Security posture", "Deterministic policy engine", "Trust Layer (probabilistic)", "DIY", "Role-based", "IAM / provider-dependent"],
+                    ["Pre-execution review", "Full plan visible before action", "No", "No", "No", "No"],
+                    ["Kill switches", "Global + tenant + execution", "Single-level", "None", "Single-level", "Single-level"],
+                    ["Compliance-grade audit trail", "Built-in, immutable", "Partial", "DIY (LangSmith separate)", "Process-level logs", "Provider-dependent"],
+                    ["Human-in-the-loop gates", "Pauses execution until approved", "Notifications", "DIY", "Action Center notifications", "Notifications"],
+                    ["Multi-tenancy", "Architected from day one", "Org-level", "DIY (not architectural)", "Varies", "Provider-dependent"],
+                    ["Pricing model", "Outcome-based — failed = free", "$2/conversation or $0.10/action", "Open source + eng team cost", "Per-bot + platform license", "Per-token consumption"],
+                    ["Time to production", "90 days with FDEs", "Weeks to months", "Months of eng build", "Weeks to months", "Weeks to months"],
+                    ["Maintenance at scale", "Sublinear", "Linear (agent per task)", "Linear (code per agent)", "Linear (bot per process)", "Linear"],
                   ] as const).map((row, i) => (
-                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${150 + i * 100}ms` }}>
+                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${150 + i * 60}ms` }}>
                       <td className="py-3.5 pr-4 font-medium text-slate-300">{row[0]}</td>
                       {row.slice(1).map((cell, j) => {
-                        const isPositive = cell === "Yes" || cell === "Full" || cell === "Built-in";
-                        const isNegative = cell === "No" || cell === "None";
+                        const isPositive = ["Single cognitive core", "Add connector, done", "AI interviews + screen capture", "Built-in (ACE)", "Any provider — switch by config", "Deterministic policy engine", "Full plan visible before action", "Global + tenant + execution", "Built-in, immutable", "Pauses execution until approved", "Architected from day one", "Outcome-based — failed = free", "90 days with FDEs", "Sublinear"].includes(cell);
+                        const isNegative = cell === "No" || cell === "None" || cell === "N/A";
                         return (
                           <td
                             key={j}
-                            className={`px-4 py-3.5 text-center font-medium ${
+                            className={`px-3 py-3.5 text-center text-[13px] ${
                               j === 0
                                 ? isPositive
-                                  ? "text-cyan-400"
+                                  ? "font-semibold text-cyan-400"
                                   : "text-slate-600"
                                 : isNegative
                                   ? "text-slate-700"
-                                  : "text-amber-500"
+                                  : "text-amber-500/80"
                             }`}
                           >
                             {j === 0 && isPositive ? `\u2713 ${cell}` : cell}
@@ -980,6 +1042,17 @@ export default function Home() {
                   ))}
                 </tbody>
               </table>
+              <p className="mt-6 text-xs leading-relaxed text-slate-600">
+                *Competitor comparisons based on publicly available documentation, pricing pages, and product announcements
+                as of March 2026. Sources include{" "}
+                <a href="https://www.salesforce.com/agentforce/pricing/" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">salesforce.com/agentforce</a>,{" "}
+                <a href="https://developer.salesforce.com/docs/ai/agentforce/guide/supported-models.html" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">Salesforce BYOLLM docs</a>,{" "}
+                <a href="https://www.uipath.com/pricing" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">uipath.com/pricing</a>,{" "}
+                <a href="https://aws.amazon.com/bedrock/model-choice/" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">AWS Bedrock model choice</a>,{" "}
+                <a href="https://langchain-ai.github.io/langgraph/" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">LangGraph docs</a>, and{" "}
+                <a href="https://docs.crewai.com" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">CrewAI docs</a>.
+                Feature availability may vary by plan or edition. AIOS capabilities reflect current production release.
+              </p>
             </div>
           </div>
         </section>
