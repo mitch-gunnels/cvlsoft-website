@@ -8,6 +8,7 @@ const LearningLoopPlayer = dynamic(() => import("@/app/components/remotion/Learn
 const CognitiveCorePlayer = dynamic(() => import("@/app/components/remotion/CognitiveCorePlayer"), { ssr: false });
 const TacitKnowledgePlayer = dynamic(() => import("@/app/components/remotion/TacitKnowledgePlayer"), { ssr: false });
 const SecurityPosturePlayer = dynamic(() => import("@/app/components/remotion/SecurityPosturePlayer"), { ssr: false });
+const ConnectorFabricPlayer = dynamic(() => import("@/app/components/remotion/ConnectorFabricPlayer"), { ssr: false });
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
@@ -98,10 +99,9 @@ function SectionScrollLine() {
   );
 }
 
-/* ── Hero generative wave art ── */
+/* ── Hero spiral — inline SVG with animated stroke pulses ── */
 
-function HeroWave() {
-  /* Paths from LangGraph's actual SVG, recolored to cyan with staggered pulse animations */
+function HeroSpiral() {
   const rightPaths = [
     "M515 315.071C823.527 315.071 853.487 619.089 1056.54 619.089C1230.97 619.089 1321.64 315.07 1572.07 315.07",
     "M515 315.071C823.527 315.071 853.487 610.748 1056.54 610.748C1230.97 610.748 1321.64 315.071 1572.07 315.071",
@@ -150,85 +150,60 @@ function HeroWave() {
     "M0.427753 314.859C159.246 314.859 174.668 174.325 279.193 174.325C368.982 174.325 415.656 314.859 544.571 314.859",
   ];
 
-  /* Pick a few paths for traveling dots */
-  const dotPathIndices = [2, 6, 10, 14, 18];
+  /* Select a few paths for traveling dot pulses */
+  const pulsePaths = [1, 5, 10, 15, 19];
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      {/* Focal glow at convergence point */}
-      <div className="absolute left-[30%] top-1/2 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.08] blur-[80px]" />
-      <div className="absolute right-[10%] top-1/2 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-cyan-500/[0.05] blur-[100px]" />
+    <svg viewBox="0 0 1573 630" fill="none" className="h-full w-full" aria-hidden="true">
+      <defs>
+        <clipPath id="clip0_6057_8963">
+          <rect width="629.356" height="1179" fill="white" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 1573 629.356)" />
+        </clipPath>
+        <clipPath id="clip1_6057_8963">
+          <rect width="290.924" height="545" fill="white" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 545 460.14)" />
+        </clipPath>
+      </defs>
 
-      <svg
-        viewBox="0 0 1573 630"
-        fill="none"
-        preserveAspectRatio="xMidYMid slice"
-        className="absolute right-[20%] top-1/2 h-[96%] w-[54%] -translate-y-1/2"
-        aria-hidden="true"
-      >
-        {/* Left wave group (smaller, tighter curves) */}
-        <g>
-          {leftPaths.map((d, i) => {
-            const distFromCenter = Math.abs(i - 10) / 10;
-            const baseOpacity = 0.08 + (1 - distFromCenter) * 0.15;
-            return (
-              <path key={`l${i}`} d={d} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" fill="none" strokeOpacity={baseOpacity}>
-                <animate
-                  attributeName="stroke-opacity"
-                  values={`${baseOpacity};${baseOpacity * 2.5};${baseOpacity}`}
-                  dur={`${5 + (i % 7) * 0.6}s`}
-                  begin={`${i * 0.15}s`}
-                  repeatCount="indefinite"
-                />
-              </path>
-            );
-          })}
-        </g>
-
-        {/* Right wave group (larger, wider curves) */}
-        <g>
-          {rightPaths.map((d, i) => {
-            const distFromCenter = Math.abs(i - 10) / 10;
-            const baseOpacity = 0.06 + (1 - distFromCenter) * 0.18;
-            return (
-              <path key={`r${i}`} d={d} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" fill="none" strokeOpacity={baseOpacity}>
-                <animate
-                  attributeName="stroke-opacity"
-                  values={`${baseOpacity};${baseOpacity * 2.2};${baseOpacity}`}
-                  dur={`${4 + (i % 5) * 0.8}s`}
-                  begin={`${i * 0.12}s`}
-                  repeatCount="indefinite"
-                />
-              </path>
-            );
-          })}
-        </g>
-
-        {/* Traveling dots along select right-side paths */}
-        {dotPathIndices.map((idx) => (
-          <g key={`dot-r-${idx}`}>
-            <path id={`rpath-${idx}`} d={rightPaths[idx]} fill="none" />
-            <circle r="3" fill="#22d3ee" opacity="0.7">
-              <animateMotion dur={`${7 + (idx % 3) * 2}s`} begin={`${idx * 0.4}s`} repeatCount="indefinite">
-                <mpath href={`#rpath-${idx}`} />
-              </animateMotion>
-            </circle>
-          </g>
+      {/* Right group — base strokes */}
+      <g clipPath="url(#clip0_6057_8963)">
+        {rightPaths.map((d, i) => (
+          <path key={`r${i}`} d={d} stroke="#22d3ee" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" fill="none" />
         ))}
+      </g>
 
-        {/* Traveling dots along select left-side paths */}
-        {dotPathIndices.map((idx) => (
-          <g key={`dot-l-${idx}`}>
-            <path id={`lpath-${idx}`} d={leftPaths[idx]} fill="none" />
-            <circle r="2.5" fill="#67e8f9" opacity="0.5">
-              <animateMotion dur={`${5 + (idx % 3) * 1.5}s`} begin={`${idx * 0.3 + 1}s`} repeatCount="indefinite">
-                <mpath href={`#lpath-${idx}`} />
-              </animateMotion>
-            </circle>
-          </g>
+      {/* Left group — base strokes */}
+      <g clipPath="url(#clip1_6057_8963)">
+        {leftPaths.map((d, i) => (
+          <path key={`l${i}`} d={d} stroke="#22d3ee" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" fill="none" />
         ))}
-      </svg>
-    </div>
+      </g>
+
+      {/* Animated pulse dots traveling along select right paths */}
+      {pulsePaths.map((idx) => (
+        <g key={`pulse-r-${idx}`}>
+          <path id={`spiralR${idx}`} d={rightPaths[idx]} fill="none" />
+          <circle r="4" fill="#22d3ee" opacity="0">
+            <animateMotion dur={`${4 + (idx % 4) * 1.5}s`} begin={`${idx * 0.7}s`} repeatCount="indefinite">
+              <mpath href={`#spiralR${idx}`} />
+            </animateMotion>
+            <animate attributeName="opacity" values="0;0.6;0.6;0" dur={`${4 + (idx % 4) * 1.5}s`} begin={`${idx * 0.7}s`} repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
+
+      {/* Animated pulse dots traveling along select left paths */}
+      {pulsePaths.map((idx) => (
+        <g key={`pulse-l-${idx}`}>
+          <path id={`spiralL${idx}`} d={leftPaths[idx]} fill="none" />
+          <circle r="3" fill="#22d3ee" opacity="0">
+            <animateMotion dur={`${3 + (idx % 3) * 1.2}s`} begin={`${idx * 0.5 + 2}s`} repeatCount="indefinite">
+              <mpath href={`#spiralL${idx}`} />
+            </animateMotion>
+            <animate attributeName="opacity" values="0;0.5;0.5;0" dur={`${3 + (idx % 3) * 1.2}s`} begin={`${idx * 0.5 + 2}s`} repeatCount="indefinite" />
+          </circle>
+        </g>
+      ))}
+    </svg>
   );
 }
 
@@ -489,11 +464,11 @@ export default function Home() {
             <span className="text-sm font-medium tracking-tight text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
           </a>
           <div className="flex items-center gap-8">
-            <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              The Problem
-            </a>
             <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Platform
+            </a>
+            <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              The Problem
             </a>
             <a
               href="#demo"
@@ -510,21 +485,31 @@ export default function Home() {
         {/* ── HERO ── */}
         <section className="relative min-h-[70vh] overflow-hidden">
 
+          {/* Spiral background */}
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            {/* Subtle glow behind spiral */}
+            <div className="absolute right-[5%] top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-cyan-500/[0.06] blur-[120px]" />
+            {/* Spiral with left fade */}
+            <div className="absolute top-1/2 h-[153.3%] w-[93.7%]" style={{ right: "0", top: "50%", transform: "translate(375px, calc(-50% - 20px))", maskImage: "linear-gradient(to right, transparent 0%, black 35%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 35%)" }}>
+              <HeroSpiral />
+            </div>
+          </div>
+
           {/* Content */}
           <div className="relative z-10 px-6 pb-24 pt-16 sm:px-10 lg:pb-32 lg:pl-[120px] lg:pr-[112px] lg:pt-24">
             <div className="max-w-2xl">
               <h1 className="reveal-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                The operating system{" "}
-                <br className="hidden sm:block" />
-                for{" "}
+                Your most expensive people do the same work{" "}
                 <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">
-                  agentic AI.
+                  every day.
                 </span>
               </h1>
 
-              <p className="reveal-up mt-8 max-w-lg text-base leading-relaxed text-slate-400 md:text-lg [animation-delay:100ms]" style={{ fontFamily: "var(--font-code), monospace" }}>
-                Transform your operational knowledge — SOPs, runbooks, tribal expertise — into
-                safe, auditable autonomous execution. No brittle workflows. No automation debt.
+              <p className="reveal-up mt-6 max-w-[540px] text-xl font-normal text-slate-400 [animation-delay:100ms]">
+                That&rsquo;s not strategy — it&rsquo;s waste! AIOS learns how your experts
+                actually work — then executes it autonomously, at scale.
+                <br /><br />
+                Outcome-based pricing. No savings, no charge — ever.
               </p>
 
               <div className="reveal-up mt-10 flex flex-wrap gap-3 [animation-delay:200ms]">
@@ -567,14 +552,15 @@ export default function Home() {
             <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
               Why we are different.
             </h2>
-            <p className="reveal-up mt-5 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:120ms]">
+            <p className="reveal-up mt-5 mb-16 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               The industry builds an agent for every task. AIOS builds
               cognition — adaptive intelligence that reasons about any workflow,
               selects any tool, and scales without maintenance debt.
+              Stop building AI agents. Start building intelligence.
             </p>
 
             {/* Feature rows — each with its own illustration box */}
-            <div className="mt-20 space-y-32">
+            <div className="mt-32 space-y-32">
               {DIFFERENTIATORS.map((item, i) => {
                 const illustrations = [
                   /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
@@ -582,7 +568,7 @@ export default function Home() {
                   /* 2: Cognitive core (Remotion) */ <CognitiveCorePlayer key="i2" />,
                   /* 3: Learning loop (Remotion) */ <LearningLoopPlayer key="i3" />,
                   /* 4: Security (Remotion) */ <SecurityPosturePlayer key="i4" />,
-                  /* 5: Connector */ <svg key="i5" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="35" fill="#0d1322" stroke="#22d3ee" strokeOpacity="0.3" strokeWidth="1.5"/><text x="200" y="147" textAnchor="middle" fill="#22d3ee" fontSize="7" fontWeight="700" letterSpacing="0.08em">UNIFIED</text><text x="200" y="159" textAnchor="middle" fill="#22d3ee" fontSize="7" fontWeight="700" letterSpacing="0.08em">CONTRACT</text>{[{l:"API",a:0},{l:"DATABASE",a:60},{l:"MAINFRAME",a:120},{l:"TERMINAL",a:180},{l:"BROWSER",a:240},{l:"EVENT QUEUE",a:300}].map((c,j)=>{const r=120;const rad=(c.a-90)*(Math.PI/180);const cx=200+r*Math.cos(rad);const cy=150+r*Math.sin(rad);return(<g key={c.l}><line x1="200" y1="150" x2={cx} y2={cy} stroke="#22d3ee" strokeOpacity="0.12" strokeWidth="1"/><rect x={cx-38} y={cy-12} width="76" height="24" rx="6" fill="#0a1628" stroke="#1e293b" strokeWidth="1"/><text x={cx} y={cy+2} textAnchor="middle" fill="#94a3b8" fontSize="7" fontWeight="600" letterSpacing="0.05em">{c.l}</text><circle r="2.5" fill="#22d3ee" opacity="0.7"><animateMotion dur={`${2.5+j*0.2}s`} begin={`${j*0.3}s`} repeatCount="indefinite" path={`M200,150 L${cx},${cy}`}/></circle><circle r="2" fill="#67e8f9" opacity="0.5"><animateMotion dur={`${2.8+j*0.2}s`} begin={`${j*0.3+1}s`} repeatCount="indefinite" path={`M${cx},${cy} L200,150`}/></circle></g>);})}<circle cx="200" cy="150" r="35" stroke="#22d3ee" strokeOpacity="0.1" fill="none" strokeWidth="1"><animate attributeName="r" values="35;50;35" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.1;0.02;0.1" dur="3s" repeatCount="indefinite"/></circle></svg>,
+                  /* 5: Connector (Remotion) */ <ConnectorFabricPlayer key="i5" />,
                 ];
 
                 return (
@@ -614,10 +600,13 @@ export default function Home() {
               </div>
               <div className="mt-4 md:mt-0">
                 <h3 className="text-lg font-normal text-white">Forward-deployed AIOS engineers</h3>
-                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-400">
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
                   We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
                   directly with your team to deploy AIOS against real workflows, integrate with
-                  your existing systems, and drive measurable outcomes from day one.
+                  your existing systems, and drive measurable outcomes from day one. From scoping
+                  to production, we stay in the trenches — tuning agent behavior, hardening
+                  guardrails, and ensuring every automation earns the trust of the people who
+                  depend on it.
                 </p>
               </div>
             </article>
