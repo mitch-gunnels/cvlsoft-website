@@ -308,6 +308,7 @@ export default function Home() {
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
   const year = useMemo(() => new Date().getFullYear(), []);
@@ -357,6 +358,7 @@ export default function Home() {
     return () => featureObserverRef.current?.disconnect();
   }, []);
 
+
   useEffect(() => {
     if (formStatus !== "success") return;
     const timer = setTimeout(() => {
@@ -394,6 +396,11 @@ export default function Home() {
     if (["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com"].includes(domain)) {
       setFormStatus("error");
       setFormMessage("Please use a company email so we can route your request correctly.");
+      return;
+    }
+    if (!phone.trim()) {
+      setFormStatus("error");
+      setFormMessage("Please enter your work phone number.");
       return;
     }
     if (!company.trim()) {
@@ -470,11 +477,23 @@ export default function Home() {
             <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Platform
             </a>
+            <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Problem
+            </a>
             <a href="#pricing" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Pricing
             </a>
-            <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Problem
+            <a href="#partnership" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Partnership
+            </a>
+            <a href="#pulse" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Pulse
+            </a>
+            <a href="#proof" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Proof
+            </a>
+            <a href="#pedigree" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Pedigree
             </a>
             <a
               href="#demo"
@@ -531,7 +550,7 @@ export default function Home() {
                   onClick={() => handleCtaClick("hero_secondary")}
                   className="rounded-md border border-slate-600 px-7 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
                 >
-                  How It Works
+                  Why We&rsquo;re Different
                 </a>
               </div>
             </div>
@@ -556,13 +575,13 @@ export default function Home() {
               THE PLATFORM
             </p>
             <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
-              Why we are different.
+              Why we&rsquo;re different.
             </h2>
             <p className="reveal-up mt-5 mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               The industry builds an agent for every task. AIOS builds
               cognition — adaptive intelligence that reasons about any workflow,
-              selects any tool, and scales without maintenance debt.
-              Stop building AI agents. Start building intelligence.
+              selects any tool, and scales without maintenance debt. &nbsp;
+              <span className="underline decoration-cyan-400 decoration-2 underline-offset-4">Stop building AI agents. Start building intelligence.</span>
             </p>
 
             {/* Feature rows — each with its own illustration box */}
@@ -599,110 +618,6 @@ export default function Home() {
               })}
             </div>
 
-            {/* Forward-deployed engineers — featured card */}
-            <article className="reveal-up mt-16 rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-8 md:flex md:items-center md:gap-10 [animation-delay:500ms]">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
-                <IconRocket className="h-7 w-7" />
-              </div>
-              <div className="mt-4 md:mt-0">
-                <h3 className="text-lg font-normal text-white">Forward-deployed AIOS engineers</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
-                  We don&rsquo;t hand you software and wish you luck. cvlSoft engineers embed
-                  directly with your team to deploy AIOS against real workflows, integrate with
-                  your existing systems, and drive measurable outcomes from day one. From scoping
-                  to production, we stay in the trenches — tuning agent behavior, hardening
-                  guardrails, and ensuring every automation earns the trust of the people who
-                  depend on it.
-                </p>
-              </div>
-            </article>
-
-          </div>
-        </section>
-
-        {/* ── Section divider ── */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-
-        {/* ── PRICING ── */}
-        <section id="pricing" className="relative py-24 md:py-32">
-          <SectionScrollLine color="emerald" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
-          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-emerald-500/[0.04] blur-[80px]" />
-
-          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
-              PRICING
-            </p>
-            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
-              We make money when you make money.
-            </h2>
-            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
-              You pay for successful outcomes. Failed tasks are free. Always.
-              No per-seat licenses. No per-connector fees. Just the floor cost of running
-              your tenant.
-            </p>
-
-            <div className="mt-12 grid gap-5 sm:grid-cols-3">
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:180ms]">
-                <p className="font-mono text-sm font-semibold text-emerald-400">Floor Cost Only</p>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  Your platform fee covers the bare cost of running your tenant.
-                  Infrastructure, connectors, tokens, security, unlimited users. No margin added.
-                </p>
-              </div>
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:240ms]">
-                <p className="font-mono text-sm font-semibold text-emerald-400">Per-Task Outcomes</p>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  Each workflow has a per-task price anchored to 20-40% of what you&rsquo;d pay
-                  a human. You save 60-80% on every successful task. Token costs baked in.
-                </p>
-              </div>
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:300ms]">
-                <p className="font-mono text-sm font-semibold text-emerald-400">Failed = Free</p>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  If a task fails, escalates, or gets killed, you pay nothing.
-                  AIOS only earns when it delivers. Our incentives are your incentives.
-                </p>
-              </div>
-            </div>
-
-            {/* Task tier table */}
-            <div className="reveal-up mt-12 overflow-x-auto [animation-delay:360ms]">
-              <p className="mb-4 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
-                TASK PRICING BY COMPLEXITY
-              </p>
-              <table className="w-full min-w-[600px] border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-white/[0.08]">
-                    <th className="py-3 pr-4 text-left font-medium text-slate-500">Tier</th>
-                    <th className="px-4 py-3 text-left font-medium text-slate-500">What it replaces</th>
-                    <th className="px-4 py-3 text-right font-medium text-emerald-400">Per task*</th>
-                    <th className="pl-4 py-3 text-right font-medium text-slate-500">You save**</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {([
-                    ["Micro", "Quick lookup, classification, routing", "$1 – $2", "60–80%"],
-                    ["Standard", "Data processing, ticket handling, extraction", "$3 – $8", "60–80%"],
-                    ["Complex", "Report generation, compliance check, multi-step analysis", "$15 – $40", "60–80%"],
-                    ["Expert", "Investigation, multi-system orchestration, audit prep", "$75 – $150", "60–80%"],
-                    ["Strategic", "End-to-end process, multi-day human equivalent", "$200 – $500", "60–80%"],
-                  ] as const).map((row, i) => (
-                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${360 + i * 80}ms` }}>
-                      <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row[0]}</td>
-                      <td className="px-4 py-3.5 text-slate-400">{row[1]}</td>
-                      <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row[2]}</td>
-                      <td className="pl-4 py-3.5 text-right font-mono text-slate-500">{row[3]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <p className="mt-4 text-xs leading-relaxed text-slate-500">
-                *Per-task fees are anchored to 20–40% of what you&rsquo;d pay a human for the same work. Pricing is agreed upon during onboarding.<br />
-                **Savings estimated versus fully loaded human cost for equivalent work.
-              </p>
-            </div>
           </div>
         </section>
 
@@ -893,76 +808,173 @@ export default function Home() {
         {/* ── Section divider ── */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-        {/* ── OBSERVATIONAL LEARNING ── */}
-        <section className="relative bg-[#0a0f1a] py-24 md:py-32">
+        {/* ── PRICING ── */}
+        <section id="pricing" className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <SectionScrollLine color="emerald" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-emerald-500/[0.04] blur-[80px]" />
+
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+              PRICING
+            </p>
+            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              We make money when you make money.
+            </h2>
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              You pay for successful outcomes. Failed tasks are free. Always.
+              No per-seat licenses. No per-connector fees. Just the floor cost of running
+              your tenant.
+            </p>
+
+            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:180ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Floor Cost Only</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  Your platform fee covers the bare cost of running your tenant.
+                  Infrastructure, connectors, tokens, security, unlimited users. No margin added.
+                </p>
+              </div>
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:240ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Per-Task Outcomes</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  Each workflow has a per-task price anchored to 20-40% of what you&rsquo;d pay
+                  a human. You save 60-80% on every successful task. Token costs baked in.
+                </p>
+              </div>
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:300ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Failed = Free</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  If a task fails, escalates, or gets killed, you pay nothing.
+                  AIOS only earns when it delivers. Our incentives are your incentives.
+                </p>
+              </div>
+            </div>
+
+            {/* Task tier table */}
+            <div className="reveal-up mt-12 overflow-x-auto [animation-delay:360ms]">
+              <p className="mb-4 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+                TASK PRICING BY COMPLEXITY
+              </p>
+              <table className="w-full min-w-[600px] border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-white/[0.08]">
+                    <th className="py-3 pr-4 text-left font-medium text-slate-500">Tier</th>
+                    <th className="px-4 py-3 text-left font-medium text-slate-500">What it replaces</th>
+                    <th className="px-4 py-3 text-right font-medium text-rose-400">Human cost**</th>
+                    <th className="px-4 py-3 text-right font-medium text-emerald-400">AIOS per task*</th>
+                    <th className="pl-4 py-3 text-right font-medium text-emerald-400">You save</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {([
+                    ["Micro", "~5 min — single action, no judgment (route, classify, look up)", "~$8", "$2 – $3", "63–75%"],
+                    ["Standard", "~30 min — multi-step, one system (extract, validate, post)", "~$48", "$10 – $19", "60–79%"],
+                    ["Complex", "~1–2 hrs — multi-system, judgment calls (analyze, reconcile, check)", "~$144", "$29 – $58", "60–80%"],
+                    ["Expert", "~half day — cross-system orchestration, decision chains", "~$384", "$77 – $154", "60–80%"],
+                    ["Strategic", "~multi-day — end-to-end process with multiple stakeholders", "~$1,500+", "$300 – $600", "60–80%"],
+                    ["Autonomous Ops", "Replaces entire department operations — custom scope and pricing", "Custom", "Custom", "Custom"],
+                  ] as const).map((row, i) => (
+                    <tr key={i} className="row-fade border-b border-white/[0.04] transition-colors duration-200 hover:bg-emerald-500/[0.04] hover:border-emerald-500/[0.12]" style={{ animationDelay: `${360 + i * 80}ms` }}>
+                      <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row[0]}</td>
+                      <td className="px-4 py-3.5 text-slate-400">{row[1]}</td>
+                      <td className="px-4 py-3.5 text-right font-mono text-rose-400/70">{row[2]}</td>
+                      <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row[3]}</td>
+                      <td className="pl-4 py-3.5 text-right font-mono text-emerald-400/80">{row[4]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-4 text-xs leading-relaxed text-slate-500">
+                *Per-task fees are anchored to 20–40% of fully loaded human cost. Pricing is agreed upon during onboarding.<br />
+                **Human cost based on $150K salary (~$200K fully loaded at $96/hr).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* ── PARTNERSHIP — WHITE GLOVE ROLLOUT ── */}
+        <section id="partnership" className="relative py-24 md:py-32">
           <SectionScrollLine />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-500/[0.05] blur-[100px]" />
 
-          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-              {/* Text — left */}
-              <div className="reveal-up flex flex-col justify-center">
-                <p className="self-start rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
-                  OBSERVATIONAL LEARNING
-                </p>
-                <h2 className="mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white">
-                  Your best operators&rsquo; knowledge{" "}
-                  <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
-                    walks out the door
-                  </span>{" "}
-                  every day.
-                </h2>
-                <p className="mt-3 text-xl font-normal text-cyan-400">
-                  We capture it before it does.
-                </p>
-                <p className="mt-4 max-w-lg text-base leading-relaxed text-slate-400 md:text-lg">
-                  AIOS learns from screen captures, click paths, and decision logic to
-                  distill expert behavior into certified, reusable skills that any agent can
-                  execute. No documentation sprints. Just operational truth, extracted and
-                  deployed.
-                </p>
-              </div>
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+              WHITE GLOVE ROLLOUT
+            </p>
+            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
+              Accelerated rollout.{" "}
+              <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
+                Optional. Hands-on.
+              </span>
+            </h2>
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              AIOS is self-serve out of the box. But if you want to move fast, our engineers
+              embed directly with your team to get you to production in 90 days. An optional
+              service for teams that want white glove support from day one.
+            </p>
 
-              {/* Visual flow — right */}
-              <div className="flex flex-col items-center gap-4">
-                {[
-                  {
-                    step: "01",
-                    label: "Observational Learning",
-                    desc: "Observe real operator workflows across any set of applications; including legacy systems, mainframes, and swivel chair operations",
-                  },
-                  {
-                    step: "02",
-                    label: "Knowledge Extraction",
-                    desc: "AI distills tacit patterns, decision trees, and edge cases",
-                  },
-                  {
-                    step: "03",
-                    label: "Certified Skill",
-                    desc: "Validated, versioned skill ready for agent execution",
-                  },
-                ].map((item, i) => (
-                  <div key={item.step} className="cascade flex w-full max-w-sm flex-col items-center" style={{ animationDelay: `${i * 300}ms` }}>
-                    <div className="w-full rounded-lg border border-white/[0.06] bg-white/[0.03] p-5 transition hover:bg-white/[0.05]">
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-500/10 font-mono text-sm font-medium text-cyan-400">
-                          {item.step}
-                        </span>
-                        <div>
-                          <p className="text-sm font-medium text-slate-200">{item.label}</p>
-                          <p className="text-xs leading-relaxed text-slate-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    </div>
-                    {i < 2 && (
-                      <svg className="my-1 h-6 w-6 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 5v14M19 12l-7 7-7-7" />
-                      </svg>
-                    )}
-                  </div>
-                ))}
+            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  step: "01",
+                  title: "Scope & Interview",
+                  desc: "We sit with your SMEs, run AIOS Interviewer sessions, capture screen workflows, and map the processes that matter most.",
+                },
+                {
+                  step: "02",
+                  title: "Build & Integrate",
+                  desc: "Our engineers build agentic workflows against your real systems, configure connectors, tune policies, and wire up approval gates.",
+                },
+                {
+                  step: "03",
+                  title: "Validate & Ship",
+                  desc: "Eval suites run against production data. Workflows promote through Draft, Staging, Production with governance at every gate. Live in 90 days.",
+                },
+                {
+                  step: "04",
+                  title: "Monitor & Optimize",
+                  desc: "Real-time metrics, execution traces, and the agentic self-evolution memory system feed continuous improvement. We tune alongside your team.",
+                },
+                {
+                  step: "05",
+                  title: "Expand & Scale",
+                  desc: "New workflows deploy faster because the cognitive core already knows your systems. Each deployment makes the next one easier.",
+                },
+                {
+                  step: "06",
+                  title: "Transfer & Own",
+                  desc: "Your team learns the platform. We transition to advisory. You own the system, the workflows, and the knowledge base.",
+                },
+              ].map((item, i) => (
+                <div key={item.step} className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 transition hover:bg-white/[0.05]" style={{ animationDelay: `${180 + i * 80}ms` }}>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-cyan-500/10 font-mono text-sm font-medium text-cyan-400">
+                    {item.step}
+                  </span>
+                  <h3 className="mt-4 text-sm font-semibold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="reveal-up mt-12 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:700ms]">
+              <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+                  <IconRocket className="h-7 w-7" />
+                </div>
+                <div>
+                  <p className="text-lg font-normal text-white">90 days from kickoff to production.</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-400">
+                    Not a POC. Not a demo environment. Real workflows, real data, real outcomes.
+                    We put skin in the game because our pricing depends on your success.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -971,8 +983,86 @@ export default function Home() {
         {/* ── Section divider ── */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
+        {/* ── PULSE — APPLICATION SCREENS ── */}
+        <section id="pulse" className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <SectionScrollLine />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-indigo-500/[0.04] blur-[100px]" />
+
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+              INSIDE THE PLATFORM
+            </p>
+            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              See everything. Control everything.
+            </h2>
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              AIOS gives you full visibility into every workflow, every agent decision,
+              and every outcome. No black boxes.
+            </p>
+
+            {/* Screen cards */}
+            <div className="mt-16 grid gap-6 md:grid-cols-2">
+              {[
+                {
+                  title: "Real-Time Metrics Dashboard",
+                  desc: "KPIs, success rates, token usage, and cost tracking across all workflows and tenants. Live sparklines update via WebSocket.",
+                  tag: "OBSERVABILITY",
+                  img: "/screen-dashboard.png",
+                },
+                {
+                  title: "Agent Execution Traces",
+                  desc: "Nested span trees across five levels: pipeline, agent, LLM, tool, and walker node. See exactly what the AI did and why.",
+                  tag: "TRACING",
+                  img: "/screen-execution-trace.png",
+                },
+                {
+                  title: "Connector Marketplace",
+                  desc: "Browse, install, and configure hundreds of connectors. Each one is immediately usable by the cognitive core.",
+                  tag: "CONNECTORS",
+                  img: "/screen-connectors.png",
+                },
+                {
+                  title: "Evaluation Suites",
+                  desc: "Test case libraries, trajectory matching, and custom LLM evaluators. Workflows can't promote to production without passing eval gates.",
+                  tag: "TESTING",
+                  img: "/screen-evals.png",
+                },
+                {
+                  title: "Policy Engine & Overrides",
+                  desc: "Configure deterministic allow/deny rules, priority-based overrides, risk conditions, and RBAC across 19+ resource types.",
+                  tag: "GOVERNANCE",
+                  img: "/screen-policy-engine.png",
+                },
+                {
+                  title: "Audit Trail & Compliance",
+                  desc: "Every action, policy decision, approval, and data access logged with timestamps, actor identity, and full request details.",
+                  tag: "AUDIT",
+                  img: "/screen-audit-log.png",
+                },
+              ].map((screen, i) => (
+                <div key={screen.title} className="reveal-up group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a1020] transition hover:border-white/[0.12]" style={{ animationDelay: `${180 + i * 80}ms` }} onClick={() => setLightboxImg(screen.img)}>
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <img src={screen.img} alt={screen.title} className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]" loading="lazy" />
+                    <div className="pointer-events-none absolute inset-0" style={{ boxShadow: "inset 0 0 20px 8px #0a1020" }} />
+                  </div>
+                  <div className="p-5">
+                    <p className="font-mono text-[10px] tracking-[0.2em] text-cyan-400/50">{screen.tag}</p>
+                    <h3 className="mt-1 text-base font-semibold text-white">{screen.title}</h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-slate-500">{screen.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
         {/* ── COMPARISON TABLE ── */}
-        <section className="relative py-24 md:py-32">
+        <section id="proof" className="relative py-24 md:py-32">
           <SectionScrollLine />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
@@ -980,11 +1070,11 @@ export default function Home() {
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
             <h2 className="reveal-up text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              AIOS vs. the alternatives.
+              The proof is in the platform.
             </h2>
             <p className="reveal-up mt-4 max-w-3xl text-lg leading-relaxed text-slate-400 [animation-delay:80ms]">
               Every other platform builds a separate agent for every task. AIOS builds cognition.
-              Here&rsquo;s how that changes everything.
+              See how that changes everything.
             </p>
 
             <div className="reveal-up mt-12 overflow-x-auto [animation-delay:150ms]">
@@ -992,11 +1082,11 @@ export default function Home() {
                 <thead>
                   <tr className="border-b border-white/[0.08]">
                     <th className="py-3 pr-4 text-left font-medium text-slate-500">Capability</th>
-                    <th className="px-3 py-3 text-center font-medium text-cyan-400">AIOS</th>
-                    <th className="px-3 py-3 text-center font-medium text-slate-500">AgentForce*</th>
-                    <th className="px-3 py-3 text-center font-medium text-slate-500">LangGraph / CrewAI*</th>
-                    <th className="px-3 py-3 text-center font-medium text-slate-500">RPA (UiPath, AA)*</th>
-                    <th className="pl-3 py-3 text-center font-medium text-slate-500">Cloud AI (AWS, Azure)*</th>
+                    <th className="px-3 py-3 text-left font-medium text-cyan-400">AIOS</th>
+                    <th className="px-3 py-3 text-left font-medium text-slate-500">AgentForce*</th>
+                    <th className="px-3 py-3 text-left font-medium text-slate-500">LangGraph / CrewAI*</th>
+                    <th className="px-3 py-3 text-left font-medium text-slate-500">RPA (UiPath, AA)*</th>
+                    <th className="pl-3 py-3 text-left font-medium text-slate-500">Cloud AI (AWS, Azure)*</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1004,7 +1094,7 @@ export default function Home() {
                     ["Agent architecture", "Single cognitive core", "Agent per task", "Agent per task", "Bot per process", "Agent templates"],
                     ["Adding new capabilities", "Add connector, done", "Build new agent", "Write new code", "Build new bot", "New template"],
                     ["Tacit knowledge capture", "AI interviews + screen capture", "No", "No", "No", "No"],
-                    ["Self-improving memory", "Built-in (ACE)", "No", "No", "No", "No"],
+                    ["Agentic self-evolution", "Built-in", "No", "No", "No", "No"],
                     ["LLM flexibility", "Any provider — switch by config", "BYOLLM available, ecosystem-centric", "Abstraction layer, eng effort to switch", "N/A", "Multi-model (within ecosystem)"],
                     ["Security posture", "Deterministic policy engine", "Trust Layer (probabilistic)", "DIY", "Role-based", "IAM / provider-dependent"],
                     ["Pre-execution review", "Full plan visible before action", "No", "No", "No", "No"],
@@ -1016,15 +1106,15 @@ export default function Home() {
                     ["Time to production", "90 days with FDEs", "Weeks to months", "Months of eng build", "Weeks to months", "Weeks to months"],
                     ["Maintenance at scale", "Sublinear", "Linear (agent per task)", "Linear (code per agent)", "Linear (bot per process)", "Linear"],
                   ] as const).map((row, i) => (
-                    <tr key={i} className="row-fade border-b border-white/[0.04]" style={{ animationDelay: `${150 + i * 60}ms` }}>
+                    <tr key={i} className="row-fade border-b border-white/[0.04] transition-colors duration-200 hover:bg-cyan-500/[0.04] hover:border-cyan-500/[0.12]" style={{ animationDelay: `${150 + i * 60}ms` }}>
                       <td className="py-3.5 pr-4 font-medium text-slate-300">{row[0]}</td>
                       {row.slice(1).map((cell, j) => {
-                        const isPositive = ["Single cognitive core", "Add connector, done", "AI interviews + screen capture", "Built-in (ACE)", "Any provider — switch by config", "Deterministic policy engine", "Full plan visible before action", "Global + tenant + execution", "Built-in, immutable", "Pauses execution until approved", "Architected from day one", "Outcome-based — failed = free", "90 days with FDEs", "Sublinear"].includes(cell);
+                        const isPositive = ["Single cognitive core", "Add connector, done", "AI interviews + screen capture", "Built-in", "Any provider — switch by config", "Deterministic policy engine", "Full plan visible before action", "Global + tenant + execution", "Built-in, immutable", "Pauses execution until approved", "Architected from day one", "Outcome-based — failed = free", "90 days with FDEs", "Sublinear"].includes(cell);
                         const isNegative = cell === "No" || cell === "None" || cell === "N/A";
                         return (
                           <td
                             key={j}
-                            className={`px-3 py-3.5 text-center text-[13px] ${
+                            className={`px-3 py-3.5 text-left text-[13px] ${
                               j === 0
                                 ? isPositive
                                   ? "font-semibold text-cyan-400"
@@ -1060,6 +1150,55 @@ export default function Home() {
         {/* ── Section divider ── */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
+        {/* ── PEDIGREE — DEEP EXPERTISE ── */}
+        <section id="pedigree" className="relative overflow-hidden bg-[#0a0f1a] py-24 md:py-32">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
+
+          {/* Subtle background glow — right side */}
+          <div className="pointer-events-none absolute -right-20 top-1/2 -z-10 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-cyan-500/[0.04] blur-[140px]" />
+          <div className="pointer-events-none absolute right-[10%] top-[30%] -z-10 h-[300px] w-[300px] rounded-full bg-indigo-500/[0.03] blur-[120px]" />
+
+          {/* Large faded "cvl" watermark on right */}
+          {/* Glow on right */}
+          <div className="pointer-events-none absolute right-[5%] top-1/2 z-0 hidden h-[500px] w-[500px] -translate-x-[100px] -translate-y-1/2 rounded-full bg-cyan-500/[0.075] blur-[150px] lg:block" />
+
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <div>
+              <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+                PEDIGREE
+              </p>
+              <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+                Deep expertise, not just code.
+              </h2>
+              <div className="reveal-up mt-8 max-w-4xl space-y-5 text-lg leading-relaxed text-slate-400 [animation-delay:120ms]">
+                <p>
+                  cvlSoft was founded by experts who have spent years in the trenches of enterprise
+                  agentic AI. We understand how large organizations actually operate: the
+                  politics, the compliance requirements, the legacy systems, the tribal knowledge
+                  that nobody has documented. That understanding is baked into the architecture
+                  of AIOS itself.
+                </p>
+                <p>
+                  When you work with cvlSoft, you benefit from that accumulated expertise and
+                  intellectual property. Our cognitive core, our knowledge extraction techniques,
+                  our security posture, our pricing model: these are not engineering decisions.
+                  They are hard-won insights from years of watching enterprise AI projects fail
+                  and understanding exactly why.
+                </p>
+              </div>
+              <p className="reveal-up mt-8 max-w-4xl text-xl font-light leading-relaxed text-white [animation-delay:180ms]">
+                The technical implementation is the icing. The foundation is knowing what to build,
+                how to deploy it, and what it takes to earn trust inside an enterprise. That part
+                isn&rsquo;t written in code — it&rsquo;s earned.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
         {/* ── DEMO CTA ── */}
         <section id="demo" className="relative bg-[#0a0f1a] py-24 md:py-32">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
@@ -1070,10 +1209,10 @@ export default function Home() {
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-indigo-500/10 blur-[60px]" />
 
             <h2 className="relative text-center text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              See it in your environment.
+              Not hype, real enterprise agentic AI!
             </h2>
-            <p className="relative mt-4 text-center text-base text-slate-400">
-              Work email only. Fast architecture walkthrough.
+            <p className="relative mt-4 text-center text-2xl text-slate-400 md:text-3xl">
+              See it now. Work email only.
             </p>
 
             <form className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
@@ -1115,8 +1254,9 @@ export default function Home() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                required
                 className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Phone (optional)"
+                placeholder="Work phone"
               />
               <input
                 id="company"
@@ -1156,23 +1296,102 @@ export default function Home() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-white/[0.04] py-8">
-        <div className="flex flex-col items-center justify-between gap-3 px-6 sm:px-10 md:flex-row lg:px-[60px]">
-          <div className="flex items-center gap-3">
-            <svg viewBox="0 0 48 48" fill="none" className="h-5 w-5" aria-hidden="true">
-              <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-              <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round" />
-              <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-            </svg>
-            <span className="font-mono text-xs tracking-[0.12em] text-slate-600">
-              &copy; {year} cvlSoft
-            </span>
+      <footer className="border-t border-white/[0.06] bg-[#050a14]">
+        <div className="mx-auto max-w-7xl px-6 pb-10 pt-16 sm:px-10 lg:px-[60px]">
+          {/* Footer columns */}
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+            {/* Brand */}
+            <div className="lg:col-span-1">
+              <div className="flex items-center gap-3">
+                <svg viewBox="0 0 48 48" fill="none" className="h-6 w-6" aria-hidden="true">
+                  <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+                  <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round" />
+                  <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+                </svg>
+                <span className="text-sm font-medium text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
+              </div>
+              <p className="mt-4 max-w-xs text-xs leading-relaxed text-slate-600">
+                 Stop building AI agents. Start building intelligence.
+              </p>
+            </div>
+
+            {/* Product */}
+              <div>
+              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
+              <ul className="mt-4 space-y-2.5">
+                <li><a href="#platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
+                <li><a href="#problem" className="text-sm text-slate-500 transition hover:text-white">Problem</a></li>
+                <li><a href="#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
+                <li><a href="#partnership" className="text-sm text-slate-500 transition hover:text-white">Partnership</a></li>
+                <li><a href="#pulse" className="text-sm text-slate-500 transition hover:text-white">Pulse</a></li>
+                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Proof</a></li>
+                <li><a href="#pedigree" className="text-sm text-slate-500 transition hover:text-white">Pedigree</a></li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">COMPANY</p>
+              <ul className="mt-4 space-y-2.5">
+                <li><a href="/about" className="text-sm text-slate-500 transition hover:text-white">About</a></li>
+                <li><a href="/contact" className="text-sm text-slate-500 transition hover:text-white">Contact</a></li>
+                <li><a href="#demo" className="text-sm text-slate-500 transition hover:text-white">Request Demo</a></li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">RESOURCES</p>
+              <ul className="mt-4 space-y-2.5">
+                <li><a href="#problem" className="text-sm text-slate-500 transition hover:text-white">Industry Problem</a></li>
+                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Comparison Table</a></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">LEGAL</p>
+              <ul className="mt-4 space-y-2.5">
+                <li><a href="/privacy" className="text-sm text-slate-500 transition hover:text-white">Privacy Policy</a></li>
+                <li><a href="/terms" className="text-sm text-slate-500 transition hover:text-white">Terms of Service</a></li>
+              </ul>
+            </div>
           </div>
-          <p className="font-mono text-[10px] tracking-wider text-slate-700">
-            Enterprise autonomy without automation debt.
-          </p>
+
+          {/* Bottom bar */}
+          <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/[0.04] pt-6 md:flex-row">
+            <span className="font-mono text-xs tracking-[0.08em] text-slate-700">
+              &copy; {year} cvlSoft, LLC All rights reserved.
+            </span>
+            <div className="flex gap-6">
+              <a href="/privacy" className="font-mono text-[10px] tracking-wider text-slate-700 transition hover:text-slate-400">Privacy</a>
+              <a href="/terms" className="font-mono text-[10px] tracking-wider text-slate-700 transition hover:text-slate-400">Terms</a>
+            </div>
+          </div>
         </div>
       </footer>
+
+      {/* ── LIGHTBOX ── */}
+      {lightboxImg && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setLightboxImg(null)}
+        >
+          <button
+            className="absolute right-6 top-6 text-3xl text-white/60 transition hover:text-white"
+            onClick={() => setLightboxImg(null)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <img
+            src={lightboxImg}
+            alt="Full size screenshot"
+            className="max-h-[90vh] max-w-[95vw] rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

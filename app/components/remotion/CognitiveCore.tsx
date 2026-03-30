@@ -54,24 +54,40 @@ function AgentBox({ x, y, rot, label, index, collapseFrame }: {
   const collapseDelay = collapseFrame + index * 0.5;
   const collapse = spring({ frame, fps, delay: collapseDelay, config: { damping: 8, stiffness: 200 } });
 
+  // Shake instability — grows as more agents appear, peaks right before explosion
+  const shakeStart = 40; // start shaking after first agents settle
+  const shakeIntensity = frame < shakeStart ? 0 : interpolate(
+    frame, [shakeStart, collapseFrame - 10, collapseFrame],
+    [0, 1, 1.5],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+  // Each agent gets a unique phase so they don't shake in sync
+  const phase = index * 1.7;
+  const shakeX = shakeIntensity * Math.sin(frame * 0.8 + phase) * 2.5;
+  const shakeY = shakeIntensity * Math.cos(frame * 1.1 + phase * 0.7) * 1.5;
+  const shakeRot = shakeIntensity * Math.sin(frame * 0.6 + phase * 1.3) * 2;
+
   // Explode outward from center — each agent flies away from (200, 150)
   const cx = x + 34; // center of box
   const cy = y + 8;
   const dx = cx - 200;
   const dy = cy - 150;
   const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-  const explodeX = x + (dx / dist) * 400 * collapse;
-  const explodeY = y + (dy / dist) * 400 * collapse;
-  const explodeRot = rot + collapse * (index % 2 === 0 ? 120 : -120);
+  const explodeX = x + shakeX + (dx / dist) * 400 * collapse;
+  const explodeY = y + shakeY + (dy / dist) * 400 * collapse;
+  const explodeRot = rot + shakeRot + collapse * (index % 2 === 0 ? 120 : -120);
   const scale = interpolate(collapse, [0, 0.3], [1, 0], { extrapolateRight: "clamp" });
   const opacity = interpolate(appear, [0, 1], [0, 1]) * interpolate(collapse, [0, 0.25], [1, 0], { extrapolateRight: "clamp" });
+
+  // Border flickers red more intensely as instability grows
+  const borderOpacity = 0.2 + shakeIntensity * 0.5;
 
   const w = 68;
   const h = 16;
 
   return (
     <g opacity={opacity} transform={`translate(${explodeX}, ${explodeY}) rotate(${explodeRot}, ${w / 2}, ${h / 2}) scale(${scale})`}>
-      <rect width={w} height={h} rx={3} fill="#0a1628" stroke={COLORS.red} strokeOpacity={0.2} strokeWidth={0.8} />
+      <rect width={w} height={h} rx={3} fill="#0a1628" stroke={COLORS.red} strokeOpacity={borderOpacity} strokeWidth={0.8 + shakeIntensity * 0.4} />
       <text x={w / 2} y={h / 2} textAnchor="middle" dominantBaseline="central" fill={COLORS.textDim} fontSize={5} fontWeight={600} letterSpacing="0.03em">
         {label}
       </text>
@@ -90,13 +106,24 @@ function ChaosLine({ from, to, index, collapseFrame }: {
   const appear = spring({ frame, fps, delay: appearDelay, config: { damping: 20, stiffness: 80 } });
   const collapse = spring({ frame, fps, delay: collapseFrame + index * 0.3, config: { damping: 8, stiffness: 200 } });
 
-  const opacity = interpolate(appear, [0, 1], [0, 0.25]) * interpolate(collapse, [0, 0.2], [1, 0], { extrapolateRight: "clamp" });
+  // Lines also jitter as instability grows
+  const shakeStart = 40;
+  const shakeIntensity = frame < shakeStart ? 0 : interpolate(
+    frame, [shakeStart, collapseFrame - 10, collapseFrame],
+    [0, 0.6, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+
+  const fadeOut = interpolate(collapse, [0, 0.2], [1, 0], { extrapolateRight: "clamp" });
+  const baseOpacity = interpolate(appear, [0, 1], [0, 0.25]);
+  // Lines flicker more red as instability grows, but always respect fade-out
+  const lineOpacity = (baseOpacity + shakeIntensity * 0.15) * fadeOut;
 
   return (
     <line
       x1={from.x + 34} y1={from.y + 8}
       x2={to.x + 34} y2={to.y + 8}
-      stroke={COLORS.red} strokeOpacity={opacity} strokeWidth={1}
+      stroke={COLORS.red} strokeOpacity={lineOpacity} strokeWidth={1 + shakeIntensity * 0.5}
     />
   );
 }
@@ -146,8 +173,8 @@ function Capability({ x, y, label, appearFrame }: { x: number; y: number; label:
 
   return (
     <g opacity={opacity} transform={`translate(${translateX}, 0)`}>
-      <rect x={x} y={y} width={74} height={18} rx={4} fill="#0a1628" stroke={COLORS.cyan} strokeOpacity={0.25} strokeWidth={1} />
-      <text x={x + 37} y={y + 9} textAnchor="middle" dominantBaseline="central" fill={COLORS.cyan} fontSize={6} fontWeight={600} letterSpacing="0.05em">
+      <rect x={x} y={y} width={90} height={18} rx={4} fill="#0a1628" stroke={COLORS.cyan} strokeOpacity={0.25} strokeWidth={1} />
+      <text x={x + 45} y={y + 9} textAnchor="middle" dominantBaseline="central" fill={COLORS.cyan} fontSize={6} fontWeight={600} letterSpacing="0.05em">
         {label}
       </text>
     </g>
@@ -206,12 +233,27 @@ function AgentCounter({ collapseFrame }: { collapseFrame: number }) {
   const collapse = spring({ frame, fps, delay: collapseFrame - 5, config: { damping: 15, stiffness: 80 } });
   const opacity = interpolate(collapse, [0, 1], [0.5, 0]);
 
+  // Instability warning flicker near collapse
+  const warningStart = collapseFrame - 40;
+  const showWarning = frame >= warningStart && frame < collapseFrame;
+  const warningFlicker = showWarning ? Math.sin(frame * 1.2) > 0.1 : false;
+
   if (frame < 10 || opacity <= 0) return null;
 
   return (
-    <text x={200} y={24} textAnchor="middle" fill={COLORS.red} fontSize={12} fontWeight={700} letterSpacing="0.06em" opacity={opacity}>
-      {count}+ AGENTS AND GROWING...
-    </text>
+    <>
+      <text x={200} y={24} textAnchor="middle" fill={COLORS.red} fontSize={12} fontWeight={700} letterSpacing="0.06em" opacity={opacity}>
+        {count}+ AGENTS AND GROWING...
+      </text>
+      {warningFlicker && (
+        <g>
+          <rect x={180} y={140} width={80} height={20} rx={4} fill="#0a1628" stroke={COLORS.red} strokeOpacity={0.6} strokeWidth={1} />
+          <text x={220} y={152} textAnchor="middle" fill={COLORS.red} fontSize={7} fontWeight={700} letterSpacing="0.1em" opacity={0.9}>
+            ⚠ UNSTABLE
+          </text>
+        </g>
+      )}
+    </>
   );
 }
 
@@ -231,7 +273,7 @@ export default function CognitiveCore() {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "transparent" }}>
-      <svg viewBox="0 0 400 300" style={{ width: "100%", height: "100%" }}>
+      <svg viewBox="0 0 440 300" style={{ width: "100%", height: "100%" }}>
 
         {/* ── PHASE 1: Agent sprawl — chaos ── */}
 
@@ -273,20 +315,21 @@ export default function CognitiveCore() {
           <Capability x={18} y={183} label="ANY TOOL" appearFrame={13} />
 
           {/* Right side — outputs */}
-          <CoreLine x1={255} y1={125} x2={305} y2={108} appearFrame={12} />
-          <Capability x={308} y={99} label="DETERMINISTIC" appearFrame={16} />
-          <CoreLine x1={255} y1={150} x2={305} y2={150} appearFrame={16} />
-          <Capability x={308} y={141} label="DYNAMIC" appearFrame={20} />
-          <CoreLine x1={255} y1={175} x2={305} y2={192} appearFrame={20} />
-          <Capability x={308} y={183} label="ADAPTIVE" appearFrame={24} />
+          <CoreLine x1={255} y1={125} x2={315} y2={108} appearFrame={12} />
+          <Capability x={318} y={99} label="TASK COMPLETE" appearFrame={16} />
+          <CoreLine x1={255} y1={150} x2={315} y2={150} appearFrame={16} />
+          <Capability x={318} y={141} label="AUDIT FIXED" appearFrame={20} />
+          <CoreLine x1={255} y1={175} x2={315} y2={192} appearFrame={20} />
+          <Capability x={318} y={183} label="CUSTOMER SATISFIED" appearFrame={24} />
 
-          {/* Flowing dots along connections */}
+          {/* Flowing dots — inputs into core */}
           <FlowDot x1={92} y1={108} x2={145} y2={130} color={COLORS.cyan} startFrame={15} dur={50} />
           <FlowDot x1={92} y1={150} x2={145} y2={150} color={COLORS.cyan} startFrame={20} dur={45} />
           <FlowDot x1={92} y1={192} x2={145} y2={170} color={COLORS.cyan} startFrame={25} dur={55} />
-          <FlowDot x1={255} y1={125} x2={305} y2={108} color={COLORS.cyanLight} startFrame={25} dur={50} />
-          <FlowDot x1={255} y1={150} x2={305} y2={150} color={COLORS.cyanLight} startFrame={30} dur={45} />
-          <FlowDot x1={255} y1={175} x2={305} y2={192} color={COLORS.cyanLight} startFrame={35} dur={55} />
+          {/* Flowing dots — outputs from core */}
+          <FlowDot x1={255} y1={125} x2={315} y2={108} color={COLORS.cyanLight} startFrame={25} dur={50} />
+          <FlowDot x1={255} y1={150} x2={315} y2={150} color={COLORS.cyanLight} startFrame={30} dur={45} />
+          <FlowDot x1={255} y1={175} x2={315} y2={192} color={COLORS.cyanLight} startFrame={35} dur={55} />
         </Sequence>
 
       </svg>
