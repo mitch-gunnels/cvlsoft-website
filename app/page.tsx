@@ -307,6 +307,7 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
+  const [expandedTiers, setExpandedTiers] = useState<Set<number>>(new Set());
   const [formMessage, setFormMessage] = useState("");
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -577,7 +578,7 @@ export default function Home() {
             <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
               Why we&rsquo;re different.
             </h2>
-            <p className="reveal-up mt-5 mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+            <p className="reveal-up mt-5 mb-16 md:mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               The industry builds an agent for every task. AIOS builds
               cognition — adaptive intelligence that reasons about any workflow,
               selects any tool, and scales without maintenance debt. &nbsp;
@@ -585,7 +586,7 @@ export default function Home() {
             </p>
 
             {/* Feature rows — each with its own illustration box */}
-            <div className="mt-32 space-y-64">
+            <div className="mt-12 space-y-20 md:mt-32 md:space-y-64">
               {DIFFERENTIATORS.map((item, i) => {
                 const illustrations = [
                   /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
@@ -857,11 +858,12 @@ export default function Home() {
               <p className="mb-4 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
                 TASK PRICING BY COMPLEXITY
               </p>
-              <table className="w-full min-w-[600px] border-collapse text-sm">
+              <table className="w-full min-w-[750px] border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-white/[0.08]">
                     <th className="py-3 pr-4 text-left font-medium text-slate-500">Tier</th>
                     <th className="px-4 py-3 text-left font-medium text-slate-500">What it replaces</th>
+                    <th className="px-4 py-3 text-left font-medium text-slate-500">Examples</th>
                     <th className="px-4 py-3 text-right font-medium text-rose-400">Human cost**</th>
                     <th className="px-4 py-3 text-right font-medium text-emerald-400">AIOS per task*</th>
                     <th className="pl-4 py-3 text-right font-medium text-emerald-400">You save</th>
@@ -869,21 +871,97 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {([
-                    ["Micro", "~5 min — single action, no judgment (route, classify, look up)", "~$8", "$2 – $3", "63–75%"],
-                    ["Standard", "~30 min — multi-step, one system (extract, validate, post)", "~$48", "$10 – $19", "60–79%"],
-                    ["Complex", "~1–2 hrs — multi-system, judgment calls (analyze, reconcile, check)", "~$144", "$29 – $58", "60–80%"],
-                    ["Expert", "~half day — cross-system orchestration, decision chains", "~$384", "$77 – $154", "60–80%"],
-                    ["Strategic", "~multi-day — end-to-end process with multiple stakeholders", "~$1,500+", "$300 – $600", "60–80%"],
-                    ["Autonomous Ops", "Replaces entire department operations — custom scope and pricing", "Custom", "Custom", "Custom"],
-                  ] as const).map((row, i) => (
-                    <tr key={i} className="row-fade border-b border-white/[0.04] transition-colors duration-200 hover:bg-emerald-500/[0.04] hover:border-emerald-500/[0.12]" style={{ animationDelay: `${360 + i * 80}ms` }}>
-                      <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row[0]}</td>
-                      <td className="px-4 py-3.5 text-slate-400">{row[1]}</td>
-                      <td className="px-4 py-3.5 text-right font-mono text-rose-400/70">{row[2]}</td>
-                      <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row[3]}</td>
-                      <td className="pl-4 py-3.5 text-right font-mono text-emerald-400/80">{row[4]}</td>
-                    </tr>
-                  ))}
+                    {
+                      tier: "Micro", desc: "~15–20 min — single action, no judgment", human: "~$32", aios: "$6 – $13", save: "59–81%",
+                      examples: [
+                        "Route a support ticket to the correct queue based on content",
+                        "Classify an invoice as PO-matched or exception",
+                        "Look up customer account status and return summary to requestor",
+                        "Verify a shipping address against USPS and correct formatting",
+                        "Check if a new lead exists in CRM and deduplicate",
+                        "Tag and categorize an inbound email by intent and urgency",
+                      ],
+                    },
+                    {
+                      tier: "Standard", desc: "~1–2 hrs — multi-step, one system", human: "~$144", aios: "$29 – $58", save: "60–80%",
+                      examples: [
+                        "Extract line items from a PDF invoice, validate against PO, post to ERP",
+                        "Process a new vendor submission: validate TIN, check OFAC, create record",
+                        "Pull a customer's renewal data, generate a quote PDF, email to rep",
+                        "Reconcile a single bank statement against GL and flag mismatches",
+                        "Parse an inbound RFP and populate a response template with known answers",
+                        "Generate a weekly sales anomaly report from CRM data",
+                      ],
+                    },
+                    {
+                      tier: "Complex", desc: "~3–6 hrs — multi-system, judgment calls", human: "~$432", aios: "$86 – $173", save: "60–80%",
+                      examples: [
+                        "Audit an expense report against travel policy, cross-check receipts, approve or flag",
+                        "Customer escalation: pull history from CRM, tickets, and billing, draft resolution",
+                        "New hire provisioning: create accounts across AD, Slack, email, and SaaS tools, verify each",
+                        "Contract review: extract key terms, compare against procurement standards, flag deviations",
+                        "Insurance claim: pull policy details, validate docs, cross-reference coverage rules, route with recommendation",
+                      ],
+                    },
+                    {
+                      tier: "Expert", desc: "~1–3 days — cross-system orchestration, decision chains", human: "~$1,536", aios: "$307 – $614", save: "60–80%",
+                      examples: [
+                        "Employee offboarding: revoke access across 12 systems, verify each, recover licenses, generate compliance cert",
+                        "SOX audit: pull evidence from 5+ systems against control checklist, identify gaps, generate report",
+                        "RFP response: retrieve case studies, pull pricing, assemble compliance matrix, draft document",
+                        "Month-end close: reconcile intercompany transactions across 4 entities, resolve discrepancies, post adjustments",
+                        "Vendor risk review: pull financials, check sanctions lists, review SLA performance, score and recommend",
+                      ],
+                    },
+                    {
+                      tier: "Strategic", desc: "~1–4 weeks — end-to-end process, multiple stakeholders", human: "~$7,680+", aios: "$1,536 – $3,072", save: "60–80%",
+                      examples: [
+                        "Annual vendor renewal cycle: pull spend data, benchmark rates, draft contracts, track through approvals",
+                        "Regulatory filing: aggregate data across business units, validate against rules, resolve issues, format and submit",
+                        "M&A data room: extract and organize financials, contracts, IP, compliance docs from both entities",
+                        "Customer churn analysis: pull usage, support history, billing, NPS for flagged accounts, generate risk-scored report",
+                      ],
+                    },
+                    {
+                      tier: "Autonomous Ops", desc: "Ongoing — recurring orchestration, custom scope", human: "Custom", aios: "Custom", save: "Custom",
+                      examples: [
+                        "Process every incoming claim end-to-end: intake, validate, adjudicate, pay or deny",
+                        "Handle all L1/L2 IT tickets: diagnose, attempt resolution, verify fix, close or escalate with context",
+                        "Manage daily AP queue: match invoices to POs, resolve discrepancies, route approvals, schedule payments",
+                      ],
+                    },
+                  ] as const).map((row, i) => {
+                    const isExpanded = expandedTiers.has(i);
+                    return (
+                      <tr
+                        key={i}
+                        className="row-fade border-b border-white/[0.04] align-top cursor-pointer select-none transition-colors duration-200 hover:bg-emerald-500/[0.04] hover:border-emerald-500/[0.12]"
+                        style={{ animationDelay: `${360 + i * 80}ms` }}
+                        onClick={() => setExpandedTiers((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(i)) next.delete(i); else next.add(i);
+                          return next;
+                        })}
+                      >
+                        <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row.tier}</td>
+                        <td className="px-4 py-3.5 text-slate-400">{row.desc}</td>
+                        <td className="px-4 py-3.5 text-slate-500">
+                          <ul className="list-disc pl-4 space-y-1">
+                            {isExpanded
+                              ? row.examples.map((ex, j) => <li key={j}>{ex}</li>)
+                              : row.examples.slice(0, 2).map((ex, j) => <li key={j}>{ex}</li>)
+                            }
+                          </ul>
+                          {!isExpanded && row.examples.length > 2 && (
+                            <p className="mt-1.5 pl-4 text-xs text-emerald-400/70">... and {row.examples.length - 2} more</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5 text-right font-mono text-rose-400/70">{row.human}</td>
+                        <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row.aios}</td>
+                        <td className="pl-4 py-3.5 text-right font-mono text-emerald-400/80">{row.save}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
               <p className="mt-4 text-xs leading-relaxed text-slate-500">
@@ -1173,7 +1251,7 @@ export default function Home() {
               </h2>
               <div className="reveal-up mt-8 max-w-4xl space-y-5 text-lg leading-relaxed text-slate-400 [animation-delay:120ms]">
                 <p>
-                  cvlSoft was founded by experts who have spent years in the trenches of enterprise
+                  Cognitive Venture Labs (cvlSoft) was founded by experts who have spent years in the trenches of enterprise
                   agentic AI. We understand how large organizations actually operate: the
                   politics, the compliance requirements, the legacy systems, the tribal knowledge
                   that nobody has documented. That understanding is baked into the architecture

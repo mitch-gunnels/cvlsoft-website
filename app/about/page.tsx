@@ -16,7 +16,7 @@ export default function About() {
           <section>
             <h2 className="text-lg font-medium text-white">The Mission</h2>
             <p className="mt-3">
-              cvlSoft builds AIOS, the Autonomous Intelligence Operating System. We believe enterprise AI
+              Cognitive Venture Labs (cvlSoft) builds AIOS, the Autonomous Intelligence Operating System. We believe enterprise AI
               should work like your best employee: it should reason about problems, learn from experience,
               and earn trust through transparency. Not like a thousand brittle bots duct-taped together.
             </p>
@@ -75,7 +75,7 @@ export default function About() {
             <h2 className="text-lg font-medium text-white">Get in Touch</h2>
             <p className="mt-3">
               Interested in learning more? <a href="/#demo" className="text-cyan-400 underline hover:text-cyan-300">Request a demo</a> or
-              email us at <span className="text-cyan-400">hello@cvlsoft.net</span>.
+              email us at <span className="text-cyan-400">hello@cvlsoft.com</span>.
             </p>
           </section>
         </div>

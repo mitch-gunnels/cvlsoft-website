@@ -106,7 +106,7 @@ export async function sendNotificationEmail(data: {
 }): Promise<void> {
   await transporter.sendMail({
     from: `"cvlSoft Website" <${process.env.SMTP_USER}>`,
-    to: "mgunnels@cvlsoft.net",
+    to: "demo@cvlsoft.com",
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
     html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
