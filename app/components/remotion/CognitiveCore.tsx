@@ -70,7 +70,7 @@ function AgentBox({ x, y, rot, label, index, collapseFrame }: {
   // Explode outward from center — each agent flies away from (200, 150)
   const cx = x + 34; // center of box
   const cy = y + 8;
-  const dx = cx - 200;
+  const dx = cx - 225;
   const dy = cy - 150;
   const dist = Math.sqrt(dx * dx + dy * dy) || 1;
   const explodeX = x + shakeX + (dx / dist) * 400 * collapse;
@@ -143,7 +143,7 @@ function CoreNode({ appearFrame }: { appearFrame: number }) {
   const glowOpacity = interpolate(progress, [0, 1], [0, 0.06]) + Math.sin(glowPhase * 0.03) * 0.02;
 
   return (
-    <g opacity={opacity} transform={`translate(200, 150) scale(${scale})`}>
+    <g opacity={opacity} transform={`translate(225, 150) scale(${scale})`}>
       {/* Outer glow */}
       <circle r={glowR} fill={COLORS.cyan} opacity={Math.max(0, glowOpacity)} />
       {/* Core box */}
@@ -295,8 +295,8 @@ export default function CognitiveCore() {
           const t = (frame - COLLAPSE_START) / 40;
           return (
             <>
-              <circle cx={200} cy={150} r={interpolate(t, [0, 1], [5, 160])} fill="#fff" opacity={interpolate(t, [0, 0.1, 1], [0, 0.25, 0])} />
-              <circle cx={200} cy={150} r={interpolate(t, [0, 1], [5, 100])} fill={COLORS.red} opacity={interpolate(t, [0, 0.08, 0.5, 1], [0, 0.18, 0.06, 0])} />
+              <circle cx={225} cy={150} r={interpolate(t, [0, 1], [5, 160])} fill="#fff" opacity={interpolate(t, [0, 0.1, 1], [0, 0.25, 0])} />
+              <circle cx={225} cy={150} r={interpolate(t, [0, 1], [5, 100])} fill={COLORS.red} opacity={interpolate(t, [0, 0.08, 0.5, 1], [0, 0.18, 0.06, 0])} />
             </>
           );
         })()}
@@ -306,30 +306,30 @@ export default function CognitiveCore() {
 
         {/* ── PHASE 3: Capabilities fan out ── */}
         <Sequence from={CAPS_APPEAR} layout="none">
-          {/* Left side — inputs */}
-          <CoreLine x1={145} y1={130} x2={95} y2={108} appearFrame={0} />
+          {/* Left side — inputs (connect to core left edge at x=170) */}
+          <CoreLine x1={170} y1={130} x2={108} y2={108} appearFrame={0} />
           <Capability x={18} y={99} label="ANY INTENT" appearFrame={5} />
-          <CoreLine x1={145} y1={150} x2={95} y2={150} appearFrame={4} />
+          <CoreLine x1={170} y1={150} x2={108} y2={150} appearFrame={4} />
           <Capability x={18} y={141} label="ANY CONTEXT" appearFrame={9} />
-          <CoreLine x1={145} y1={170} x2={95} y2={192} appearFrame={8} />
+          <CoreLine x1={170} y1={170} x2={108} y2={192} appearFrame={8} />
           <Capability x={18} y={183} label="ANY TOOL" appearFrame={13} />
 
-          {/* Right side — outputs */}
-          <CoreLine x1={255} y1={125} x2={315} y2={108} appearFrame={12} />
-          <Capability x={318} y={99} label="TASK COMPLETE" appearFrame={16} />
-          <CoreLine x1={255} y1={150} x2={315} y2={150} appearFrame={16} />
-          <Capability x={318} y={141} label="AUDIT FIXED" appearFrame={20} />
-          <CoreLine x1={255} y1={175} x2={315} y2={192} appearFrame={20} />
-          <Capability x={318} y={183} label="CUSTOMER SATISFIED" appearFrame={24} />
+          {/* Right side — outputs (connect from core right edge at x=280) */}
+          <CoreLine x1={280} y1={130} x2={340} y2={108} appearFrame={12} />
+          <Capability x={340} y={99} label="TASK COMPLETE" appearFrame={16} />
+          <CoreLine x1={280} y1={150} x2={340} y2={150} appearFrame={16} />
+          <Capability x={340} y={141} label="AUDIT FIXED" appearFrame={20} />
+          <CoreLine x1={280} y1={170} x2={340} y2={192} appearFrame={20} />
+          <Capability x={340} y={183} label="CUSTOMER SATISFIED" appearFrame={24} />
 
           {/* Flowing dots — inputs into core */}
-          <FlowDot x1={92} y1={108} x2={145} y2={130} color={COLORS.cyan} startFrame={15} dur={50} />
-          <FlowDot x1={92} y1={150} x2={145} y2={150} color={COLORS.cyan} startFrame={20} dur={45} />
-          <FlowDot x1={92} y1={192} x2={145} y2={170} color={COLORS.cyan} startFrame={25} dur={55} />
+          <FlowDot x1={108} y1={108} x2={170} y2={130} color={COLORS.cyan} startFrame={15} dur={50} />
+          <FlowDot x1={108} y1={150} x2={170} y2={150} color={COLORS.cyan} startFrame={20} dur={45} />
+          <FlowDot x1={108} y1={192} x2={170} y2={170} color={COLORS.cyan} startFrame={25} dur={55} />
           {/* Flowing dots — outputs from core */}
-          <FlowDot x1={255} y1={125} x2={315} y2={108} color={COLORS.cyanLight} startFrame={25} dur={50} />
-          <FlowDot x1={255} y1={150} x2={315} y2={150} color={COLORS.cyanLight} startFrame={30} dur={45} />
-          <FlowDot x1={255} y1={175} x2={315} y2={192} color={COLORS.cyanLight} startFrame={35} dur={55} />
+          <FlowDot x1={280} y1={130} x2={340} y2={108} color={COLORS.cyanLight} startFrame={25} dur={50} />
+          <FlowDot x1={280} y1={150} x2={340} y2={150} color={COLORS.cyanLight} startFrame={30} dur={45} />
+          <FlowDot x1={280} y1={170} x2={340} y2={192} color={COLORS.cyanLight} startFrame={35} dur={55} />
         </Sequence>
 
       </svg>

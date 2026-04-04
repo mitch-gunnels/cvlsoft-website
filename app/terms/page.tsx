@@ -304,7 +304,7 @@ export default function TermsOfService() {
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">Notices:</strong> All legal notices must be sent in writing to
-              legal@cvlsoft.com or to the address specified in your service agreement.
+              support@cvlsoft.com or to the address specified in your service agreement.
             </p>
           </section>
 
@@ -312,7 +312,7 @@ export default function TermsOfService() {
             <h2 className="text-lg font-medium text-white">22. Contact</h2>
             <p className="mt-3">
               Questions about these Terms? Contact us at:<br />
-              <span className="text-cyan-400">legal@cvlsoft.com</span>
+              <span className="text-cyan-400">support@cvlsoft.com</span>
             </p>
           </section>
         </div>

@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import { readFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -10,76 +12,101 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function findLogoPath(): string {
+  const candidates = [
+    resolve(process.cwd(), "public/logo-email.png"),
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) return p;
+  }
+  return candidates[0]!;
+}
+
 function buildConfirmationEmail(firstName: string): string {
   return `
 <!DOCTYPE html>
-<html lang="en">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-<body style="margin:0;padding:0;background:#f7f8fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f8fb;padding:40px 20px;">
-    <tr><td align="center">
-      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.06);">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--[if mso]><style>table,td{font-family:Arial,sans-serif!important}</style><![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#f7f8fb;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f7f8fb;">
+    <tr><td align="center" style="padding:40px 16px;">
+      <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
         <!-- Header -->
-        <tr>
-          <td style="background:#0f172a;padding:32px 40px;text-align:center;">
-            <span style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:0.10em;font-family:'Courier New',monospace;">cvlSoft</span>
-          </td>
-        </tr>
+        <tr><td style="background-color:#020618;border-radius:16px 16px 0 0;padding:32px 40px;text-align:center;">
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+            <tr>
+              <td style="padding-right:12px;vertical-align:middle;">
+                <img src="cid:aios-logo" alt="AIOS" width="36" height="36" style="display:block;border:0;" />
+              </td>
+              <td style="vertical-align:middle;">
+                <span style="font-family:'Space Grotesk',system-ui,sans-serif;font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.025em;">AIOS</span>
+                <span style="font-family:'Manrope',system-ui,sans-serif;font-size:12px;font-weight:500;color:#94a3b8;margin-left:6px;">by cvlSoft</span>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
         <!-- Body -->
-        <tr>
-          <td style="padding:40px;">
-            <h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;">
-              ${firstName},
-            </h1>
-            <p style="margin:0 0 24px;font-size:15px;line-height:1.7;color:#475569;">
-              Thanks for your interest in <strong>AIOS</strong>. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
-            </p>
+        <tr><td style="background-color:#ffffff;padding:40px;">
+          <h1 style="font-family:'Space Grotesk',system-ui,sans-serif;font-size:22px;font-weight:600;color:#020618;margin:0 0 8px;letter-spacing:-0.025em;">
+            Hi ${firstName},
+          </h1>
+          <p style="font-family:'Manrope',system-ui,sans-serif;font-size:14px;color:#62748e;margin:0 0 28px;line-height:1.6;">
+            Thanks for your interest in <strong style="color:#020618;">AIOS</strong>. A member of our team will reach out shortly to schedule a walkthrough tailored to your environment.
+          </p>
 
-            <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f0fdfa;border-radius:12px;width:100%;">
-              <tr>
-                <td style="padding:24px;">
-                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;">What is <strong>AIOS</strong>?</p>
-                  <p style="margin:8px 0 0;font-size:14px;line-height:1.8;color:#334155;">
-                    <strong>AIOS</strong> (Autonomous Intelligence Operating System) is cvlSoft's enterprise autonomy platform that transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into reusable super agents with deterministic policy controls, enterprise-grade security, and evidence-first observability. No more brittle, one-off agentic workflows.
-                  </p>
-                </td>
-              </tr>
-            </table>
+          <!-- What is AIOS -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0fdfa;border-radius:12px;">
+            <tr><td style="padding:24px;">
+              <p style="font-family:'Manrope',system-ui,sans-serif;font-size:12px;font-weight:600;color:#0e7490;letter-spacing:0.06em;margin:0 0 8px;">WHAT IS AIOS?</p>
+              <p style="font-family:'Manrope',system-ui,sans-serif;font-size:14px;line-height:1.7;color:#334155;margin:0;">
+                <strong>AIOS</strong> (Autonomous Intelligence Operating System) transforms your operational knowledge &mdash; SOPs, runbooks, and tribal expertise &mdash; into autonomous execution with enterprise-grade guardrails, security, and evidence-first observability.
+              </p>
+            </td></tr>
+          </table>
 
-            <table role="presentation" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:12px;width:100%;margin-top:16px;">
-              <tr>
-                <td style="padding:24px;">
-                  <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#0e7490;letter-spacing:0.06em;text-transform:uppercase;">What to expect</p>
-                  <ul style="margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.8;color:#334155;">
-                    <li>A brief intro call to understand your use case</li>
-                    <li>A live platform walkthrough using your scenarios</li>
-                    <li>A clear next-steps plan &mdash; no pressure</li>
-                  </ul>
-                </td>
-              </tr>
-            </table>
+          <!-- What to expect -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:12px;margin-top:16px;">
+            <tr><td style="padding:24px;">
+              <p style="font-family:'Manrope',system-ui,sans-serif;font-size:12px;font-weight:600;color:#0e7490;letter-spacing:0.06em;margin:0 0 8px;">WHAT TO EXPECT</p>
+              <ul style="margin:0;padding-left:18px;font-family:'Manrope',system-ui,sans-serif;font-size:14px;line-height:1.8;color:#334155;">
+                <li>A brief intro call to understand your use case</li>
+                <li>A live platform walkthrough using your scenarios</li>
+                <li>A clear next-steps plan &mdash; no pressure</li>
+              </ul>
+            </td></tr>
+          </table>
 
-            <p style="margin:28px 0 0;font-size:14px;line-height:1.7;color:#475569;">
-              In the meantime, feel free to reply directly to this email with any questions or visit our website to learn more.
-            </p>
-            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto 0;text-align:center;">
-              <tr>
-                <td style="background:#0f172a;border-radius:9999px;padding:12px 28px;">
-                  <a href="https://www.cvlsoft.net" style="font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">Visit cvlsoft.net</a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+          <p style="font-family:'Manrope',system-ui,sans-serif;font-size:14px;line-height:1.6;color:#62748e;margin:28px 0 0;">
+            In the meantime, feel free to reply directly to this email with any questions.
+          </p>
+
+          <!-- CTA Button -->
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px auto 0;">
+            <tr><td style="background-color:#020618;border-radius:9999px;text-align:center;">
+              <a href="https://www.cvlsoft.com" target="_blank"
+                 style="display:inline-block;padding:14px 36px;font-family:'Manrope',system-ui,sans-serif;font-size:13px;font-weight:600;color:#ffffff;text-decoration:none;letter-spacing:0.01em;">
+                Visit cvlsoft.com
+              </a>
+            </td></tr>
+          </table>
+        </td></tr>
+
         <!-- Footer -->
-        <tr>
-          <td style="padding:24px 40px;border-top:1px solid #e2e8f0;text-align:center;">
-            <a href="https://www.cvlsoft.net" style="font-size:12px;color:#0e7490;text-decoration:none;">www.cvlsoft.net</a>
-            <p style="margin:8px 0 0;font-size:12px;color:#94a3b8;">
-              cvlSoft &middot; Enterprise Autonomy Platform
-            </p>
-          </td>
-        </tr>
+        <tr><td style="background-color:#f7f8fb;border-top:1px solid #e2e8f0;border-radius:0 0 16px 16px;padding:24px 40px;text-align:center;">
+          <p style="font-family:'Manrope',system-ui,sans-serif;font-size:11px;color:#94a3b8;margin:0 0 4px;letter-spacing:0.03em;">
+            AIOS &mdash; Autonomous Intelligence Operating System
+          </p>
+          <p style="font-family:'Manrope',system-ui,sans-serif;font-size:11px;color:#cbd5e1;margin:0;">
+            Enterprise AI that actually ships to production.
+          </p>
+        </td></tr>
+
       </table>
     </td></tr>
   </table>
@@ -94,6 +121,13 @@ export async function sendConfirmationEmail(to: string, name: string): Promise<v
     to,
     subject: "cvlSoft — AIOS Demo Request",
     html: buildConfirmationEmail(firstName),
+    attachments: [
+      {
+        filename: "logo.png",
+        content: readFileSync(findLogoPath()),
+        cid: "aios-logo",
+      },
+    ],
   });
 }
 
@@ -106,7 +140,7 @@ export async function sendNotificationEmail(data: {
 }): Promise<void> {
   await transporter.sendMail({
     from: `"cvlSoft Website" <${process.env.SMTP_USER}>`,
-    to: "demo@cvlsoft.com",
+    to: "sales@cvlsoft.com",
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
     html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">

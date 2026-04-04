@@ -23,53 +23,25 @@ export default function Contact() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">General Inquiries</h2>
+            <h2 className="text-lg font-medium text-white">Sales &amp; General Inquiries</h2>
             <p className="mt-3">
-              For general questions about cvlSoft and the AIOS platform:<br />
-              <span className="text-cyan-400">hello@cvlsoft.com</span>
+              For general questions, pricing inquiries, enterprise agreements, demo requests,
+              or partnership opportunities:<br />
+              <span className="text-cyan-400">sales@cvlsoft.com</span>
             </p>
             <p className="mt-2 text-sm text-slate-500">We typically respond within one business day.</p>
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">Sales</h2>
+            <h2 className="text-lg font-medium text-white">Support, Security &amp; Legal</h2>
             <p className="mt-3">
-              For pricing inquiries, enterprise agreements, or partnership opportunities:<br />
-              <span className="text-cyan-400">sales@cvlsoft.com</span>
-            </p>
-            <p className="mt-2 text-sm text-slate-500">Our sales team responds within one business day.</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-medium text-white">Customer Support</h2>
-            <p className="mt-3">
-              Existing platform customers can reach our support team for technical assistance,
-              account management, and service inquiries:<br />
+              For technical assistance, account management, security vulnerabilities,
+              privacy requests, legal notices, or questions about our Terms of Service
+              and Privacy Policy:<br />
               <span className="text-cyan-400">support@cvlsoft.com</span>
             </p>
             <p className="mt-2 text-sm text-slate-500">
-              Support SLAs are defined in your service agreement. Critical issues are triaged immediately.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-medium text-white">Security &amp; Privacy</h2>
-            <p className="mt-3">
-              To report a security vulnerability, data privacy request, or to exercise your privacy rights
-              under CCPA, GDPR, or other applicable regulations:<br />
-              <span className="text-cyan-400">security@cvlsoft.com</span>
-            </p>
-            <p className="mt-2 text-sm text-slate-500">
-              Security reports are acknowledged within 24 hours. Privacy requests are processed within 30 days.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-medium text-white">Legal</h2>
-            <p className="mt-3">
-              For legal notices, subpoenas, regulatory inquiries, or questions about our Terms of Service
-              and Privacy Policy:<br />
-              <span className="text-cyan-400">legal@cvlsoft.com</span>
+              Support SLAs are defined in your service agreement. Security reports are acknowledged within 24 hours. Privacy requests are processed within 30 days.
             </p>
           </section>
         </div>

@@ -257,17 +257,20 @@ function Particles() {
 /* ── Data ── */
 
 const FUNNEL_STAGES = [
-  { label: "Start AI initiative", pct: 100 },
-  { label: "Reach proof of concept", pct: 60 },
-  { label: "Reach pilot", pct: 20 },
-  { label: "Full production", pct: 5 },
+  { label: "Experimenting with AI", pct: 88 },
+  { label: "Scaling agentic AI", pct: 23 },
+  { label: "Beyond proof-of-concept", pct: 22 },
+  { label: "Creating substantial value", pct: 4 },
 ];
 
-const FAILURE_REASONS = [
-  { label: "Governance & compliance", pct: 34 },
-  { label: "Integration complexity", pct: 28 },
-  { label: "Accuracy below threshold", pct: 22 },
-  { label: "Maintenance & drift", pct: 16 },
+const BARRIERS = [
+  { label: "Trust & governance", stat: "63%", statDesc: "lack AI governance policies", source: "Forrester 2025-2026" },
+  { label: "No ROI proof", stat: "47%", statDesc: "have no AI strategy at all", source: "BCG 2025" },
+  { label: "Cascading failure risk", stat: "75%", statDesc: "of DIY agentic architectures will fail", source: "Forrester 2026" },
+  { label: "Talent gap", stat: "#1", statDesc: "barrier to integrating AI into workflows", source: "Deloitte 2026" },
+  { label: "Architecture complexity", stat: "40%+", statDesc: "of agentic AI projects will be canceled by 2027", source: "Gartner 2025" },
+  { label: "Regulatory acceleration", stat: "10pt", statDesc: "rise as a deployment barrier in one year", source: "Deloitte 2025" },
+  { label: "Culture & process inertia", stat: "70%", statDesc: "of AI success is people/process, not tech", source: "BCG 2025" },
 ];
 
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
@@ -475,11 +478,11 @@ export default function Home() {
             <span className="text-sm font-medium tracking-tight text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
           </a>
           <div className="flex items-center gap-8">
-            <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Platform
-            </a>
             <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Problem
+            </a>
+            <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Platform
             </a>
             <a href="#pricing" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Pricing
@@ -525,17 +528,17 @@ export default function Home() {
           <div className="relative z-10 px-6 pb-24 pt-16 sm:px-10 lg:pb-32 lg:pl-[120px] lg:pr-[112px] lg:pt-24">
             <div className="max-w-2xl">
               <h1 className="reveal-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                Your most expensive people do the same work{" "}
+                Enterprise AI has a 96% failure rate for a reason —{" "}
                 <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">
-                  every day.
+                  it&rsquo;s built wrong.
                 </span>
               </h1>
 
               <p className="reveal-up mt-6 max-w-[540px] text-xl font-normal text-slate-400 [animation-delay:100ms]">
-                That&rsquo;s not strategy — it&rsquo;s waste! AIOS learns how your experts
-                actually work — then executes it autonomously, at scale.
+                AIOS captures how your experts actually work, then executes autonomously with guardrails.
+                Not another chatbot. Not another agent framework. An operating system for autonomous intelligence.
                 <br /><br />
-                Outcome-based pricing. No savings, no charge — ever.
+                No savings, no charge — ever.
               </p>
 
               <div className="reveal-up mt-10 flex flex-wrap gap-3 [animation-delay:200ms]">
@@ -561,76 +564,12 @@ export default function Home() {
         {/* ── Section divider ── */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="platform" className="relative bg-[#0a0f1a] py-24 md:py-32">
-          <SectionScrollLine />
-          {/* Top fade */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
-          {/* Bottom fade */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
-          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-500/[0.04] blur-[100px]" />
-          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-500/[0.05] blur-[80px]" />
-
-          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
-              THE PLATFORM
-            </p>
-            <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
-              Why we&rsquo;re different.
-            </h2>
-            <p className="reveal-up mt-5 mb-16 md:mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
-              The industry builds an agent for every task. AIOS builds
-              cognition — adaptive intelligence that reasons about any workflow,
-              selects any tool, and scales without maintenance debt. &nbsp;
-              <span className="underline decoration-cyan-400 decoration-2 underline-offset-4">Stop building AI agents. Start building intelligence.</span>
-            </p>
-
-            {/* Feature rows — each with its own illustration box */}
-            <div className="mt-12 space-y-20 md:mt-32 md:space-y-64">
-              {DIFFERENTIATORS.map((item, i) => {
-                const illustrations = [
-                  /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
-                  /* 1: Tacit knowledge (Remotion) */ <TacitKnowledgePlayer key="i1" />,
-                  /* 2: Cognitive core (Remotion) */ <CognitiveCorePlayer key="i2" />,
-                  /* 3: Learning loop (Remotion) */ <LearningLoopPlayer key="i3" />,
-                  /* 4: Security (Remotion) */ <SecurityPosturePlayer key="i4" />,
-                  /* 5: Connector (Remotion) */ <ConnectorFabricPlayer key="i5" />,
-                ];
-
-                return (
-                  <div key={item.title} className="reveal-up grid items-center gap-10 lg:grid-cols-[5fr_6fr]" style={{ animationDelay: `${i * 60}ms` }}>
-                    {/* Text — vertically centered, horizontally centered between line and box */}
-                    <div className="flex flex-col items-start justify-center px-4 py-8 lg:mx-auto lg:px-0">
-                      <h3 className="max-w-md text-2xl font-light tracking-[-0.02em] text-white md:text-[36px] md:leading-[1.15]">{item.title}</h3>
-                      <p className="mt-6 max-w-md text-[15px] leading-relaxed text-slate-400">{item.description}</p>
-                      <a href="#demo" className="mt-8 inline-flex w-fit items-center gap-2 rounded-md border border-slate-600 px-5 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white">
-                        Learn more <span className="text-xs">&#8599;</span>
-                      </a>
-                    </div>
-                    {/* Illustration box */}
-                    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020]">
-                      <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
-                      <div className="flex aspect-[16/10] items-center justify-center p-10">
-                        {illustrations[[2, 1, 3, 4, 5][i]]}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ── Section divider ── */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-
         {/* ── INDUSTRY PROBLEM ── */}
-        <section id="problem" className="relative py-24 md:py-32">
+        <section id="problem" className="relative bg-[#0a0f1a] py-24 md:py-32">
           <SectionScrollLine color="rose" />
           {/* Top fade */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 rounded-full bg-rose-500/[0.06] blur-[80px]" />
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
@@ -638,31 +577,26 @@ export default function Home() {
               THE INDUSTRY PROBLEM
             </p>
 
-            <h2 className="reveal-up mt-6 max-w-4xl text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
-              <span className="font-mono font-medium text-rose-400">95%</span> of enterprise AI{" "}
-              <span className="underline decoration-rose-400 decoration-[3px] underline-offset-4">
-                never reaches production.
-              </span>
+            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
+              <span className="font-mono font-medium text-rose-400">96%</span> of enterprises <span className="underline decoration-rose-400 decoration-[3px] underline-offset-4">aren&rsquo;t creating real value from AI.</span>
             </h2>
 
-            <p className="reveal-up mt-4 max-w-2xl text-[15px] leading-relaxed text-slate-400 [animation-delay:120ms]">
-              The agentic AI industry has structural problems that point
-              solutions can&rsquo;t fix. Here&rsquo;s the data.
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              Everyone&rsquo;s experimenting. Almost no one&rsquo;s shipping. The data is brutal, but tells a consistent story!
             </p>
 
-            {/* Attrition Funnel */}
-            <div className="reveal-up mt-12 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:160ms]">
+            {/* Scaling Gap Funnel */}
+            <div className="observe-viz reveal-up mt-12 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:160ms]">
               <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
-                CONCEPT &rarr; PRODUCTION
+                THE SCALING GAP
               </p>
               <p className="mt-3 text-base font-medium text-slate-200 md:text-lg">
-                For every 100 enterprises that start an AI initiative,
-                only 5 ship to production.
+                88% of organizations use AI. Only 4% are creating substantial value.
               </p>
               <div className="mt-5 space-y-3">
                 {FUNNEL_STAGES.map((stage, i) => {
-                  const barColor = ["bg-slate-700", "bg-slate-400", "bg-amber-500", "bg-rose-500"][i];
-                  const numColor = ["text-slate-300", "text-slate-400", "text-amber-500", "text-rose-400"][i];
+                  const barColor = ["bg-slate-500", "bg-amber-500", "bg-orange-500", "bg-rose-500"][i];
+                  const numColor = ["text-slate-300", "text-amber-400", "text-orange-400", "text-rose-400"][i];
                   return (
                     <div key={stage.label}>
                       <div className="mb-1 flex items-baseline gap-2">
@@ -681,58 +615,54 @@ export default function Home() {
                   );
                 })}
               </div>
-              <p className="mt-4 text-xs text-slate-400">
-                Source: MIT Sloan Management Review &middot; Gartner
+              <p className="mt-4 text-xs text-slate-500">
+                Source: McKinsey State of AI, Nov 2025 &middot; BCG &ldquo;Widening AI Value Gap,&rdquo; Sept 2025
               </p>
             </div>
 
-            {/* Two-column: Why They Fail + Cost Over Time */}
+            {/* Kill Shot Stat */}
+            <div className="reveal-up mt-5 rounded-lg border border-rose-500/15 bg-rose-500/[0.04] p-6 md:p-8 [animation-delay:220ms]">
+              <p className="text-center text-3xl font-light text-white md:text-4xl">
+                <span className="font-mono font-medium text-rose-400">40%+</span> of agentic AI projects will be{" "}
+                <span className="underline decoration-rose-400 decoration-2 underline-offset-4">canceled</span> by 2027.
+              </p>
+              <p className="mt-3 text-center text-xs text-slate-500">
+                Due to escalating costs, unclear business value, or inadequate risk controls. &mdash; Gartner, June 2025
+              </p>
+            </div>
+
+            {/* 7 Barriers + Cost Over Time — side by side */}
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
-              {/* Failure breakdown */}
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:240ms]">
+              {/* 7 Barriers Grid */}
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:280ms]">
                 <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
-                  WHY THEY FAIL
+                  7 BARRIERS TO ENTERPRISE AGENTIC AI
                 </p>
                 <p className="mt-3 text-base font-medium text-slate-200">
-                  Governance and integration account for 62% of all failures.
+                  The research converges on seven structural problems. Point solutions can&rsquo;t fix them.
                 </p>
 
-                <div className="mt-5 flex h-6 gap-0.5 overflow-hidden rounded-md">
-                  {FAILURE_REASONS.map((r, i) => {
-                    const color = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
-                    return (
-                      <div
-                        key={r.label}
-                        className={`bar-fill ${color}`}
-                        style={{ width: `${r.pct}%`, transitionDelay: `${500 + i * 150}ms` }}
-                      />
-                    );
-                  })}
-                </div>
-
-                <div className="mt-5 space-y-2.5">
-                  {FAILURE_REASONS.map((r, i) => {
-                    const dot = ["bg-rose-400", "bg-amber-400", "bg-orange-400", "bg-slate-300"][i];
-                    return (
-                      <div key={r.label} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <div className={`h-2.5 w-2.5 rounded-full ${dot}`} />
-                          <span className="text-sm text-slate-400">{r.label}</span>
+                <div className="mt-6 space-y-4">
+                  {BARRIERS.map((b, i) => (
+                    <div key={b.label} className="flex items-start gap-4">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500/10 font-mono text-xs font-medium text-rose-400">
+                        {i + 1}
+                      </span>
+                      <div className="flex-1">
+                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                          <span className="text-sm font-medium text-white">{b.label}</span>
+                          <span className="font-mono text-sm font-medium text-rose-400">{b.stat}</span>
+                          <span className="text-xs text-slate-500">{b.statDesc}</span>
                         </div>
-                        <span className="font-mono text-sm font-medium text-slate-300">
-                          {r.pct}%
-                        </span>
+                        <p className="mt-0.5 text-[10px] text-slate-600">{b.source}</p>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
-                <p className="mt-4 text-xs text-slate-400">
-                  Source: UC Berkeley &middot; Industry surveys
-                </p>
               </div>
 
-              {/* Cost over time */}
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:320ms]">
+              {/* Cost Over Time */}
+              <div className="observe-viz reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:340ms]">
                 <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
                   TOTAL COST OF OWNERSHIP
                 </p>
@@ -787,14 +717,15 @@ export default function Home() {
             {/* AIOS: The Antithesis */}
             <div className="reveal-up mt-5 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:400ms]">
               <p className="text-lg font-medium text-white">
-                AIOS is built for the 95%.
+                AIOS is built to solve the barriers that matter most.
               </p>
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 {[
-                  { title: "Production from day one", desc: "Forward-deployed engineers ship real workflows, not demos." },
-                  { title: "Governance built in", desc: "Policy engine, circuit breakers, and evidence-grade audit." },
-                  { title: "Flat cost curve", desc: "Reusable skills eliminate maintenance debt." },
-                  { title: ">99% accuracy", desc: "Deterministic policy controls close the reliability gap." },
+                  { title: "Trust & governance", desc: "Deterministic policy guardrails, plan-before-execute, evidence-grade audit trails." },
+                  { title: "Cascading failure", desc: "Circuit breakers, hierarchical kill switches, deterministic safety at every step." },
+                  { title: "Architecture complexity", desc: "Pre-built cognitive core replaces DIY agent sprawl. No architecture to maintain." },
+                  { title: "Talent gap", desc: "AI-powered knowledge extraction from SMEs — no ML engineers required." },
+                  { title: "ROI from day one", desc: "Outcome-based pricing. You pay per successful task. Failed tasks are free." },
                 ].map((item) => (
                   <div key={item.title}>
                     <p className="text-sm font-medium text-cyan-400">{item.title}</p>
@@ -802,7 +733,223 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+
+              {/* Automation Spectrum Infographic */}
+              <div className="mt-10 border-t border-white/[0.08] pt-10">
+                <svg viewBox="0 -20 1200 600" fill="none" className="w-full" role="img" aria-label="AIOS Automation Spectrum: Deterministic Automation, Deterministic Intelligence, and Full Autonomy">
+
+                  {/* ── Full-width label above bar ── */}
+                  <text x="600" y="15" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600" letterSpacing="0.1em">AIOS COVERS THE FULL SPECTRUM (Deterministic thru Full Autonomy)</text>
+
+                  {/* ── Spectrum bar ── */}
+                  <rect x="40" y="34" width="1120" height="8" rx="4" fill="#1e293b" />
+                  <rect x="40" y="34" width="280" height="8" rx="4" fill="#475569" />
+                  <rect x="320" y="32" width="560" height="12" rx="6" fill="#22d3ee" opacity="0.8" />
+                  <rect x="880" y="34" width="280" height="8" rx="4" fill="#475569" />
+                  {/* Center marker */}
+                  <circle cx="600" cy="38" r="6" fill="#22d3ee" />
+                  <circle cx="600" cy="38" r="10" fill="#22d3ee" opacity="0.2">
+                    <animate attributeName="r" values="10;14;10" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.2;0.08;0.2" dur="3s" repeatCount="indefinite" />
+                  </circle>
+                  <text x="600" y="62" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">SWEET SPOT</text>
+
+                  {/* ── LEFT COLUMN: Deterministic Automation ── */}
+                  <rect x="40" y="100" width="340" height="410" rx="12" fill="#0a0f1a" stroke="#1e293b" strokeWidth="1" />
+
+                  {/* Icon: rigid grid — centered */}
+                  <rect x="198" y="124" width="8" height="8" rx="1" fill="#475569" />
+                  <rect x="210" y="124" width="8" height="8" rx="1" fill="#475569" />
+                  <rect x="222" y="124" width="8" height="8" rx="1" fill="#475569" />
+                  <rect x="198" y="136" width="8" height="8" rx="1" fill="#475569" />
+                  <rect x="210" y="136" width="8" height="8" rx="1" fill="#475569" />
+                  <rect x="222" y="136" width="8" height="8" rx="1" fill="#475569" />
+
+                  <text x="210" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="600" letterSpacing="0.12em">DETERMINISTIC AUTOMATION</text>
+                  <text x="210" y="198" textAnchor="middle" fill="#64748b" fontSize="11">Pure rule-based execution. No AI judgment.</text>
+                  <text x="210" y="214" textAnchor="middle" fill="#64748b" fontSize="11">Every action follows explicit if/then logic.</text>
+                  <text x="210" y="230" textAnchor="middle" fill="#64748b" fontSize="11">Predictable but brittle.</text>
+
+                  {/* Traits — centered */}
+                  <circle cx="120" cy="262" r="3" fill="#475569" />
+                  <text x="132" y="266" fill="#94a3b8" fontSize="11">100% predictable</text>
+                  <circle cx="120" cy="286" r="3" fill="#475569" />
+                  <text x="132" y="290" fill="#94a3b8" fontSize="11">Strict decision matrix</text>
+                  <circle cx="120" cy="310" r="3" fill="#475569" />
+                  <text x="132" y="314" fill="#94a3b8" fontSize="11">High maintenance cost</text>
+                  <circle cx="120" cy="334" r="3" fill="#475569" />
+                  <text x="132" y="338" fill="#94a3b8" fontSize="11">Edge cases are hard to maintain</text>
+
+                  {/* Use case */}
+                  <text x="210" y="376" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.1em">USE CASE</text>
+                  <text x="210" y="396" textAnchor="middle" fill="#64748b" fontSize="11">Simple automations, scripted workflows</text>
+
+                  {/* Bottom stat */}
+                  <rect x="62" y="420" width="296" height="32" rx="6" fill="#1e293b" />
+                  <text x="210" y="441" textAnchor="middle" fill="#64748b" fontSize="11" fontWeight="500">~5% of enterprise needs</text>
+
+
+                  {/* ── CENTER COLUMN: Deterministic Intelligence ── */}
+                  <rect x="400" y="96" width="400" height="418" rx="12" fill="#0a0f1a" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.3" />
+                  <rect x="401" y="97" width="398" height="416" rx="12" fill="#22d3ee" fillOpacity="0.02" />
+
+                  {/* Icon: shield with circuit pattern inside — centered in box */}
+                  <path d="M586,118 L600,110 L614,118 L614,136 C614,146 600,154 600,154 C600,154 586,146 586,136 Z" stroke="#22d3ee" strokeWidth="1.5" fill="#22d3ee" fillOpacity="0.06" />
+                  {/* Circuit nodes inside shield — vertically centered */}
+                  <circle cx="600" cy="123" r="2.5" fill="#22d3ee" opacity="0.8" />
+                  <circle cx="593" cy="132" r="2" fill="#22d3ee" opacity="0.6" />
+                  <circle cx="607" cy="132" r="2" fill="#22d3ee" opacity="0.6" />
+                  <circle cx="600" cy="141" r="2" fill="#22d3ee" opacity="0.5" />
+                  <line x1="600" y1="123" x2="593" y2="132" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
+                  <line x1="600" y1="123" x2="607" y2="132" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
+                  <line x1="593" y1="132" x2="600" y2="141" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
+                  <line x1="607" y1="132" x2="600" y2="141" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
+
+                  <text x="600" y="178" textAnchor="middle" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.12em">GUIDED AUTONOMY</text>
+                  <text x="600" y="194" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="500" opacity="0.7">The AIOS default</text>
+
+                  <text x="600" y="218" textAnchor="middle" fill="#94a3b8" fontSize="11">AI reasoning operates inside deterministic guardrails.</text>
+                  <text x="600" y="234" textAnchor="middle" fill="#94a3b8" fontSize="11">The system thinks, but policy controls what it can do.</text>
+
+                  {/* Traits with cyan checks — centered */}
+                  {[
+                    "AI reasoning + policy guardrails",
+                    "Adapts to edge cases within bounds",
+                    "Plan-before-execute architecture",
+                    "Evidence-grade audit trail",
+                    "Human-in-the-loop when needed",
+                  ].map((trait, i) => (
+                    <g key={trait}>
+                      <path d={`M480,${262 + i * 24} L484,${266 + i * 24} L490,${258 + i * 24}`} stroke="#22d3ee" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      <text x="498" y={266 + i * 24} fill="#e2e8f0" fontSize="11">{trait}</text>
+                    </g>
+                  ))}
+
+                  {/* 90% stat */}
+                  <text x="600" y="434" textAnchor="middle" fill="#ffffff" fontSize="28" fontWeight="300">
+                    <tspan fill="#22d3ee" fontWeight="500" fontFamily="var(--font-code), monospace">90%</tspan>
+                    <tspan fill="#94a3b8" fontSize="14"> of enterprise workflows</tspan>
+                  </text>
+                  <text x="600" y="456" textAnchor="middle" fill="#94a3b8" fontSize="14">belong here</text>
+                  <line x1="530" y1="462" x2="670" y2="462" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.4" />
+
+                  {/* Bottom tag */}
+                  <text x="600" y="492" textAnchor="middle" fill="#64748b" fontSize="10" fontWeight="500" letterSpacing="0.08em">WHERE COMPLIANCE MEETS INTELLIGENCE</text>
+
+
+                  {/* ── RIGHT COLUMN: Full Autonomy ── */}
+                  <rect x="820" y="100" width="340" height="410" rx="12" fill="#0a0f1a" stroke="#1e293b" strokeWidth="1" />
+
+                  {/* Icon: expanding neural nodes — centered */}
+                  <circle cx="978" cy="128" r="5" fill="#475569" />
+                  <circle cx="996" cy="120" r="3.5" fill="#475569" />
+                  <circle cx="1010" cy="134" r="4" fill="#475569" />
+                  <circle cx="990" cy="142" r="3" fill="#475569" />
+                  <line x1="978" y1="128" x2="996" y2="120" stroke="#475569" strokeWidth="1" />
+                  <line x1="996" y1="120" x2="1010" y2="134" stroke="#475569" strokeWidth="1" />
+                  <line x1="978" y1="128" x2="1010" y2="134" stroke="#475569" strokeWidth="1" />
+                  <line x1="978" y1="128" x2="990" y2="142" stroke="#475569" strokeWidth="1" />
+                  <line x1="1010" y1="134" x2="990" y2="142" stroke="#475569" strokeWidth="1" />
+
+                  <text x="990" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="600" letterSpacing="0.12em">FULL AUTONOMY</text>
+                  <text x="990" y="198" textAnchor="middle" fill="#64748b" fontSize="11">Fully autonomous AI with maximum</text>
+                  <text x="990" y="214" textAnchor="middle" fill="#64748b" fontSize="11">agency. Minimal human oversight.</text>
+                  <text x="990" y="230" textAnchor="middle" fill="#64748b" fontSize="11">Requires the highest trust threshold.</text>
+
+                  {/* Traits — centered */}
+                  <circle cx="900" cy="262" r="3" fill="#475569" />
+                  <text x="912" y="266" fill="#94a3b8" fontSize="11">Maximum AI agency</text>
+                  <circle cx="900" cy="286" r="3" fill="#475569" />
+                  <text x="912" y="290" fill="#94a3b8" fontSize="11">Minimal guardrails</text>
+                  <circle cx="900" cy="310" r="3" fill="#475569" />
+                  <text x="912" y="314" fill="#94a3b8" fontSize="11">Highest risk surface</text>
+                  <circle cx="900" cy="334" r="3" fill="#475569" />
+                  <text x="912" y="338" fill="#94a3b8" fontSize="11">Requires mature governance</text>
+
+                  {/* Use case */}
+                  <text x="990" y="376" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.1em">USE CASE</text>
+                  <text x="990" y="396" textAnchor="middle" fill="#64748b" fontSize="11">Research, creative generation,</text>
+                  <text x="990" y="412" textAnchor="middle" fill="#64748b" fontSize="11">open-ended exploration</text>
+
+                  {/* Bottom stat */}
+                  <rect x="842" y="420" width="296" height="32" rx="6" fill="#1e293b" />
+                  <text x="990" y="441" textAnchor="middle" fill="#64748b" fontSize="11" fontWeight="500">~5% of enterprise needs</text>
+
+
+                  {/* ── Bottom callout — larger, more space ── */}
+                  <text x="600" y="548" textAnchor="middle" fill="#94a3b8" fontSize="14" fontWeight="400">
+                    One platform. Three modes. <tspan fill="#22d3ee" fontWeight="500">The 90% in the middle</tspan> is where enterprises actually operate.
+                  </text>
+                  <text x="600" y="570" textAnchor="middle" fill="#64748b" fontSize="12">
+                    AIOS handles all three — but the sweet spot is Deterministic Intelligence.
+                  </text>
+                </svg>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
+        <section id="platform" className="relative py-24 md:py-32">
+          <SectionScrollLine />
+          {/* Top fade */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+          {/* Bottom fade */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
+          <div className="pointer-events-none absolute right-0 bottom-0 -z-10 h-96 w-96 rounded-full bg-indigo-500/[0.04] blur-[100px]" />
+          <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-500/[0.05] blur-[80px]" />
+
+          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+              THE PLATFORM
+            </p>
+            <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              Why we&rsquo;re different.
+            </h2>
+            <p className="reveal-up mt-5 mb-16 md:mb-48 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              The industry builds an agent for every task. AIOS builds
+              cognition — adaptive intelligence that reasons about any workflow,
+              selects any tool, and scales without maintenance debt. &nbsp;
+              <span className="underline decoration-cyan-400 decoration-2 underline-offset-4">Stop building AI agents. Start building intelligence.</span>
+            </p>
+
+            {/* Feature rows — each with its own illustration box */}
+            <div className="mt-12 space-y-20 md:mt-32 md:space-y-64">
+              {DIFFERENTIATORS.map((item, i) => {
+                const illustrations = [
+                  /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
+                  /* 1: Tacit knowledge (Remotion) */ <TacitKnowledgePlayer key="i1" />,
+                  /* 2: Cognitive core (Remotion) */ <CognitiveCorePlayer key="i2" />,
+                  /* 3: Learning loop (Remotion) */ <LearningLoopPlayer key="i3" />,
+                  /* 4: Security (Remotion) */ <SecurityPosturePlayer key="i4" />,
+                  /* 5: Connector (Remotion) */ <ConnectorFabricPlayer key="i5" />,
+                ];
+
+                return (
+                  <div key={item.title} className="reveal-up grid items-center gap-10 lg:grid-cols-[5fr_6fr]" style={{ animationDelay: `${i * 60}ms` }}>
+                    {/* Text — vertically centered, horizontally centered between line and box */}
+                    <div className="flex flex-col items-start justify-center px-4 py-8 lg:mx-auto lg:px-0">
+                      <h3 className="max-w-md text-2xl font-light tracking-[-0.02em] text-white md:text-[36px] md:leading-[1.15]">{item.title}</h3>
+                      <p className="mt-6 max-w-md text-[15px] leading-relaxed text-slate-400">{item.description}</p>
+                      <a href="#demo" className="mt-8 inline-flex w-fit items-center gap-2 rounded-md border border-slate-600 px-5 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white">
+                        Learn more <span className="text-xs">&#8599;</span>
+                      </a>
+                    </div>
+                    {/* Illustration box */}
+                    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020]">
+                      <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
+                      <div className="flex aspect-[16/10] items-center justify-center p-10">
+                        {illustrations[[2, 1, 3, 4, 5][i]]}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
           </div>
         </section>
 
@@ -1252,7 +1399,7 @@ export default function Home() {
               <div className="reveal-up mt-8 max-w-4xl space-y-5 text-lg leading-relaxed text-slate-400 [animation-delay:120ms]">
                 <p>
                   Cognitive Venture Labs (cvlSoft) was founded by experts who have spent years in the trenches of enterprise
-                  agentic AI. We understand how large organizations actually operate: the
+                  AI systems. Our founders were early contributors to transformer-based AI and thought leaders in agentic AI. We understand how large organizations actually operate: the
                   politics, the compliance requirements, the legacy systems, the tribal knowledge
                   that nobody has documented. That understanding is baked into the architecture
                   of AIOS itself.
@@ -1397,8 +1544,8 @@ export default function Home() {
               <div>
               <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
               <ul className="mt-4 space-y-2.5">
-                <li><a href="#platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
                 <li><a href="#problem" className="text-sm text-slate-500 transition hover:text-white">Problem</a></li>
+                <li><a href="#platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
                 <li><a href="#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
                 <li><a href="#partnership" className="text-sm text-slate-500 transition hover:text-white">Partnership</a></li>
                 <li><a href="#pulse" className="text-sm text-slate-500 transition hover:text-white">Pulse</a></li>

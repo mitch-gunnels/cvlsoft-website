@@ -75,7 +75,7 @@ export default function About() {
             <h2 className="text-lg font-medium text-white">Get in Touch</h2>
             <p className="mt-3">
               Interested in learning more? <a href="/#demo" className="text-cyan-400 underline hover:text-cyan-300">Request a demo</a> or
-              email us at <span className="text-cyan-400">hello@cvlsoft.com</span>.
+              email us at <span className="text-cyan-400">sales@cvlsoft.com</span>.
             </p>
           </section>
         </div>

@@ -149,7 +149,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Withdraw Consent:</strong> Where processing is based on consent, you may withdraw that consent at any time.</li>
             </ul>
             <p className="mt-3">
-              To exercise any of these rights, contact us at <span className="text-cyan-400">privacy@cvlsoft.com</span>.
+              To exercise any of these rights, contact us at <span className="text-cyan-400">support@cvlsoft.com</span>.
               We will respond to verified requests within thirty (30) days. We will not discriminate against you for
               exercising your privacy rights.
             </p>
@@ -170,7 +170,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Non-Discrimination:</strong> We will not discriminate against you for exercising any of your CCPA/CPRA rights.</li>
             </ul>
             <p className="mt-3">
-              To submit a request, email <span className="text-cyan-400">privacy@cvlsoft.com</span> with the subject
+              To submit a request, email <span className="text-cyan-400">support@cvlsoft.com</span> with the subject
               line &ldquo;California Privacy Request.&rdquo; We may need to verify your identity before processing your request.
             </p>
           </section>
@@ -212,7 +212,7 @@ export default function PrivacyPolicy() {
               in your jurisdiction). We do not knowingly collect personal information from children. If we become
               aware that we have collected personal information from a child without appropriate consent, we will
               take steps to delete that information promptly. If you believe we have inadvertently collected information
-              from a child, please contact us at <span className="text-cyan-400">privacy@cvlsoft.com</span>.
+              from a child, please contact us at <span className="text-cyan-400">support@cvlsoft.com</span>.
             </p>
           </section>
 
@@ -260,8 +260,8 @@ export default function PrivacyPolicy() {
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">cvlSoft, LLC</strong><br />
-              Email: <span className="text-cyan-400">privacy@cvlsoft.com</span><br />
-              General: <span className="text-cyan-400">hello@cvlsoft.com</span>
+              Email: <span className="text-cyan-400">support@cvlsoft.com</span><br />
+              General: <span className="text-cyan-400">sales@cvlsoft.com</span>
             </p>
             <p className="mt-3">
               If you are not satisfied with our response, you may have the right to lodge a complaint with your
