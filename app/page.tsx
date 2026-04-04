@@ -12,7 +12,7 @@ const ConnectorFabricPlayer = dynamic(() => import("@/app/components/remotion/Co
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
-/* ── Capabilities teasers ── */
+/* ── Icon components ── */
 
 function IconEye({ className }: { className?: string }) {
   return (
@@ -301,56 +301,13 @@ const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[]
   },
 ];
 
-/* ── Floating particles (client-only to avoid hydration mismatch) ── */
-
-function Particles() {
-  const [particles, setParticles] = useState<
-    { id: number; left: string; top: string; size: number; delay: string; duration: string; opacity: number }[]
-  >([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 28 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: 1.5 + Math.random() * 3,
-        delay: `${Math.random() * 6}s`,
-        duration: `${5 + Math.random() * 6}s`,
-        opacity: 0.15 + Math.random() * 0.35,
-      })),
-    );
-  }, []);
-
-  if (particles.length === 0) return null;
-
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="float-slow absolute rounded-full bg-cyan-400"
-          style={{
-            left: p.left,
-            top: p.top,
-            width: p.size,
-            height: p.size,
-            opacity: p.opacity,
-            animationDelay: p.delay,
-            animationDuration: p.duration,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 /* ── Page ── */
 
-export default function ComingSoon() {
-  const [email, setEmail] = useState("");
+export default function Home() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [expandedTiers, setExpandedTiers] = useState<Set<number>>(new Set());
@@ -407,62 +364,42 @@ export default function ComingSoon() {
 
 
   useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observerRef.current?.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-
-    document
-      .querySelectorAll(".reveal-up, .reveal-scale, .reveal-left, .reveal-right")
-      .forEach((el) => observerRef.current?.observe(el));
-
-    return () => observerRef.current?.disconnect();
-  }, []);
-
-  useEffect(() => {
     if (formStatus !== "success") return;
     const timer = setTimeout(() => {
       setFormStatus("idle");
       setFormMessage("");
-    }, 6000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [formStatus]);
 
   function handleCtaClick(location: string) {
-    trackEvent("coming_soon_cta_click", { location });
+    trackEvent("bold_claim_cta_click", { location });
   }
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setFormStatus("idle");
     setFormMessage("");
 
     if (!firstName.trim()) {
       setFormStatus("error");
-      setFormMessage("First name is required.");
+      setFormMessage("Please enter your first name.");
       return;
     }
     if (!lastName.trim()) {
       setFormStatus("error");
-      setFormMessage("Last name is required.");
+      setFormMessage("Please enter your last name.");
       return;
     }
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setFormStatus("error");
-      setFormMessage("Please enter a valid email.");
+      setFormMessage("Please enter a valid email address.");
       return;
     }
     const domain = email.split("@")[1]?.toLowerCase();
     if (["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com"].includes(domain)) {
       setFormStatus("error");
-      setFormMessage("Please use a company email.");
+      setFormMessage("Please use a company email so we can route your request correctly.");
       return;
     }
     if (!phone.trim()) {
@@ -472,14 +409,14 @@ export default function ComingSoon() {
     }
     if (!company.trim()) {
       setFormStatus("error");
-      setFormMessage("Company name is required.");
+      setFormMessage("Please enter your company name.");
       return;
     }
 
     setFormStatus("loading");
 
     try {
-      const res = await fetch("/api/demo-request", {
+      const response = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -488,21 +425,21 @@ export default function ComingSoon() {
           email,
           phone,
           company,
-          source: "coming_soon",
+          source: "website_v2",
         }),
       });
 
-      const data = (await res.json()) as { ok?: boolean; message?: string };
-      trackEvent("coming_soon_form_submit", { status: res.ok ? "success" : "error" });
+      const data = (await response.json()) as { ok?: boolean; message?: string };
+      trackEvent("demo_form_submit", { status: response.ok ? "success" : "error" });
 
-      if (!res.ok) {
+      if (!response.ok) {
         setFormStatus("error");
-        setFormMessage(data.message ?? "Unable to submit. Try again.");
+        setFormMessage(data.message ?? "Unable to submit demo request.");
         return;
       }
 
       setFormStatus("success");
-      setFormMessage("You're on the list. We'll be in touch soon.");
+      setFormMessage(data.message ?? "Thanks. We will follow up to schedule your demo.");
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -511,6 +448,7 @@ export default function ComingSoon() {
     } catch {
       setFormStatus("error");
       setFormMessage("Network error. Please try again.");
+      trackEvent("demo_form_submit", { status: "error" });
     }
   }
 
@@ -572,7 +510,7 @@ export default function ComingSoon() {
         </nav>
       </header>
 
-      <main>
+      <main id="top">
         {/* ── HERO ── */}
         <section className="relative min-h-[70vh] overflow-hidden">
 
@@ -1265,6 +1203,7 @@ export default function ComingSoon() {
               </div>
             </div>
           </div>
+        </section>
 
         {/* ── Section divider ── */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
@@ -1504,17 +1443,21 @@ export default function ComingSoon() {
             <form className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-3">
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   required
                   className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                   placeholder="First name"
                 />
                 <input
+                  id="lastName"
+                  name="lastName"
                   type="text"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   required
                   className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                   placeholder="Last name"
