@@ -17,7 +17,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-lg font-medium text-white">1. Acceptance of Terms</h2>
             <p className="mt-3">
-              By accessing or using the AIOS platform and cvlsoft.net website (&ldquo;Services&rdquo;), you agree to be
+              By accessing or using the AIOS platform and cvlsoft.net, cvlsoft.com, and cvlsoft.ai websites (&ldquo;Services&rdquo;), you agree to be
               bound by these Terms of Service (&ldquo;Terms&rdquo;). If you are using the Services on behalf of an organization, you represent
               and warrant that you have the authority to bind that organization to these Terms, and &ldquo;you&rdquo; refers to
               that organization. If you do not agree to these Terms, you must not access or use the Services.
@@ -304,7 +304,7 @@ export default function TermsOfService() {
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">Notices:</strong> All legal notices must be sent in writing to
-              support@cvlsoft.com or to the address specified in your service agreement.
+              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a> or to the address specified in your service agreement.
             </p>
           </section>
 
@@ -312,7 +312,7 @@ export default function TermsOfService() {
             <h2 className="text-lg font-medium text-white">22. Contact</h2>
             <p className="mt-3">
               Questions about these Terms? Contact us at:<br />
-              <span className="text-cyan-400">support@cvlsoft.com</span>
+              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>
             </p>
           </section>
         </div>

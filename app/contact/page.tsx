@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact cvlSoft",
-  description: "Get in touch with the cvlSoft team.",
+  description: "Contact the cvlSoft team about AIOS, enterprise AI demos, pricing, or technical support.",
 };
 
 export default function Contact() {
@@ -27,7 +27,7 @@ export default function Contact() {
             <p className="mt-3">
               For general questions, pricing inquiries, enterprise agreements, demo requests,
               or partnership opportunities:<br />
-              <span className="text-cyan-400">sales@cvlsoft.com</span>
+              <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a>
             </p>
             <p className="mt-2 text-sm text-slate-500">We typically respond within one business day.</p>
           </section>
@@ -38,7 +38,7 @@ export default function Contact() {
               For technical assistance, account management, security vulnerabilities,
               privacy requests, legal notices, or questions about our Terms of Service
               and Privacy Policy:<br />
-              <span className="text-cyan-400">support@cvlsoft.com</span>
+              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>
             </p>
             <p className="mt-2 text-sm text-slate-500">
               Support SLAs are defined in your service agreement. Security reports are acknowledged within 24 hours. Privacy requests are processed within 30 days.

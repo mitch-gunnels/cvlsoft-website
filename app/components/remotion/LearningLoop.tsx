@@ -231,9 +231,9 @@ export default function LearningLoop() {
   const recallStart = memoryLeft;
   const recallEnd = { x: decideRight.x, y: decideRight.y };
 
-  /* ── Optimized learn path (OPTIMIZED → MEMORY) ── */
-  const optimizedTopCenter = { x: OPTIMIZED.x + OPTIMIZED.w / 2, y: OPTIMIZED.y };
-  const memoryTop = { x: MEMORY.x + MEMORY.w / 2, y: MEMORY.y };
+  /* ── Optimized learn path (OPTIMIZED bottom → MEMORY top) ── */
+  const optimizedBottomCenter = { x: OPTIMIZED.x + OPTIMIZED.w / 2, y: OPTIMIZED.y + OPTIMIZED.h };
+  const memoryTop = { x: OPTIMIZED.x + OPTIMIZED.w / 2, y: MEMORY.y };
 
   /* ── Phase timing (in frames at 30fps) ── */
   const P1 = 0;
@@ -306,10 +306,10 @@ export default function LearningLoop() {
 
         {/* ── PHASE 6: Learnings from optimized → memory (completes the loop) ── */}
         <Sequence from={P6} layout="none">
-          <Line x1={optimizedTopCenter.x} y1={optimizedTopCenter.y} x2={memoryTop.x} y2={memoryTop.y} color={COLORS.green} appearFrame={0} dashed />
-          <LinearDot path={[optimizedTopCenter, memoryTop]} color={COLORS.green} startFrame={5} duration={Math.round(1 * fps)} r={2.5} />
-          <LinearDot path={[optimizedTopCenter, memoryTop]} color={COLORS.green} startFrame={18} duration={Math.round(1 * fps)} r={2} />
-          <Label x={optimizedTopCenter.x + 18} y={(optimizedTopCenter.y + memoryTop.y) / 2} text="LEARN" color={COLORS.green} appearFrame={8} />
+          <Line x1={optimizedBottomCenter.x} y1={optimizedBottomCenter.y} x2={memoryTop.x} y2={memoryTop.y} color={COLORS.green} appearFrame={0} dashed />
+          <LinearDot path={[optimizedBottomCenter, memoryTop]} color={COLORS.green} startFrame={5} duration={Math.round(1 * fps)} r={2.5} />
+          <LinearDot path={[optimizedBottomCenter, memoryTop]} color={COLORS.green} startFrame={18} duration={Math.round(1 * fps)} r={2} />
+          <Label x={optimizedBottomCenter.x + 18} y={(optimizedBottomCenter.y + memoryTop.y) / 2} text="LEARN" color={COLORS.green} appearFrame={8} />
           <PulseRing cx={MEMORY.x + MEMORY.w / 2} cy={MEMORY.y + MEMORY.h / 2} color={COLORS.green} startFrame={Math.round(1 * fps)} />
         </Sequence>
 

@@ -276,7 +276,7 @@ const BARRIERS = [
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
   {
     title: "One brain. Every workflow.",
-    description: "Traditional platforms build a separate agent for every task — hundreds of brittle bots you have to maintain. AIOS operates like a single brilliant employee: one cognitive engine that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
+    description: "Traditional platforms build a separate agent for every task — hundreds of brittle bots you have to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
     icon: <IconCpu className="h-5 w-5" />,
   },
   {
@@ -290,13 +290,13 @@ const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[]
     icon: <IconGrid className="h-5 w-5" />,
   },
   {
-    title: "Security first posture.",
+    title: "Security-first posture.",
     description: "Every action is blocked unless an explicit policy allows it. A deterministic policy engine with allow/deny controls, global and per-execution kill switches that halt instantly, and human-in-the-loop approval gates with compliance-grade audit logging.",
     icon: <IconShield className="h-5 w-5" />,
   },
   {
     title: "Universal connector fabric",
-    description: "Hundreds of connectors — REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace — unified under one execution contract. Add a connector and every cognitive agent uses it immediately.",
+    description: "Hundreds of connectors — REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace — unified under one execution contract. Add a connector and every cognitive core uses it immediately.",
     icon: <IconLink className="h-5 w-5" />,
   },
 ];
@@ -494,7 +494,7 @@ export default function Home() {
               Pulse
             </a>
             <a href="#proof" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Proof
+              Product
             </a>
             <a href="#pedigree" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Pedigree
@@ -830,11 +830,12 @@ export default function Home() {
                     <tspan fill="#22d3ee" fontWeight="500" fontFamily="var(--font-code), monospace">90%</tspan>
                     <tspan fill="#94a3b8" fontSize="14"> of enterprise workflows</tspan>
                   </text>
-                  <text x="600" y="456" textAnchor="middle" fill="#94a3b8" fontSize="14">belong here</text>
+                  <text x="600" y="456" textAnchor="middle" fill="#94a3b8" fontSize="14">belong here*</text>
                   <line x1="530" y1="462" x2="670" y2="462" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.4" />
 
                   {/* Bottom tag */}
-                  <text x="600" y="492" textAnchor="middle" fill="#64748b" fontSize="10" fontWeight="500" letterSpacing="0.08em">WHERE COMPLIANCE MEETS INTELLIGENCE</text>
+                  <text x="600" y="486" textAnchor="middle" fill="#64748b" fontSize="10" fontWeight="500" letterSpacing="0.08em">WHERE COMPLIANCE MEETS INTELLIGENCE</text>
+                  <text x="600" y="502" textAnchor="middle" fill="#475569" fontSize="9">*Based on internal analysis of enterprise deployment patterns.</text>
 
 
                   {/* ── RIGHT COLUMN: Full Autonomy ── */}
@@ -1295,7 +1296,7 @@ export default function Home() {
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
             <h2 className="reveal-up text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              The proof is in the platform.
+              How AIOS compares.
             </h2>
             <p className="reveal-up mt-4 max-w-3xl text-lg leading-relaxed text-slate-400 [animation-delay:80ms]">
               Every other platform builds a separate agent for every task. AIOS builds cognition.
@@ -1524,9 +1525,9 @@ export default function Home() {
       <footer className="border-t border-white/[0.06] bg-[#050a14]">
         <div className="mx-auto max-w-7xl px-6 pb-10 pt-16 sm:px-10 lg:px-[60px]">
           {/* Footer columns */}
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
             {/* Brand */}
-            <div className="lg:col-span-1">
+            <div>
               <div className="flex items-center gap-3">
                 <svg viewBox="0 0 48 48" fill="none" className="h-6 w-6" aria-hidden="true">
                   <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round" />
@@ -1535,8 +1536,8 @@ export default function Home() {
                 </svg>
                 <span className="text-sm font-medium text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
               </div>
-              <p className="mt-4 max-w-xs text-xs leading-relaxed text-slate-600">
-                 Stop building AI agents. Start building intelligence.
+              <p className="mt-4 text-xs leading-relaxed text-slate-600 whitespace-nowrap">
+                 Autonomous Intelligence Operating System
               </p>
             </div>
 
@@ -1549,7 +1550,7 @@ export default function Home() {
                 <li><a href="#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
                 <li><a href="#partnership" className="text-sm text-slate-500 transition hover:text-white">Partnership</a></li>
                 <li><a href="#pulse" className="text-sm text-slate-500 transition hover:text-white">Pulse</a></li>
-                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Proof</a></li>
+                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Product</a></li>
                 <li><a href="#pedigree" className="text-sm text-slate-500 transition hover:text-white">Pedigree</a></li>
               </ul>
             </div>
@@ -1586,7 +1587,7 @@ export default function Home() {
           {/* Bottom bar */}
           <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/[0.04] pt-6 md:flex-row">
             <span className="font-mono text-xs tracking-[0.08em] text-slate-700">
-              &copy; {year} cvlSoft, LLC All rights reserved.
+              &copy; {year} cvlSoft, LLC. All rights reserved.
             </span>
             <div className="flex gap-6">
               <a href="/privacy" className="font-mono text-[10px] tracking-wider text-slate-700 transition hover:text-slate-400">Privacy</a>

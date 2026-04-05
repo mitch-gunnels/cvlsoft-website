@@ -149,7 +149,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Withdraw Consent:</strong> Where processing is based on consent, you may withdraw that consent at any time.</li>
             </ul>
             <p className="mt-3">
-              To exercise any of these rights, contact us at <span className="text-cyan-400">support@cvlsoft.com</span>.
+              To exercise any of these rights, contact us at <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>.
               We will respond to verified requests within thirty (30) days. We will not discriminate against you for
               exercising your privacy rights.
             </p>
@@ -170,7 +170,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Non-Discrimination:</strong> We will not discriminate against you for exercising any of your CCPA/CPRA rights.</li>
             </ul>
             <p className="mt-3">
-              To submit a request, email <span className="text-cyan-400">support@cvlsoft.com</span> with the subject
+              To submit a request, email <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a> with the subject
               line &ldquo;California Privacy Request.&rdquo; We may need to verify your identity before processing your request.
             </p>
           </section>
@@ -186,8 +186,7 @@ export default function PrivacyPolicy() {
             <p className="mt-3">
               Where required by applicable law, we implement appropriate safeguards for international data transfers,
               including Standard Contractual Clauses (SCCs) approved by the European Commission, or other lawful
-              transfer mechanisms. By using the Services, you consent to the transfer of your information as described
-              in this policy.
+              transfer mechanisms.
             </p>
           </section>
 
@@ -212,7 +211,7 @@ export default function PrivacyPolicy() {
               in your jurisdiction). We do not knowingly collect personal information from children. If we become
               aware that we have collected personal information from a child without appropriate consent, we will
               take steps to delete that information promptly. If you believe we have inadvertently collected information
-              from a child, please contact us at <span className="text-cyan-400">support@cvlsoft.com</span>.
+              from a child, please contact us at <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>.
             </p>
           </section>
 
@@ -260,8 +259,9 @@ export default function PrivacyPolicy() {
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">cvlSoft, LLC</strong><br />
-              Email: <span className="text-cyan-400">support@cvlsoft.com</span><br />
-              General: <span className="text-cyan-400">sales@cvlsoft.com</span>
+              Email: <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a><br />
+              General: <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a><br />
+              516 Huntington Dr., Ball Ground, GA 30107
             </p>
             <p className="mt-3">
               If you are not satisfied with our response, you may have the right to lodge a complaint with your
