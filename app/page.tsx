@@ -463,7 +463,7 @@ export default function Home() {
 
 
       {/* ── HEADER ── */}
-      <header className="sticky top-0 z-30 px-10 pt-2 sm:px-14 lg:px-[88px]">
+      <header className="sticky top-0 z-30 px-0 pt-0 sm:px-14 sm:pt-2 lg:px-[88px]">
         <nav className={`mx-auto flex items-center justify-between rounded-md px-6 py-4.5 backdrop-blur-xl transition-all duration-300 ${
           scrolled
             ? "border border-white/[0.10] bg-[#050a14]/70"
@@ -734,8 +734,8 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Automation Spectrum Infographic */}
-              <div className="mt-10 border-t border-white/[0.08] pt-10">
+              {/* Automation Spectrum Infographic — hidden for now, may bring back later */}
+              <div className="mt-10 hidden border-t border-white/[0.08] pt-10">
                 <svg viewBox="0 -20 1200 600" fill="none" className="w-full" role="img" aria-label="AIOS Automation Spectrum: Deterministic Automation, Deterministic Intelligence, and Full Autonomy">
 
                   {/* ── Full-width label above bar ── */}
@@ -939,8 +939,8 @@ export default function Home() {
                         Learn more <span className="text-xs">&#8599;</span>
                       </a>
                     </div>
-                    {/* Illustration box */}
-                    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020]">
+                    {/* Illustration box — hidden on mobile to avoid heavy animations */}
+                    <div className="relative hidden overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020] lg:block">
                       <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
                       <div className="flex aspect-[16/10] items-center justify-center p-10">
                         {illustrations[[2, 1, 3, 4, 5][i]]}
