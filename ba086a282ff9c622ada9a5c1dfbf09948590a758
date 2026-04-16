@@ -1,0 +1,23 @@
+app/page.tsx
+  44308117017af5e2 466,737-738,942-943
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "ba086a282ff9c622ada9a5c1dfbf09948590a758",
+  "prompts": {
+    "44308117017af5e2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6d8817-08ca-4003-8843-aacfbae09d5b",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 7,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
