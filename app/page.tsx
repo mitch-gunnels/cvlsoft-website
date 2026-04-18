@@ -1,14 +1,15 @@
 "use client";
 
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import { trackEvent } from "@/app/lib/analytics";
 
-const LearningLoopPlayer = dynamic(() => import("@/app/components/remotion/LearningLoopPlayer"), { ssr: false });
-const CognitiveCorePlayer = dynamic(() => import("@/app/components/remotion/CognitiveCorePlayer"), { ssr: false });
-const TacitKnowledgePlayer = dynamic(() => import("@/app/components/remotion/TacitKnowledgePlayer"), { ssr: false });
-const SecurityPosturePlayer = dynamic(() => import("@/app/components/remotion/SecurityPosturePlayer"), { ssr: false });
-const ConnectorFabricPlayer = dynamic(() => import("@/app/components/remotion/ConnectorFabricPlayer"), { ssr: false });
+// ── Remotion animation players — commented out while Why AIOS uses static architecture diagrams ──
+// import dynamic from "next/dynamic";
+// const LearningLoopPlayer = dynamic(() => import("@/app/components/remotion/LearningLoopPlayer"), { ssr: false });
+// const CognitiveCorePlayer = dynamic(() => import("@/app/components/remotion/CognitiveCorePlayer"), { ssr: false });
+// const TacitKnowledgePlayer = dynamic(() => import("@/app/components/remotion/TacitKnowledgePlayer"), { ssr: false });
+// const SecurityPosturePlayer = dynamic(() => import("@/app/components/remotion/SecurityPosturePlayer"), { ssr: false });
+// const ConnectorFabricPlayer = dynamic(() => import("@/app/components/remotion/ConnectorFabricPlayer"), { ssr: false });
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
@@ -47,9 +48,10 @@ function IconGrid({ className }: { className?: string }) {
 function IconRocket({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M13.13 22a10 10 0 0 1-1.3-3.43 10 10 0 0 1 3.43 1.3L13.13 22ZM6.87 2a10 10 0 0 1 1.3 3.43 10 10 0 0 1-3.43-1.3L6.87 2Z" />
-      <path d="M2 12h5M17 12h5" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" />
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </svg>
   );
 }
@@ -84,11 +86,14 @@ function IconLink({ className }: { className?: string }) {
 
 /* ── Section scroll indicator (sticky dot + line) ── */
 
-function SectionScrollLine({ color = "cyan" }: { color?: "cyan" | "emerald" | "rose" } = {}) {
+function SectionScrollLine({ color = "cyan" }: { color?: "cyan" | "emerald" | "rose" | "violet" | "amber" | "sky" } = {}) {
   const styles = {
     cyan: "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]",
     emerald: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.6)]",
     rose: "bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.6)]",
+    violet: "bg-violet-400 shadow-[0_0_10px_rgba(167,139,250,0.65)]",
+    amber: "bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.65)]",
+    sky: "bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.65)]",
   };
   return (
     <div className="pointer-events-none absolute left-[175px] top-0 bottom-0 z-20 hidden lg:block">
@@ -263,14 +268,86 @@ const FUNNEL_STAGES = [
   { label: "Creating substantial value", pct: 4 },
 ];
 
-const BARRIERS = [
-  { label: "Trust & governance", stat: "63%", statDesc: "lack AI governance policies", source: "Forrester 2025-2026" },
-  { label: "No ROI proof", stat: "47%", statDesc: "have no AI strategy at all", source: "BCG 2025" },
-  { label: "Cascading failure risk", stat: "75%", statDesc: "of DIY agentic architectures will fail", source: "Forrester 2026" },
-  { label: "Talent gap", stat: "#1", statDesc: "barrier to integrating AI into workflows", source: "Deloitte 2026" },
-  { label: "Architecture complexity", stat: "40%+", statDesc: "of agentic AI projects will be canceled by 2027", source: "Gartner 2025" },
-  { label: "Regulatory acceleration", stat: "10pt", statDesc: "rise as a deployment barrier in one year", source: "Deloitte 2025" },
-  { label: "Culture & process inertia", stat: "70%", statDesc: "of AI success is people/process, not tech", source: "BCG 2025" },
+const BARRIERS: {
+  label: string;
+  stat: string;
+  statDesc: string;
+  source: string;
+  answer: string;
+  detail: string;
+}[] = [
+  {
+    label: "Agent sprawl",
+    stat: "12%",
+    statDesc: "of enterprises run a centralized AI platform",
+    source: "Gravitee, State of AI Agent Security 2026",
+    answer: "One cognitive core, one connector fabric. Every workflow makes the next one smarter.",
+    detail:
+      "Fragmented agents each solve one task and learn in isolation. AIOS runs every process through the same reasoning core and a unified connector fabric, so adding a capability upgrades every workflow at once. You stop maintaining a stack of point solutions and start compounding IP on your own data.",
+  },
+  {
+    label: "Shadow AI breaches",
+    stat: "+$670K",
+    statDesc: "added to the average breach when shadow AI is involved",
+    source: "IBM Cost of a Data Breach 2026",
+    answer: "Plan-before-execute architecture. No action runs without an explicit, policy-approved plan.",
+    detail:
+      "Every AI action is proposed as a plan, checked against policy, then executed. Global and per-execution kill switches halt the system instantly when something drifts. Security teams see exactly what AI is doing in real time, instead of discovering shadow usage in a post-breach forensic.",
+  },
+  {
+    label: "Hallucination exposure",
+    stat: "86%",
+    statDesc: "of finance teams have caught AI fabricating numbers",
+    source: "Workiva / CFO Dive 2026",
+    answer: "Reasoning grounded in your certified knowledge, not generic model priors.",
+    detail:
+      "Outputs are built from your own process IP, captured directly from your experts. If a proposed action crosses a confidence threshold or violates policy, it halts at the reasoning step and routes to a named human approver. Finance ships numbers they can defend line-by-line in an audit.",
+  },
+  {
+    label: "Audit-readiness gap",
+    stat: "78%",
+    statDesc: "of execs can't pass an AI governance audit in 90 days",
+    source: "Grant Thornton AI Impact Survey 2026",
+    answer: "Continuous evidence bundle. Your audit package is the byproduct, not a retrofit.",
+    detail:
+      "Every action is logged with its reasoning step, every policy decision traced, every human approval signed. Compliance evidence accretes as the platform runs, so when external review arrives you hand over a ready package instead of scrambling for six weeks.",
+  },
+  {
+    label: "Governance debt",
+    stat: "6%",
+    statDesc: "have updated AI governance frameworks",
+    source: "Sprinto / Gravitee 2026",
+    answer: "Identity, policy, and audit ship as platform primitives \u2014 not bolted on after a breach.",
+    detail:
+      "79% of enterprises are already deploying agents; only 6% have refreshed governance to match. AIOS closes that gap at the substrate: role-based identity, allow/deny rules, approval gates, and tamper-evident logs live in the core, not in a separate governance tool bought post-incident. Your framework doesn't chase the deployment; it's what the deployment runs on from day one.",
+  },
+  {
+    label: "Expert knowledge attrition",
+    stat: "10K/day",
+    statDesc: "U.S. boomers retiring with tacit process knowledge",
+    source: "Pew Research / U.S. Census projections",
+    answer: "AIOS interviews your experts before they leave, then makes what they know permanent.",
+    detail:
+      "Ten thousand U.S. boomers retire every day, and decades of tacit process knowledge walk out with them. AIOS voice interviews use seven science-backed elicitation techniques to capture how your experts actually complete work. A three-role memory engine \u2014 Generator, Reflector, Curator \u2014 turns every execution into reusable knowledge. The expertise that normally disappears on a retirement or resignation becomes a durable asset on your side of the ledger.",
+  },
+  {
+    label: "Agent-washing",
+    stat: "<1%",
+    statDesc: "of \u201cagentic\u201d vendors ship a real reasoning-capable agent",
+    source: "Gartner, June 2025",
+    answer: "Prove it on a real process in a 90-day pilot. If the work doesn't ship, you don't pay.",
+    detail:
+      "We stake our work on a measured pilot you choose. The cognitive core has to plan, adapt, and execute autonomously against your actual process, not a demo on rails. Every claim we make is verifiable in your environment, on your data, inside a quarter.",
+  },
+  {
+    label: "Project cancellation",
+    stat: "40%+",
+    statDesc: "of agentic AI projects will be canceled by 2027",
+    source: "Gartner, June 2025",
+    answer: "Forward-deployed team embeds until it works. Outcome-based pricing \u2014 failed tasks are free.",
+    detail:
+      "You pay per successful, in-policy task execution, not per seat, per call, or per model token. Our engineers stay embedded with your team through production, not just deployment. We're on the hook for the same outcome you are, which is why the invoice only shows up when the work does.",
+  },
 ];
 
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
@@ -301,7 +378,527 @@ const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[]
   },
 ];
 
+/* ── "Why AIOS" architecture diagrams (Option A + D — static diagram + hero stat) ── */
+
+function DiagramFrame({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <svg viewBox="0 0 500 320" className="h-full w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id={`grid-${id}`} width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M 24 0 L 0 0 L 0 24" stroke="#1e293b" strokeWidth="0.5" strokeOpacity="0.35" />
+        </pattern>
+        <radialGradient id={`vignette-${id}`} cx="50%" cy="45%" r="65%">
+          <stop offset="0%" stopColor="#0a1020" stopOpacity="0" />
+          <stop offset="100%" stopColor="#050a14" stopOpacity="0.7" />
+        </radialGradient>
+      </defs>
+      <rect width="500" height="320" fill={`url(#grid-${id})`} />
+      <rect width="500" height="320" fill={`url(#vignette-${id})`} />
+      {children}
+    </svg>
+  );
+}
+
+/* 1. One brain. Every workflow. — TODAY vs AIOS split contrast */
+function DiagramOneBrain() {
+  const todayBots = [
+    { x: 38, y: 80 }, { x: 72, y: 70 }, { x: 108, y: 86 }, { x: 150, y: 72 }, { x: 186, y: 86 },
+    { x: 42, y: 112 }, { x: 82, y: 104 }, { x: 126, y: 118 }, { x: 170, y: 104 }, { x: 200, y: 120 },
+    { x: 58, y: 144 }, { x: 100, y: 138 }, { x: 142, y: 150 }, { x: 186, y: 138 },
+    { x: 72, y: 174 }, { x: 120, y: 170 }, { x: 166, y: 180 },
+  ];
+  const aiosPills = [
+    { x: 272, label: "FINANCE", width: 68 },
+    { x: 360, label: "OPERATIONS", width: 88 },
+    { x: 448, label: "SALES", width: 60 },
+  ];
+  const coreX = 360;
+  const coreY = 162;
+  return (
+    <DiagramFrame id="onebrain">
+      <text x="28" y="48" fill="#64748b" fontSize="9" fontWeight="600" letterSpacing="0.16em">TODAY</text>
+      <text x="28" y="60" fill="#475569" fontSize="8.5">agent per task</text>
+      {todayBots.map((b, i) => (
+        <circle key={i} cx={b.x} cy={b.y} r="3" stroke="#475569" strokeWidth="0.8" fill="#0d1322" opacity="0.55" />
+      ))}
+      {[
+        [40, 80, 70, 72],
+        [78, 104, 124, 118],
+        [108, 86, 148, 72],
+        [144, 148, 186, 138],
+        [60, 144, 100, 138],
+        [168, 180, 200, 120],
+      ].map((seg, i) => (
+        <line key={i} x1={seg[0]} y1={seg[1]} x2={seg[2]} y2={seg[3]} stroke="#334155" strokeWidth="0.6" strokeOpacity="0.6" strokeDasharray="2 3" />
+      ))}
+      <line x1="222" y1="40" x2="222" y2="212" stroke="#1e293b" strokeWidth="1" strokeDasharray="3 4" />
+      {/* AIOS labels aligned to FINANCE pill left edge */}
+      <text x="238" y="48" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.16em">AIOS</text>
+      <text x="238" y="60" fill="#94a3b8" fontSize="8.5">one cognitive core</text>
+      {aiosPills.map((w) => (
+        <g key={w.label}>
+          <rect x={w.x - w.width / 2} y="74" width={w.width} height="20" rx="3" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.45" fill="#22d3ee" fillOpacity="0.05" />
+          <text x={w.x} y="88" textAnchor="middle" fill="#94a3b8" fontSize="8.5" fontWeight="600" letterSpacing="0.1em">{w.label}</text>
+          <line x1={w.x} y1="94" x2={coreX} y2={coreY - 40} stroke="#22d3ee" strokeWidth="0.8" strokeOpacity="0.4" />
+        </g>
+      ))}
+      {/* Cognitive core \u2014 enlarged so label fits */}
+      <circle cx={coreX} cy={coreY} r="66" stroke="#22d3ee" strokeWidth="0.8" strokeOpacity="0.12" fill="none" />
+      <circle cx={coreX} cy={coreY} r="52" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.3" fill="none" />
+      <circle cx={coreX} cy={coreY} r="40" stroke="#22d3ee" strokeWidth="2" fill="#0e3a4a" fillOpacity="0.65" />
+      <text x={coreX} y={coreY - 2} textAnchor="middle" fill="#67e8f9" fontSize="9.5" fontWeight="600" letterSpacing="0.12em">COGNITIVE</text>
+      <text x={coreX} y={coreY + 11} textAnchor="middle" fill="#67e8f9" fontSize="9.5" fontWeight="600" letterSpacing="0.12em">CORE</text>
+      <line x1="30" y1="238" x2="470" y2="238" stroke="#1e293b" strokeWidth="1" />
+      <text x="56" y="298" fill="#67e8f9" fontSize="64" fontWeight="300" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">1</text>
+      <text x="118" y="272" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.16em">COGNITIVE CORE</text>
+      <text x="118" y="288" fill="#94a3b8" fontSize="10.5">Not one-hundred task-specific AI agents.</text>
+      <text x="118" y="303" fill="#94a3b8" fontSize="10" fillOpacity="0.7">{"Add a capability \u2014 every workflow inherits it."}</text>
+    </DiagramFrame>
+  );
+}
+
+/* 2. AIOS interviews your experts */
+function DiagramInterview() {
+  // Speech-like waveform: asymmetric heights above/below a centerline, with silence gaps
+  const waveHeights: [number, number][] = [
+    [6, 4], [10, 8], [14, 10], [8, 6], [0, 0], [12, 8], [18, 14], [22, 16], [14, 10], [8, 4],
+    [0, 0], [6, 8], [16, 12], [20, 16], [24, 18], [18, 12], [10, 6], [4, 2], [0, 0], [8, 4], [10, 8],
+  ];
+  return (
+    <DiagramFrame id="interview">
+      <text x="250" y="28" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.16em">KNOWLEDGE CAPTURE</text>
+
+      {/* ── Panel 1: VOICE ── */}
+      <g>
+        <rect x="26" y="56" width="132" height="118" rx="8" stroke="#334155" strokeWidth="1" fill="#0a0f1a" />
+        <text x="92" y="76" textAnchor="middle" fill="#67e8f9" fontSize="9" fontWeight="600" letterSpacing="0.14em">VOICE</text>
+        {/* Centerline */}
+        <line x1="36" y1="120" x2="148" y2="120" stroke="#1e293b" strokeWidth="0.5" />
+        {/* Speech waveform — bars around centerline, asymmetric */}
+        {waveHeights.map(([up, down], idx) => {
+          const barX = 38 + idx * 5.2;
+          const opacity = up === 0 ? 0 : 0.45 + ((idx % 5) * 0.1);
+          return (
+            <g key={idx}>
+              {up > 0 && <rect x={barX} y={120 - up} width="2" height={up} rx="1" fill="#22d3ee" fillOpacity={opacity} />}
+              {down > 0 && <rect x={barX} y={120} width="2" height={down} rx="1" fill="#22d3ee" fillOpacity={opacity} />}
+            </g>
+          );
+        })}
+        <text x="92" y="158" textAnchor="middle" fill="#94a3b8" fontSize="8.5" letterSpacing="0.08em">Expert explains</text>
+      </g>
+
+      {/* Arrow 1 — thicker, cyan */}
+      <g>
+        <line x1="162" y1="115" x2="188" y2="115" stroke="#22d3ee" strokeWidth="1.8" strokeOpacity="0.85" />
+        <path d="M 186 109 L 196 115 L 186 121 Z" fill="#22d3ee" />
+      </g>
+
+      {/* ── Panel 2: SCREEN ── */}
+      <g>
+        <rect x="200" y="56" width="132" height="118" rx="8" stroke="#334155" strokeWidth="1" fill="#0a0f1a" />
+        <text x="266" y="76" textAnchor="middle" fill="#67e8f9" fontSize="9" fontWeight="600" letterSpacing="0.14em">SCREEN</text>
+        {/* Mock app window */}
+        <rect x="214" y="86" width="104" height="64" rx="3" stroke="#334155" strokeWidth="0.8" fill="#0d1322" />
+        {/* Traffic-light dots */}
+        <circle cx="220" cy="92" r="1.5" fill="#475569" />
+        <circle cx="226" cy="92" r="1.5" fill="#475569" />
+        <circle cx="232" cy="92" r="1.5" fill="#475569" />
+        {/* Sidebar */}
+        <rect x="218" y="100" width="20" height="46" rx="1" fill="#0a0f1a" stroke="#1e293b" strokeWidth="0.5" />
+        <rect x="221" y="104" width="14" height="2" rx="0.5" fill="#334155" />
+        <rect x="221" y="110" width="10" height="2" rx="0.5" fill="#1e293b" />
+        <rect x="221" y="116" width="12" height="2" rx="0.5" fill="#1e293b" />
+        {/* Main content rows */}
+        <rect x="244" y="100" width="68" height="3" rx="0.5" fill="#334155" />
+        <rect x="244" y="108" width="54" height="3" rx="0.5" fill="#1e293b" />
+        <rect x="244" y="116" width="62" height="3" rx="0.5" fill="#1e293b" />
+        {/* Highlighted selection button with cyan corner brackets */}
+        <rect x="246" y="126" width="58" height="18" rx="2" fill="#22d3ee" fillOpacity="0.12" />
+        <path d="M 246 130 L 246 126 L 250 126" stroke="#22d3ee" strokeWidth="1.2" fill="none" />
+        <path d="M 304 126 L 304 130" stroke="#22d3ee" strokeWidth="1.2" fill="none" />
+        <path d="M 304 140 L 304 144 L 300 144" stroke="#22d3ee" strokeWidth="1.2" fill="none" />
+        <path d="M 246 140 L 246 144 L 250 144" stroke="#22d3ee" strokeWidth="1.2" fill="none" />
+        {/* Cursor arrow near highlighted button */}
+        <path d="M 310 138 L 310 148 L 313 145 L 316 152 L 319 150 L 316 143 L 320 143 Z" fill="#67e8f9" />
+        {/* Pulse ring over a captured click point */}
+        <circle cx="260" cy="100" r="3" fill="#22d3ee" />
+        <circle cx="260" cy="100" r="6" stroke="#22d3ee" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
+        <text x="266" y="166" textAnchor="middle" fill="#94a3b8" fontSize="8.5" letterSpacing="0.08em">Decisions captured</text>
+      </g>
+
+      {/* Arrow 2 */}
+      <g>
+        <line x1="336" y1="115" x2="362" y2="115" stroke="#22d3ee" strokeWidth="1.8" strokeOpacity="0.85" />
+        <path d="M 360 109 L 370 115 L 360 121 Z" fill="#22d3ee" />
+      </g>
+
+      {/* ── Panel 3: WORKFLOW (payoff — stronger styling) ── */}
+      <g>
+        <rect x="374" y="56" width="100" height="118" rx="8" stroke="#22d3ee" strokeWidth="1.2" strokeOpacity="0.7" fill="#0a1020" />
+        <rect x="376" y="58" width="96" height="114" rx="7" stroke="#22d3ee" strokeWidth="0.5" strokeOpacity="0.18" fill="none" />
+        <text x="424" y="76" textAnchor="middle" fill="#67e8f9" fontSize="9" fontWeight="600" letterSpacing="0.14em">WORKFLOW</text>
+        {/* Branching DAG — 5 nodes, one fan-out, one merge */}
+        {/* Start */}
+        <circle cx="388" cy="104" r="4.5" fill="#0e3a4a" stroke="#22d3ee" strokeWidth="1.2" />
+        {/* Branch up */}
+        <circle cx="420" cy="90" r="4.5" fill="#0e3a4a" stroke="#22d3ee" strokeWidth="1.2" />
+        {/* Branch down */}
+        <circle cx="420" cy="118" r="4.5" fill="#0e3a4a" stroke="#22d3ee" strokeWidth="1.2" />
+        {/* Merge */}
+        <circle cx="452" cy="104" r="4.5" fill="#0e3a4a" stroke="#22d3ee" strokeWidth="1.2" />
+        {/* Terminal (cert) */}
+        <circle cx="424" cy="140" r="5.5" fill="#0e3a4a" stroke="#22d3ee" strokeWidth="1.4" />
+        {/* Check glyph inside terminal */}
+        <path d="M 421 140 L 423 142 L 427 138" stroke="#22d3ee" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Edges with arrowheads */}
+        <line x1="392" y1="102" x2="416" y2="92" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" />
+        <line x1="392" y1="106" x2="416" y2="116" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" />
+        <line x1="424" y1="92" x2="448" y2="102" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" />
+        <line x1="424" y1="116" x2="448" y2="106" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" />
+        <line x1="450" y1="108" x2="428" y2="136" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" />
+        <text x="424" y="164" textAnchor="middle" fill="#94a3b8" fontSize="8.5" letterSpacing="0.08em">Ready to ship</text>
+      </g>
+
+      {/* Baseline progress rail connecting panel bottoms */}
+      <g>
+        <line x1="40" y1="182" x2="460" y2="182" stroke="#1e293b" strokeWidth="0.5" strokeDasharray="2 4" />
+        <circle cx="92" cy="182" r="2" fill="#22d3ee" fillOpacity="0.5" />
+        <circle cx="266" cy="182" r="2" fill="#22d3ee" fillOpacity="0.5" />
+        <circle cx="424" cy="182" r="2" fill="#22d3ee" fillOpacity="0.7" />
+      </g>
+
+      <line x1="30" y1="202" x2="470" y2="202" stroke="#1e293b" strokeWidth="1" />
+
+      {/* Hero stat — anchored with cyan vertical rule */}
+      <line x1="108" y1="254" x2="108" y2="308" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.45" />
+      <text x="52" y="298" fill="#67e8f9" fontSize="62" fontWeight="300" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">7</text>
+      <text x="120" y="268" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.16em">ELICITATION TECHNIQUES</text>
+      <text x="120" y="284" fill="#94a3b8" fontSize="10.5">{"Your experts talk \u2014 AIOS ships workflows."}</text>
+      <text x="120" y="299" fill="#94a3b8" fontSize="10" fillOpacity="0.75">No prompt engineering. No AI team required.</text>
+    </DiagramFrame>
+  );
+}
+
+/* 3. Self-evolving \u2014 horizontal linear flow + persistent memory + cycle-back improvement arrow */
+function DiagramSelfEvolving() {
+  // Left-to-right: Generator -> Reflector -> Curator -> Memory (persisted), then cycles back to Generator
+  const nodes = [
+    { x: 80, label: "GENERATOR", desc: "Proposes next step" },
+    { x: 210, label: "REFLECTOR", desc: "Evaluates outcome" },
+    { x: 340, label: "CURATOR", desc: "Validates insight" },
+  ];
+  const nodeY = 100;
+  const nodeR = 22;
+  const memoryX = 440;
+  return (
+    <DiagramFrame id="evolve">
+      <text x="250" y="28" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.16em">MEMORY ENGINE</text>
+
+      {/* Linear flow arrows between the three nodes */}
+      {nodes.slice(0, -1).map((n, i) => {
+        const from = n.x + nodeR;
+        const to = nodes[i + 1].x - nodeR - 8;
+        return (
+          <g key={`arr-${i}`}>
+            <line x1={from} y1={nodeY} x2={to} y2={nodeY} stroke="#22d3ee" strokeWidth="1.6" strokeOpacity="0.8" />
+            <path d={`M ${to} ${nodeY - 5} L ${to + 8} ${nodeY} L ${to} ${nodeY + 5} Z`} fill="#22d3ee" />
+          </g>
+        );
+      })}
+
+      {/* Curator -> Memory arrow */}
+      <g>
+        <line x1={nodes[2].x + nodeR} y1={nodeY} x2={memoryX - 30} y2={nodeY} stroke="#22d3ee" strokeWidth="1.6" strokeOpacity="0.8" />
+        <path d={`M ${memoryX - 30} ${nodeY - 5} L ${memoryX - 22} ${nodeY} L ${memoryX - 30} ${nodeY + 5} Z`} fill="#22d3ee" />
+      </g>
+
+      {/* Nodes */}
+      {nodes.map((n) => (
+        <g key={n.label}>
+          <text x={n.x} y={nodeY - 38} textAnchor="middle" fill="#e2e8f0" fontSize="9" fontWeight="600" letterSpacing="0.1em">{n.label}</text>
+          <text x={n.x} y={nodeY - 26} textAnchor="middle" fill="#64748b" fontSize="8">{n.desc}</text>
+          <circle cx={n.x} cy={nodeY} r={nodeR} stroke="#475569" strokeWidth="1.2" fill="#0a0f1a" />
+          <circle cx={n.x} cy={nodeY} r="4" fill="#22d3ee" fillOpacity="0.7" />
+        </g>
+      ))}
+
+      {/* Persisted Memory block \u2014 stacked as a cylinder */}
+      <g>
+        <text x={memoryX} y={nodeY - 38} textAnchor="middle" fill="#67e8f9" fontSize="9" fontWeight="600" letterSpacing="0.12em">MEMORY</text>
+        <text x={memoryX} y={nodeY - 26} textAnchor="middle" fill="#64748b" fontSize="8">Persisted</text>
+        {/* Cylinder body */}
+        <path
+          d={`M ${memoryX - 18} ${nodeY - 14} L ${memoryX - 18} ${nodeY + 14} A 18 6 0 0 0 ${memoryX + 18} ${nodeY + 14} L ${memoryX + 18} ${nodeY - 14}`}
+          stroke="#22d3ee"
+          strokeWidth="1.2"
+          fill="#0e3a4a"
+          fillOpacity="0.55"
+        />
+        {/* Top ellipse */}
+        <ellipse cx={memoryX} cy={nodeY - 14} rx="18" ry="6" stroke="#22d3ee" strokeWidth="1.2" fill="#0e3a4a" fillOpacity="0.9" />
+        {/* Faint layer rings inside cylinder */}
+        <ellipse cx={memoryX} cy={nodeY - 6} rx="18" ry="6" stroke="#22d3ee" strokeWidth="0.5" strokeOpacity="0.35" fill="none" />
+        <ellipse cx={memoryX} cy={nodeY + 2} rx="18" ry="6" stroke="#22d3ee" strokeWidth="0.5" strokeOpacity="0.35" fill="none" />
+      </g>
+
+      {/* Cycle-back improvement arrow \u2014 big curve from Memory back up and around to Generator */}
+      <g>
+        <path
+          d={`M ${memoryX} ${nodeY + 22} C ${memoryX} ${nodeY + 90}, ${nodes[0].x} ${nodeY + 90}, ${nodes[0].x} ${nodeY + 24}`}
+          stroke="#22d3ee"
+          strokeWidth="1.4"
+          strokeOpacity="0.6"
+          fill="none"
+          strokeDasharray="4 4"
+        />
+        {/* Arrowhead at Generator bottom */}
+        <path d={`M ${nodes[0].x - 5} ${nodeY + 28} L ${nodes[0].x} ${nodeY + 22} L ${nodes[0].x + 5} ${nodeY + 28} Z`} fill="#22d3ee" fillOpacity="0.8" />
+        {/* Loop label — centered in the diagram */}
+        <rect x={180} y={nodeY + 76} width="140" height="22" rx="4" fill="#0a0f1a" stroke="#22d3ee" strokeWidth="0.8" strokeOpacity="0.45" />
+        <text x={250} y={nodeY + 91} textAnchor="middle" fill="#67e8f9" fontSize="9" fontWeight="600" letterSpacing="0.16em">EVERY RUN LEARNS</text>
+      </g>
+
+      <line x1="30" y1="245" x2="470" y2="245" stroke="#1e293b" strokeWidth="1" />
+
+      {/* Hero stat \u2014 elongated infinity via scaleX transform */}
+      <g transform="translate(60, 298) scale(1.35, 1)">
+        <text x="0" y="0" fill="#67e8f9" fontSize="58" fontWeight="300" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">&#8734;</text>
+      </g>
+      <text x="140" y="276" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.16em">CONTINUOUS IMPROVEMENT</text>
+      <text x="140" y="292" fill="#94a3b8" fontSize="10.5">No retraining. No prompt tuning.</text>
+      <text x="140" y="307" fill="#94a3b8" fontSize="10" fillOpacity="0.75">Validated insights persist as reusable knowledge.</text>
+    </DiagramFrame>
+  );
+}
+
+/* 4. Security-first posture \u2014 concentric defense layers + audit stream */
+function DiagramSecurity() {
+  const cx = 170;
+  const cy = 130;
+  const rings = [
+    { r: 100, label: "POLICY ENGINE", desc: "Deterministic allow / deny", strokeW: 0.8, op: 0.22, labelY: 62 },
+    { r: 82, label: "PLAN INSPECTION", desc: "Pre-execution policy check", strokeW: 1, op: 0.32, labelY: 94 },
+    { r: 62, label: "HUMAN-IN-THE-LOOP", desc: "Approval gates at risk thresholds", strokeW: 1.2, op: 0.5, labelY: 126 },
+    { r: 40, label: "KILL SWITCH", desc: "Global + per-execution halt", strokeW: 1.6, op: 0.7, labelY: 158 },
+  ];
+  const auditEntries = [
+    { ts: "14:22:01", tag: "ALLOW", tagColor: "#22d3ee", detailWidth: 70 },
+    { ts: "14:22:08", tag: "DENY", tagColor: "#f87171", detailWidth: 58 },
+    { ts: "14:22:14", tag: "GATE", tagColor: "#facc15", detailWidth: 80 },
+    { ts: "14:22:19", tag: "ALLOW", tagColor: "#22d3ee", detailWidth: 64 },
+  ];
+  return (
+    <DiagramFrame id="security">
+      <text x="250" y="28" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.16em">DEFENSE IN DEPTH</text>
+      {rings.map((ring, i) => (
+        <circle
+          key={ring.r}
+          cx={cx}
+          cy={cy}
+          r={ring.r}
+          stroke="#22d3ee"
+          strokeWidth={ring.strokeW}
+          strokeOpacity={ring.op}
+          fill="none"
+          strokeDasharray={i === 0 ? "3 4" : undefined}
+        />
+      ))}
+      <circle cx={cx} cy={cy} r="22" stroke="#22d3ee" strokeWidth="1.8" fill="#0e3a4a" fillOpacity="0.6" />
+      <text x={cx} y={cy + 2.5} textAnchor="middle" fill="#67e8f9" fontSize="7.5" fontWeight="600" letterSpacing="0.16em">ACTION</text>
+      {/* Ring-to-label connectors \u2014 STRAIGHT HORIZONTAL lines from each ring's right-side intersection at the label's Y */}
+      {rings.map((ring) => {
+        const targetY = ring.labelY - 3;
+        const dy = targetY - cy;
+        const dxSquared = ring.r * ring.r - dy * dy;
+        if (dxSquared <= 0) return null;
+        const dotX = cx + Math.sqrt(dxSquared);
+        return (
+          <g key={`conn-${ring.r}`}>
+            <circle cx={dotX} cy={targetY} r="2.6" fill="#22d3ee" fillOpacity={ring.op + 0.35} />
+            <line
+              x1={dotX + 3}
+              y1={targetY}
+              x2="296"
+              y2={targetY}
+              stroke="#22d3ee"
+              strokeWidth="1"
+              strokeOpacity={ring.op + 0.25}
+            />
+          </g>
+        );
+      })}
+      {rings.map((ring) => (
+        <g key={`label-${ring.r}`}>
+          <text x="300" y={ring.labelY} fill="#e2e8f0" fontSize="9" fontWeight="600" letterSpacing="0.1em">{ring.label}</text>
+          <text x="300" y={ring.labelY + 11} fill="#64748b" fontSize="8.5">{ring.desc}</text>
+        </g>
+      ))}
+      <g>
+        <text x="300" y="188" fill="#67e8f9" fontSize="8.5" fontWeight="600" letterSpacing="0.14em">AUDIT STREAM</text>
+        <circle cx="388" cy="185" r="2.5" fill="#22d3ee" />
+        <circle cx="388" cy="185" r="4" stroke="#22d3ee" strokeWidth="0.6" strokeOpacity="0.4" fill="none" />
+        <text x="396" y="188" fill="#475569" fontSize="7.5" letterSpacing="0.08em">LIVE</text>
+        {auditEntries.map((e, j) => (
+          <g key={j} opacity={1 - j * 0.12}>
+            <rect x="300" y={196 + j * 12} width="168" height="10" rx="1.5" fill="#0d1322" stroke="#1e293b" strokeWidth="0.5" />
+            <text x="305" y={203 + j * 12} fill="#94a3b8" fontSize="7" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">{e.ts}</text>
+            <rect x="343" y={198 + j * 12} width="30" height="6.5" rx="1" fill={e.tagColor} fillOpacity="0.18" />
+            <text x="358" y={203 + j * 12} textAnchor="middle" fill={e.tagColor} fontSize="6" fontWeight="700" letterSpacing="0.1em">{e.tag}</text>
+            <rect x="378" y={201 + j * 12} width={e.detailWidth} height="3" rx="0.5" fill="#334155" />
+            <circle cx="463" cy={202 + j * 12} r="1.6" fill={e.tagColor} fillOpacity="0.6" />
+          </g>
+        ))}
+      </g>
+      <line x1="30" y1="248" x2="470" y2="248" stroke="#1e293b" strokeWidth="1" />
+      <text x="58" y="300" fill="#67e8f9" fontSize="58" fontWeight="300" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">0</text>
+      <text x="116" y="274" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.16em">ACTIONS BY DEFAULT</text>
+      <text x="116" y="290" fill="#94a3b8" fontSize="10.5">Every action requires explicit policy.</text>
+      <text x="116" y="305" fill="#94a3b8" fontSize="10" fillOpacity="0.7">Evidence-grade audit on every decision.</text>
+    </DiagramFrame>
+  );
+}
+
+/* 5. Universal connector fabric \u2014 hub + named spokes */
+function DiagramConnectors() {
+  const cx = 250;
+  const cy = 140;
+  const r = 86;
+  const hubR = 40;
+  const nodeR = 14;
+  // Rotated 22.5° so no spoke sits directly under the eyebrow label
+  const spokes = [
+    { a: -67.5, label: "REST", proto: "HTTPS" },
+    { a: -22.5, label: "Slack", proto: "OAuth" },
+    { a: 22.5, label: "Databases", proto: "SQL" },
+    { a: 67.5, label: "Google", proto: "OAuth" },
+    { a: 112.5, label: "Jira", proto: "REST" },
+    { a: 157.5, label: "Terminal", proto: "SSH" },
+    { a: 202.5, label: "HTTP", proto: "JSON" },
+    { a: 247.5, label: "+ more", proto: "", plus: true },
+  ];
+  return (
+    <DiagramFrame id="connectors">
+      <text x="250" y="28" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.16em">CONNECTOR FABRIC</text>
+
+      {/* Hub — stronger: outer glow + halo + core */}
+      <circle cx={cx} cy={cy} r={hubR + 20} stroke="#22d3ee" strokeWidth="0.6" strokeOpacity="0.1" fill="none" />
+      <circle cx={cx} cy={cy} r={hubR + 8} stroke="#22d3ee" strokeWidth="0.8" strokeOpacity="0.22" fill="none" />
+      <circle cx={cx} cy={cy} r={hubR} stroke="#22d3ee" strokeWidth="2" fill="#0e3a4a" fillOpacity="0.7" />
+      <circle cx={cx} cy={cy} r={hubR - 6} stroke="#0891b2" strokeWidth="1" strokeOpacity="0.6" fill="none" />
+      <text x={cx} y={cy - 2} textAnchor="middle" fill="#67e8f9" fontSize="9.5" fontWeight="600" letterSpacing="0.14em">EXECUTION</text>
+      <text x={cx} y={cy + 11} textAnchor="middle" fill="#67e8f9" fontSize="9.5" fontWeight="600" letterSpacing="0.14em">CONTRACT</text>
+
+      {/* Spokes — terminate at node circle edge; opacity tapered from hub outward */}
+      {spokes.map((s) => {
+        const rad = (s.a * Math.PI) / 180;
+        const nodeX = cx + Math.cos(rad) * r;
+        const nodeY = cy + Math.sin(rad) * r;
+        const startX = cx + Math.cos(rad) * (hubR + 2);
+        const startY = cy + Math.sin(rad) * (hubR + 2);
+        const lineEndX = cx + Math.cos(rad) * (r - nodeR);
+        const lineEndY = cy + Math.sin(rad) * (r - nodeR);
+        return (
+          <g key={s.label}>
+            {/* Line: bright near hub, fading outward */}
+            <line
+              x1={startX}
+              y1={startY}
+              x2={lineEndX}
+              y2={lineEndY}
+              stroke="#22d3ee"
+              strokeWidth={s.plus ? 0.8 : 1}
+              strokeOpacity={s.plus ? 0.35 : 0.55}
+              strokeDasharray={s.plus ? "2 3" : undefined}
+            />
+            {/* Node */}
+            {s.plus ? (
+              <g>
+                {/* Marketplace \u2014 solid node with dashed halo */}
+                <circle cx={nodeX} cy={nodeY} r={nodeR + 4} stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.35" fill="none" strokeDasharray="3 3" />
+                <circle cx={nodeX} cy={nodeY} r={nodeR} stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.7" fill="#0a0f1a" />
+                <text x={nodeX} y={nodeY + 4} textAnchor="middle" fill="#22d3ee" fontSize="14" fontWeight="300">+</text>
+              </g>
+            ) : (
+              <g>
+                <circle cx={nodeX} cy={nodeY} r={nodeR} stroke="#475569" strokeWidth="1" fill="#0a0f1a" />
+                <g transform={`translate(${nodeX} ${nodeY})`} stroke="#ffffff" strokeLinecap="round" strokeLinejoin="round" fill="none">
+                  {s.label === "REST" && (
+                    <g strokeWidth="1.3">
+                      <path d="M-4,-3 L-7,0 L-4,3" />
+                      <path d="M4,-3 L7,0 L4,3" />
+                      <line x1="-1.5" y1="-4" x2="1.5" y2="4" />
+                    </g>
+                  )}
+                  {s.label === "Slack" && (
+                    <g strokeWidth="1.3">
+                      <line x1="-3" y1="-5.5" x2="-3" y2="5.5" />
+                      <line x1="3" y1="-5.5" x2="3" y2="5.5" />
+                      <line x1="-6" y1="-2.5" x2="6" y2="-2.5" />
+                      <line x1="-6" y1="2.5" x2="6" y2="2.5" />
+                    </g>
+                  )}
+                  {s.label === "Databases" && (
+                    <g strokeWidth="1.1">
+                      <ellipse cx="0" cy="-4" rx="5.5" ry="1.8" />
+                      <ellipse cx="0" cy="0" rx="5.5" ry="1.8" strokeOpacity="0.65" />
+                      <path d="M-5.5,-4 L-5.5,4" />
+                      <path d="M5.5,-4 L5.5,4" />
+                      <path d="M-5.5,4 A 5.5 1.8 0 0 0 5.5,4" />
+                    </g>
+                  )}
+                  {s.label === "Google" && (
+                    <g strokeWidth="1.2">
+                      <path d="M 4.5,-2 A 5 5 0 1 0 5,3 L 0,3" />
+                      <line x1="5" y1="3" x2="5" y2="0" />
+                    </g>
+                  )}
+                  {s.label === "Jira" && (
+                    <g strokeWidth="1.15">
+                      <path d="M-5,-5 L5,-5 L5,5 L-5,5 Z" />
+                      <path d="M-2.5,0 L-0.5,2 L2.5,-1.5" strokeWidth="1.4" />
+                    </g>
+                  )}
+                  {s.label === "Terminal" && (
+                    <g strokeWidth="1.3">
+                      <path d="M-5,-3 L-1,0 L-5,3" />
+                      <line x1="1" y1="3" x2="5" y2="3" />
+                    </g>
+                  )}
+                  {s.label === "HTTP" && (
+                    <g strokeWidth="1">
+                      <circle cx="0" cy="0" r="6" />
+                      <line x1="-6" y1="0" x2="6" y2="0" />
+                      <path d="M0,-6 Q-3.2,0 0,6" />
+                      <path d="M0,-6 Q3.2,0 0,6" />
+                    </g>
+                  )}
+                </g>
+              </g>
+            )}
+          </g>
+        );
+      })}
+      <line x1="30" y1="245" x2="470" y2="245" stroke="#1e293b" strokeWidth="1" />
+      <text x="52" y="300" fill="#ffffff" fontSize="62" fontWeight="200" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">1</text>
+      <text x="108" y="276" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.16em">EXECUTION CONTRACT</text>
+      <text x="108" y="292" fill="#94a3b8" fontSize="10.5">Hundreds of connectors, unified.</text>
+      <text x="108" y="307" fill="#64748b" fontSize="10">{"Add a connector \u2014 every workflow can use it."}</text>
+    </DiagramFrame>
+  );
+}
+
 /* ── Page ── */
+
+const HERO_HEAD_SEGMENTS: { text: string; gradient?: boolean; breakAfter?: boolean }[] = [
+  { text: "Enterprise AI has a", breakAfter: true },
+  { text: "96% failure rate for a", breakAfter: true },
+  { text: "reason \u2014 " },
+  { text: "it\u2019s built", gradient: true, breakAfter: true },
+  { text: "wrong.", gradient: true },
+];
+const HERO_HEAD_TOTAL = HERO_HEAD_SEGMENTS.reduce((sum, s) => sum + s.text.length, 0);
+const HERO_TYPING_SPEED_MS = 55;
 
 export default function Home() {
   const [firstName, setFirstName] = useState("");
@@ -311,12 +908,40 @@ export default function Home() {
   const [company, setCompany] = useState("");
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [expandedTiers, setExpandedTiers] = useState<Set<number>>(new Set());
+  const [flippedRoles, setFlippedRoles] = useState<Set<number>>(new Set());
   const [formMessage, setFormMessage] = useState("");
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [heroTypedLen, setHeroTypedLen] = useState(0);
   const year = useMemo(() => new Date().getFullYear(), []);
   const featureObserverRef = useRef<IntersectionObserver | null>(null);
+
+  /* Hero headline typing animation */
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setHeroTypedLen(HERO_HEAD_TOTAL);
+      return;
+    }
+    let i = 0;
+    const id = window.setInterval(() => {
+      i += 1;
+      setHeroTypedLen(i);
+      if (i >= HERO_HEAD_TOTAL) window.clearInterval(id);
+    }, HERO_TYPING_SPEED_MS);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const heroTypingDone = heroTypedLen >= HERO_HEAD_TOTAL;
+  const heroActiveSegIdx = (() => {
+    let c = 0;
+    for (let i = 0; i < HERO_HEAD_SEGMENTS.length; i++) {
+      c += HERO_HEAD_SEGMENTS[i].text.length;
+      if (heroTypedLen < c) return i;
+    }
+    return HERO_HEAD_SEGMENTS.length - 1;
+  })();
 
   /* Scroll-triggered reveal animations */
   useEffect(() => {
@@ -479,30 +1104,31 @@ export default function Home() {
           </a>
           <div className="flex items-center gap-8">
             <a href="#problem" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Problem
+              The Problem
             </a>
-            <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Platform
+            <a href="#why-aios" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Why AIOS
+            </a>
+            <a href="#use-cases" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Use Cases
             </a>
             <a href="#pricing" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
               Pricing
             </a>
-            <a href="#partnership" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Partnership
+            <a href="#rollout" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Rollout
             </a>
-            <a href="#pulse" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Pulse
+            <a href="#platform" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Platform
             </a>
-            <a href="#proof" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Product
-            </a>
-            <a href="#pedigree" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
-              Pedigree
+            {/* Compare link hidden */}
+            <a href="#team" className="hidden text-sm text-slate-400 transition hover:text-white md:block">
+              Team
             </a>
             <a
               href="#demo"
               onClick={() => handleCtaClick("header")}
-              className="rounded-md border border-white/[0.10] bg-cyan-400 px-5 py-2 text-xs font-semibold tracking-[0.08em] text-slate-950 transition hover:bg-cyan-300"
+              className="rounded-md border border-white/[0.10] bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition hover:bg-cyan-300"
             >
               REQUEST DEMO
             </a>
@@ -527,21 +1153,58 @@ export default function Home() {
           {/* Content */}
           <div className="relative z-10 px-6 pb-24 pt-16 sm:px-10 lg:pb-32 lg:pl-[120px] lg:pr-[112px] lg:pt-24">
             <div className="max-w-2xl">
-              <h1 className="reveal-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                Enterprise AI has a 96% failure rate for a reason —{" "}
-                <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">
-                  it&rsquo;s built wrong.
+              <h1 className="relative text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
+                <span className="invisible" aria-hidden="true">
+                  {HERO_HEAD_SEGMENTS.map((seg, i) => (
+                    <span key={i}>
+                      {seg.gradient ? <span>{seg.text}</span> : seg.text}
+                      {seg.breakAfter && <br />}
+                    </span>
+                  ))}
+                </span>
+                <span className="absolute inset-0">
+                  {(() => {
+                    let consumed = 0;
+                    return HERO_HEAD_SEGMENTS.map((seg, i) => {
+                      const revealLen = Math.max(0, Math.min(seg.text.length, heroTypedLen - consumed));
+                      const shown = seg.text.slice(0, revealLen);
+                      consumed += seg.text.length;
+                      const showCursor = !heroTypingDone && i === heroActiveSegIdx;
+                      const content = seg.gradient ? (
+                        <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(34,211,238,0.45))]">
+                          {shown}
+                        </span>
+                      ) : (
+                        shown
+                      );
+                      return (
+                        <span key={i}>
+                          {content}
+                          {showCursor && <span className="typing-cursor text-cyan-400" aria-hidden="true" />}
+                          {seg.breakAfter && <br />}
+                        </span>
+                      );
+                    });
+                  })()}
                 </span>
               </h1>
 
-              <p className="reveal-up mt-6 max-w-[540px] text-xl font-normal text-slate-400 [animation-delay:100ms]">
+              <p
+                className={`mt-6 max-w-[540px] text-xl font-normal text-slate-400 transition-all duration-700 ease-out ${
+                  heroTypingDone ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                }`}
+              >
                 AIOS captures how your experts actually work, then executes autonomously with guardrails.
-                Not another chatbot. Not another agent framework. An operating system for autonomous intelligence.
+                Not another chatbot. Not another agent framework. <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">An operating system for autonomous intelligence.</span>
                 <br /><br />
                 No savings, no charge — ever.
               </p>
 
-              <div className="reveal-up mt-10 flex flex-wrap gap-3 [animation-delay:200ms]">
+              <div
+                className={`mt-10 flex flex-wrap gap-3 transition-all delay-200 duration-700 ease-out ${
+                  heroTypingDone ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                }`}
+              >
                 <a
                   href="#demo"
                   onClick={() => handleCtaClick("hero_primary")}
@@ -550,7 +1213,7 @@ export default function Home() {
                   Request Demo
                 </a>
                 <a
-                  href="#platform"
+                  href="#why-aios"
                   onClick={() => handleCtaClick("hero_secondary")}
                   className="rounded-md border border-slate-600 px-7 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
                 >
@@ -573,7 +1236,7 @@ export default function Home() {
           <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 rounded-full bg-rose-500/[0.06] blur-[80px]" />
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-rose-500/20 bg-rose-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-rose-400">
+            <p className="reveal-up inline-block rounded-full border border-rose-500/20 bg-rose-500/5 px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-rose-400">
               THE INDUSTRY PROBLEM
             </p>
 
@@ -585,85 +1248,46 @@ export default function Home() {
               Everyone&rsquo;s experimenting. Almost no one&rsquo;s shipping. The data is brutal, but tells a consistent story!
             </p>
 
-            {/* Scaling Gap Funnel */}
-            <div className="observe-viz reveal-up mt-12 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:160ms]">
-              <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
-                THE SCALING GAP
-              </p>
-              <p className="mt-3 text-base font-medium text-slate-200 md:text-lg">
-                88% of organizations use AI. Only 4% are creating substantial value.
-              </p>
-              <div className="mt-5 space-y-3">
-                {FUNNEL_STAGES.map((stage, i) => {
-                  const barColor = ["bg-slate-500", "bg-amber-500", "bg-orange-500", "bg-rose-500"][i];
-                  const numColor = ["text-slate-300", "text-amber-400", "text-orange-400", "text-rose-400"][i];
-                  return (
-                    <div key={stage.label}>
-                      <div className="mb-1 flex items-baseline gap-2">
-                        <span className={`font-mono text-sm font-medium ${numColor}`}>
-                          {stage.pct}%
-                        </span>
-                        <span className="text-xs text-slate-500">
-                          {stage.label}
-                        </span>
-                      </div>
-                      <div
-                        className={`bar-fill h-7 rounded-md ${barColor}`}
-                        style={{ width: `${stage.pct}%`, minWidth: "16px", transitionDelay: `${400 + i * 200}ms` }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              <p className="mt-4 text-xs text-slate-500">
-                Source: McKinsey State of AI, Nov 2025 &middot; BCG &ldquo;Widening AI Value Gap,&rdquo; Sept 2025
-              </p>
-            </div>
-
-            {/* Kill Shot Stat */}
-            <div className="reveal-up mt-5 rounded-lg border border-rose-500/15 bg-rose-500/[0.04] p-6 md:p-8 [animation-delay:220ms]">
-              <p className="text-center text-3xl font-light text-white md:text-4xl">
-                <span className="font-mono font-medium text-rose-400">40%+</span> of agentic AI projects will be{" "}
-                <span className="underline decoration-rose-400 decoration-2 underline-offset-4">canceled</span> by 2027.
-              </p>
-              <p className="mt-3 text-center text-xs text-slate-500">
-                Due to escalating costs, unclear business value, or inadequate risk controls. &mdash; Gartner, June 2025
-              </p>
-            </div>
-
-            {/* 7 Barriers + Cost Over Time — side by side */}
-            <div className="mt-5 grid gap-5 lg:grid-cols-2">
-              {/* 7 Barriers Grid */}
-              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:280ms]">
-                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
-                  7 BARRIERS TO ENTERPRISE AGENTIC AI
+            {/* Scaling Gap + Total Cost of Ownership — side by side */}
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
+              {/* Scaling Gap Funnel */}
+              <div className="observe-viz reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:160ms]">
+                <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
+                  THE SCALING GAP
                 </p>
-                <p className="mt-3 text-base font-medium text-slate-200">
-                  The research converges on seven structural problems. Point solutions can&rsquo;t fix them.
+                <p className="mt-3 text-base font-medium text-slate-200 md:text-lg">
+                  88% of organizations use AI. Only 4% are creating substantial value.
                 </p>
-
-                <div className="mt-6 space-y-4">
-                  {BARRIERS.map((b, i) => (
-                    <div key={b.label} className="flex items-start gap-4">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500/10 font-mono text-xs font-medium text-rose-400">
-                        {i + 1}
-                      </span>
-                      <div className="flex-1">
-                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                          <span className="text-sm font-medium text-white">{b.label}</span>
-                          <span className="font-mono text-sm font-medium text-rose-400">{b.stat}</span>
-                          <span className="text-xs text-slate-500">{b.statDesc}</span>
+                <div className="mt-5 space-y-3">
+                  {FUNNEL_STAGES.map((stage, i) => {
+                    const barColor = ["bg-slate-500", "bg-amber-500", "bg-orange-500", "bg-rose-500"][i];
+                    const numColor = ["text-slate-300", "text-amber-400", "text-orange-400", "text-rose-400"][i];
+                    return (
+                      <div key={stage.label}>
+                        <div className="mb-1 flex items-baseline gap-2">
+                          <span className={`font-mono text-sm font-medium ${numColor}`}>
+                            {stage.pct}%
+                          </span>
+                          <span className="text-[13px] text-slate-500">
+                            {stage.label}
+                          </span>
                         </div>
-                        <p className="mt-0.5 text-[10px] text-slate-600">{b.source}</p>
+                        <div
+                          className={`bar-fill h-7 rounded-md ${barColor}`}
+                          style={{ width: `${stage.pct}%`, minWidth: "16px", transitionDelay: `${400 + i * 200}ms` }}
+                        />
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
+                <p className="mt-4 text-[13px] text-slate-500">
+                  Source: McKinsey State of AI, Nov 2025 &middot; BCG &ldquo;Widening AI Value Gap,&rdquo; Sept 2025
+                </p>
               </div>
 
               {/* Cost Over Time */}
-              <div className="observe-viz reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:340ms]">
-                <p className="font-mono text-[11px] tracking-[0.18em] text-slate-500">
+              <div className="observe-viz reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:220ms]">
+                <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
                   TOTAL COST OF OWNERSHIP
                 </p>
                 <p className="mt-3 text-base font-medium text-slate-200">
@@ -688,11 +1312,11 @@ export default function Home() {
                   <path className="chart-line" d="M10,110 C80,114 155,120 220,122 S280,124 290,125" fill="none" stroke="#0891b2" strokeWidth="3" strokeLinecap="round" style={{ transitionDelay: "1.2s" }} />
 
                   {["Yr 1", "Yr 2", "Yr 3", "Yr 4", "Yr 5"].map((yr, i) => (
-                    <text key={yr} x={10 + i * 70} y={155} style={{ fontSize: "9px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
+                    <text key={yr} x={10 + i * 70} y={155} style={{ fontSize: "13px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
                       {yr}
                     </text>
                   ))}
-                  <text x="4" y="18" style={{ fontSize: "8px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
+                  <text x="4" y="18" style={{ fontSize: "13px", fill: "#94a3b8", fontFamily: "var(--font-code), monospace" }}>
                     Cost &uarr;
                   </text>
                 </svg>
@@ -700,22 +1324,72 @@ export default function Home() {
                 <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
                   <div className="flex items-center gap-2">
                     <div className="h-0.5 w-5 rounded bg-rose-500" />
-                    <span className="text-xs text-slate-500">Custom workflows</span>
+                    <span className="text-[13px] text-slate-500">Custom workflows</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-0.5 w-5 rounded bg-amber-500" />
-                    <span className="text-xs text-slate-500">RPA</span>
+                    <span className="text-[13px] text-slate-500">RPA</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="h-0.5 w-5 rounded bg-cyan-500" />
-                    <span className="text-xs font-medium text-cyan-400">AIOS</span>
+                    <span className="text-[13px] font-medium text-cyan-400">AIOS</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* AIOS: The Antithesis */}
-            <div className="reveal-up mt-5 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:400ms]">
+            {/* Kill Shot Stat */}
+            <div className="reveal-up mt-5 rounded-lg border border-rose-500/15 bg-rose-500/[0.04] p-6 md:p-8 [animation-delay:220ms]">
+              <p className="text-center text-3xl font-light text-white md:text-4xl">
+                <span className="font-mono font-medium text-rose-400">40%+</span> of agentic AI projects will be{" "}
+                <span className="underline decoration-rose-400 decoration-2 underline-offset-4">canceled</span> by 2027.
+              </p>
+              <p className="mt-3 text-center text-[13px] text-slate-500">
+                Due to escalating costs, unclear business value, or inadequate risk controls. &mdash; Gartner, June 2025
+              </p>
+            </div>
+
+            {/* 7 Barriers Grid */}
+            <div className="reveal-up mt-5 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:280ms]">
+              <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
+                WHAT THE C-SUITE ACTUALLY WORRIES ABOUT
+              </p>
+              <p className="mt-3 text-base font-medium text-slate-200">
+                Eight structural problems hitting CFOs, COOs, CISOs, and GCs right now. Bolt-on AI can&rsquo;t fix them.
+              </p>
+
+              <div className="mt-6 divide-y divide-white/[0.06]">
+                {BARRIERS.map((b, i) => (
+                  <div key={b.label} className="grid gap-5 py-5 md:grid-cols-3 md:gap-8">
+                    {/* Problem */}
+                    <div className="flex items-start gap-4 md:col-span-1">
+                      <span className="shrink-0 pt-0.5 font-mono text-[13px] font-medium text-slate-500">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-slate-300">{b.label}</p>
+                        <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                          <span className="font-mono text-sm font-medium text-rose-400">{b.stat}</span>
+                          <span className="text-[13px] text-slate-500">{b.statDesc}</span>
+                        </div>
+                        <p className="mt-0.5 text-[13px] italic text-slate-600">{b.source}</p>
+                      </div>
+                    </div>
+                    {/* AIOS answer */}
+                    <div className="md:col-span-2 md:border-l md:border-white/[0.08] md:pl-8">
+                      <p className="text-sm font-medium leading-relaxed text-white">
+                        <span className="mr-2 font-mono uppercase tracking-[0.14em] text-cyan-400">AIOS &rarr;</span>
+                        {b.answer}
+                      </p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-slate-400">{b.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AIOS: The Antithesis — hidden for now, may bring back later */}
+            <div className="reveal-up mt-5 hidden rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:400ms]">
               <p className="text-lg font-medium text-white">
                 AIOS is built to solve the barriers that matter most.
               </p>
@@ -729,7 +1403,7 @@ export default function Home() {
                 ].map((item) => (
                   <div key={item.title}>
                     <p className="text-sm font-medium text-cyan-400">{item.title}</p>
-                    <p className="mt-0.5 text-xs leading-relaxed text-slate-500">{item.desc}</p>
+                    <p className="mt-0.5 text-[13px] leading-relaxed text-slate-500">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -894,7 +1568,7 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="platform" className="relative py-24 md:py-32">
+        <section id="why-aios" className="relative py-24 md:py-32">
           <SectionScrollLine />
           {/* Top fade */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
@@ -904,8 +1578,8 @@ export default function Home() {
           <div className="pointer-events-none absolute -left-10 top-1/2 -z-10 h-72 w-72 rounded-full bg-cyan-500/[0.05] blur-[80px]" />
 
           <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
-              THE PLATFORM
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-cyan-400">
+              WHY AIOS
             </p>
             <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
               Why we&rsquo;re different.
@@ -914,19 +1588,30 @@ export default function Home() {
               The industry builds an agent for every task. AIOS builds
               cognition — adaptive intelligence that reasons about any workflow,
               selects any tool, and scales without maintenance debt. &nbsp;
-              <span className="underline decoration-cyan-400 decoration-2 underline-offset-4">Stop building AI agents. Start building intelligence.</span>
+              <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">Stop building AI agents. Start building intelligence.</span>
             </p>
 
             {/* Feature rows — each with its own illustration box */}
-            <div className="mt-12 space-y-20 md:mt-32 md:space-y-64">
+            <div className="mt-12 space-y-12 md:mt-24 md:space-y-24">
               {DIFFERENTIATORS.map((item, i) => {
+                /* ── Previous Remotion animations (preserved for possible revival) ──
+                const animatedIllustrations = [
+                  <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text></svg>,
+                  <TacitKnowledgePlayer key="i1" />,
+                  <CognitiveCorePlayer key="i2" />,
+                  <LearningLoopPlayer key="i3" />,
+                  <SecurityPosturePlayer key="i4" />,
+                  <ConnectorFabricPlayer key="i5" />,
+                ];
+                ── */
+
+                /* New static architecture diagrams — order matches DIFFERENTIATORS */
                 const illustrations = [
-                  /* 0: Persona-centric */ <svg key="i0" viewBox="0 0 400 300" fill="none" className="h-full w-full"><circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.3" fill="#0e3a4a" fillOpacity="0.5"/><text x="200" y="145" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">PERSONA</text><text x="200" y="160" textAnchor="middle" fill="#64748b" fontSize="8">Operator Role</text>{[0,60,120,180,240,300].map((a,j)=>{const l=["APPROVE","QUERY","EXECUTE","REVIEW","ROUTE","AUDIT"];return(<g key={j}><circle cx="200" cy="150" r="110" stroke="#22d3ee" strokeOpacity="0.06" strokeWidth="1" fill="none"/><g><animateTransform attributeName="transform" type="rotate" from={`${a} 200 150`} to={`${a+360} 200 150`} dur={`${20+j*2}s`} repeatCount="indefinite"/><rect x="185" y="36" width="30" height="18" rx="4" fill="#0d1322" stroke="#1e293b" strokeWidth="1"/><text x="200" y="48" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="600" letterSpacing="0.05em">{l[j]}</text></g></g>);})}<circle cx="200" cy="150" r="40" stroke="#22d3ee" strokeOpacity="0.15" strokeWidth="1" fill="none"><animate attributeName="r" values="40;55;40" dur="3s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/></circle></svg>,
-                  /* 1: Tacit knowledge (Remotion) */ <TacitKnowledgePlayer key="i1" />,
-                  /* 2: Cognitive core (Remotion) */ <CognitiveCorePlayer key="i2" />,
-                  /* 3: Learning loop (Remotion) */ <LearningLoopPlayer key="i3" />,
-                  /* 4: Security (Remotion) */ <SecurityPosturePlayer key="i4" />,
-                  /* 5: Connector (Remotion) */ <ConnectorFabricPlayer key="i5" />,
+                  <DiagramOneBrain key="d0" />,
+                  <DiagramInterview key="d1" />,
+                  <DiagramSelfEvolving key="d2" />,
+                  <DiagramSecurity key="d3" />,
+                  <DiagramConnectors key="d4" />,
                 ];
 
                 return (
@@ -936,14 +1621,14 @@ export default function Home() {
                       <h3 className="max-w-md text-2xl font-light tracking-[-0.02em] text-white md:text-[36px] md:leading-[1.15]">{item.title}</h3>
                       <p className="mt-6 max-w-md text-[15px] leading-relaxed text-slate-400">{item.description}</p>
                       <a href="#demo" className="mt-8 inline-flex w-fit items-center gap-2 rounded-md border border-slate-600 px-5 py-3 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white">
-                        Learn more <span className="text-xs">&#8599;</span>
+                        Learn more <span className="text-[13px]">&#8599;</span>
                       </a>
                     </div>
-                    {/* Illustration box — hidden on mobile to avoid heavy animations */}
+                    {/* Illustration box — static architecture diagrams */}
                     <div className="relative hidden overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020] lg:block">
                       <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
                       <div className="flex aspect-[16/10] items-center justify-center p-10">
-                        {illustrations[[2, 1, 3, 4, 5][i]]}
+                        {illustrations[i]}
                       </div>
                     </div>
                   </div>
@@ -951,6 +1636,174 @@ export default function Home() {
               })}
             </div>
 
+          </div>
+        </section>
+
+        {/* ── Section divider ── */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* ── USE CASES ── */}
+        <section id="use-cases" className="relative py-24 md:py-32">
+          <SectionScrollLine color="violet" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
+          <div className="pointer-events-none absolute right-0 bottom-1/4 -z-10 h-80 w-80 rounded-full bg-indigo-500/[0.05] blur-[100px]" />
+
+          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
+            <p className="reveal-up inline-block rounded-full border border-violet-400/25 bg-violet-500/[0.07] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-violet-300">
+              USE CASES
+            </p>
+            <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
+              Enterprise{" "}
+              <span className="bg-gradient-to-r from-violet-300 via-indigo-300 to-violet-300 bg-clip-text text-transparent [filter:drop-shadow(0_0_24px_rgba(167,139,250,0.45))]">
+                Autonomous Agentic AI
+              </span>{" "}
+              Operations
+            </h2>
+            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
+              One cognitive core across every enterprise function. The same platform classifies a single ticket in seconds or runs a full operation forever.
+            </p>
+
+            {/* ── 6 ROLE CARDS ── */}
+            <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  role: "Finance",
+                  summary: "Chief Financial Officers juggle 275 software subscriptions at $49M a year while 86% of finance teams have seen AI fabricate numbers. AIOS runs accounts payable, close, and reconciliation through one governed core with evidence-grade audit trails — priced on successful outcomes, not per-seat.",
+                  icon: "/use-cases/briefcase.avif",
+                  tasks: [
+                    "Ingest every inbound invoice — extract line items, match to purchase orders, post to the finance system, chase missing receipts",
+                    "Reconcile daily bank statements against the general ledger, flag anomalies, post corrections",
+                    "Run month-end close across every sub-ledger — reconcile intercompany, post accruals, surface variances",
+                    "Onboard a new vendor end-to-end: validate tax ID, screen sanctions lists, verify banking, create the record",
+                    "Draft the weekly variance report — pull actuals, compare to forecast, write commentary, send to the finance chief",
+                  ],
+                },
+                {
+                  role: "Operations",
+                  summary: "54% of Chief Operating Officers worry about agentic AI compliance — they own the blast radius when an agent takes the wrong action. AIOS plans before executing, scopes every tool call to a revocable identity, and replaces bot-per-process automation sprawl with one adaptive core.",
+                  icon: "/use-cases/clip.avif",
+                  tasks: [
+                    "Take a customer order from intake through credit check, allocation, carrier booking, invoice, and delivery — across every system it touches",
+                    "Handle a shipment exception: detect the delay, reroute, notify the customer, adjust downstream orders, calculate the service-level credit",
+                    "Process a return end-to-end: inspect, approve, issue the credit memo, update inventory, close the loop",
+                    "Onboard a new supplier: send the non-disclosure agreement, collect insurance certificates, verify compliance, create master data",
+                    "Run the overnight queue while the team is offline — resolve exceptions that don't need judgment, escalate the ones that do with full context",
+                  ],
+                },
+                {
+                  role: "Customer Service",
+                  summary: "91% of customer experience leaders are under board pressure to ship AI, but disconnected point agents for chat, voice, and agent-assist are drowning teams. AIOS is one governed core for every channel — you only pay for resolutions.",
+                  icon: "/use-cases/customer_support.avif",
+                  tasks: [
+                    "Triage an angry support email — pull billing and product history, draft a policy-grounded response, route to the right owner",
+                    "Resolve a password reset, subscription change, or refund request end-to-end — no human needed for tier-1",
+                    "Prep an escalation call: pull the full relationship history and draft a resolution plan before the human picks up",
+                    "Monitor every live chat, surface risk signals, and escalate when fraud, churn, or legal language appears",
+                    "Close the loop after every resolution — log notes, update the customer record, schedule follow-up, capture knowledge for next time",
+                  ],
+                },
+                {
+                  role: "Sales & Revenue",
+                  summary: "40%+ of enterprise deals stall because the full buying group isn't mapped, and AI sales-development bots burned your sender reputation in 2025. AIOS coordinates research, outbound, quoting, and contract operations through one governed core — outcome-priced.",
+                  icon: "/use-cases/bars.avif",
+                  tasks: [
+                    "Enrich, score, and route a new inbound lead in seconds — no more Monday-morning lead triage",
+                    "Research an enterprise account overnight: org chart, recent news, tech stack, competitor footprint, draft a tailored point of view",
+                    "Prep every meeting — pull relationship history, draft talking points, send the pre-read, log the call after",
+                    "Map the full buying group for a deal — find every internal and external stakeholder and coordinate outreach across them",
+                    "Shepherd a contract through redline, pricing, and signature — the rep stays on the phone, not in DocuSign",
+                  ],
+                },
+                {
+                  role: "IT & Security",
+                  summary: "1 in 5 breaches now involve shadow AI, adding $670K per incident — yet only 6% of orgs deploying agents have updated governance. AIOS is one identity-scoped, policy-enforced cognitive core, not 20 ungoverned agents with god-mode service accounts.",
+                  icon: "/use-cases/code.avif",
+                  tasks: [
+                    "Resolve a password reset, remote-access certificate renewal, or single sign-on group request with one message",
+                    "Provision a new hire across every system on day one — and de-provision the moment offboarding fires",
+                    "Triage a security alert: correlate signals, check the runbook, auto-remediate or page the right person with full context",
+                    "Run a quarterly access review: pull entitlements, flag anomalies, route to managers, close out the campaign",
+                    "Coordinate a laptop refresh end-to-end — order, ship, configure, pick up the old device, wipe, retire",
+                  ],
+                },
+                {
+                  role: "Risk & Compliance",
+                  summary: "The EU AI Act is fully enforceable August 2, 2026, and 78% of execs can't pass an AI governance audit in 90 days. AIOS ships evidence packages mapped to Articles 9, 11, 12, and 17 — built for independent audit from day one.",
+                  icon: "/use-cases/legal.avif",
+                  tasks: [
+                    "Pull audit evidence from every relevant system against the control checklist, identify gaps, draft the auditor's response",
+                    "Screen a new vendor end-to-end: sanctions lists, tax ID verification, financial health, service-level history, risk score",
+                    "Review a vendor contract against your playbook — extract terms, flag deviations, route non-standard clauses to legal",
+                    "Aggregate data across business units for a regulatory filing, validate against the rule, format and submit",
+                    "Monitor every AI-driven action in the organization for policy violations — automatically log incidents to the risk register",
+                  ],
+                },
+              ].map((r, i) => {
+                const isFlipped = flippedRoles.has(i);
+                return (
+                  <div
+                    key={r.role}
+                    className="reveal-up min-h-[460px] [perspective:1200px]"
+                    style={{ animationDelay: `${180 + i * 70}ms` }}
+                  >
+                    <button
+                      type="button"
+                      aria-pressed={isFlipped}
+                      aria-label={`${r.role} — ${isFlipped ? "hide" : "show"} example use cases`}
+                      onClick={() =>
+                        setFlippedRoles((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(i)) next.delete(i);
+                          else next.add(i);
+                          return next;
+                        })
+                      }
+                      className={`group relative h-full min-h-[460px] w-full cursor-pointer text-left transition-transform duration-700 [transform-style:preserve-3d] ${
+                        isFlipped ? "[transform:rotateY(180deg)]" : ""
+                      }`}
+                    >
+                      {/* ── FRONT ── */}
+                      <div className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 transition [backface-visibility:hidden] [-webkit-backface-visibility:hidden] group-hover:border-violet-400/30 group-hover:bg-violet-500/[0.04]">
+                        {/* Top-left corner glow */}
+                        <div className="pointer-events-none absolute -top-10 -left-10 h-48 w-48 rounded-full bg-violet-500/[0.06] blur-[60px]" />
+                        {/* Icon */}
+                        <img
+                          src={r.icon}
+                          alt=""
+                          aria-hidden="true"
+                          className="pointer-events-none absolute -bottom-[40px] -right-[60px] z-0 h-72 w-72 object-contain object-right-bottom opacity-70 [filter:brightness(0)_invert(1)]"
+                        />
+                        <h3 className="relative text-lg font-semibold text-white">{r.role}</h3>
+                        <p className="relative mt-3 text-sm leading-relaxed text-slate-400">{r.summary}</p>
+                        <span className="relative mt-auto pt-4 font-mono text-[13px] uppercase tracking-[0.18em] text-violet-300/70 transition group-hover:text-violet-200">
+                          Workflows AIOS runs autonomously &rarr;
+                        </span>
+                      </div>
+
+                      {/* ── BACK ── */}
+                      <div className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-violet-400/25 bg-violet-500/[0.06] p-6 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateY(180deg)]">
+                        {/* Top-left corner glow */}
+                        <div className="pointer-events-none absolute -top-10 -left-10 h-48 w-48 rounded-full bg-violet-500/[0.08] blur-[60px]" />
+                        <h3 className="relative text-lg font-semibold text-white">{r.role}</h3>
+                        <p className="relative mt-1 font-mono text-[13px] uppercase tracking-[0.18em] text-violet-300/80">Workflows AIOS runs autonomously</p>
+                        <ul className="relative mt-4 space-y-2.5">
+                          {r.tasks.map((t) => (
+                            <li key={t} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-300">
+                              <span className="mt-[7px] block h-1 w-1 shrink-0 rounded-full bg-violet-300" />
+                              <span>{t}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <span className="relative mt-auto pt-4 font-mono text-[13px] uppercase tracking-[0.18em] text-violet-300/70">
+                          &larr; Back
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
@@ -965,11 +1818,14 @@ export default function Home() {
           <div className="pointer-events-none absolute left-0 bottom-0 -z-10 h-72 w-72 rounded-full bg-emerald-500/[0.04] blur-[80px]" />
 
           <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+            <p className="reveal-up inline-block rounded-full border border-emerald-500/20 bg-emerald-500/5 px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-emerald-400">
               PRICING
             </p>
             <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
-              We make money when you make money.
+              We make money when{" "}
+              <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(52,211,153,0.45))]">
+                you make money.
+              </span>
             </h2>
             <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               You pay for successful outcomes. Failed tasks are free. Always.
@@ -1003,71 +1859,71 @@ export default function Home() {
 
             {/* Task tier table */}
             <div className="reveal-up mt-12 overflow-x-auto [animation-delay:360ms]">
-              <p className="mb-4 font-mono text-[11px] tracking-[0.18em] text-emerald-400">
+              <p className="mb-4 font-mono text-[13px] tracking-[0.18em] text-emerald-400">
                 TASK PRICING BY COMPLEXITY
               </p>
-              <table className="w-full min-w-[750px] border-collapse text-sm">
+              <table className="w-full min-w-[900px] border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-white/[0.08]">
-                    <th className="py-3 pr-4 text-left font-medium text-slate-500">Tier</th>
+                    <th className="py-3 pl-[10px] pr-4 text-left font-medium text-slate-500">Tier</th>
                     <th className="px-4 py-3 text-left font-medium text-slate-500">What it replaces</th>
                     <th className="px-4 py-3 text-left font-medium text-slate-500">Examples</th>
-                    <th className="px-4 py-3 text-right font-medium text-rose-400">Human cost**</th>
-                    <th className="px-4 py-3 text-right font-medium text-emerald-400">AIOS per task*</th>
-                    <th className="pl-4 py-3 text-right font-medium text-emerald-400">You save</th>
+                    <th className="w-[120px] whitespace-nowrap px-4 py-3 text-right font-medium text-rose-400">Human cost**</th>
+                    <th className="w-[150px] whitespace-nowrap px-4 py-3 text-right font-medium text-emerald-400">AIOS per task*</th>
+                    <th className="w-[110px] whitespace-nowrap py-3 pl-4 pr-[10px] text-right font-medium text-emerald-400">You save</th>
                   </tr>
                 </thead>
                 <tbody>
                   {([
                     {
-                      tier: "Micro", desc: "~15–20 min — single action, no judgment", human: "~$32", aios: "$6 – $13", save: "59–81%",
+                      tier: "Micro", desc: "single action, no judgment", human: "~$48", aios: "$9 – $20", save: "59–81%",
                       examples: [
                         "Route a support ticket to the correct queue based on content",
-                        "Classify an invoice as PO-matched or exception",
-                        "Look up customer account status and return summary to requestor",
+                        "Classify an invoice as purchase-order matched or exception",
+                        "Look up a customer account status and return a summary to the requestor",
                         "Verify a shipping address against USPS and correct formatting",
-                        "Check if a new lead exists in CRM and deduplicate",
+                        "Check if a new lead already exists in the customer records and deduplicate",
                         "Tag and categorize an inbound email by intent and urgency",
                       ],
                     },
                     {
-                      tier: "Standard", desc: "~1–2 hrs — multi-step, one system", human: "~$144", aios: "$29 – $58", save: "60–80%",
+                      tier: "Standard", desc: "multi-step, one system", human: "~$216", aios: "$44 – $87", save: "60–80%",
                       examples: [
-                        "Extract line items from a PDF invoice, validate against PO, post to ERP",
-                        "Process a new vendor submission: validate TIN, check OFAC, create record",
-                        "Pull a customer's renewal data, generate a quote PDF, email to rep",
-                        "Reconcile a single bank statement against GL and flag mismatches",
-                        "Parse an inbound RFP and populate a response template with known answers",
-                        "Generate a weekly sales anomaly report from CRM data",
+                        "Extract line items from a PDF invoice, validate against the purchase order, post to the finance system",
+                        "Process a new vendor submission: validate tax ID, check sanctions lists, create record",
+                        "Pull a customer's renewal data, generate a quote PDF, email to the rep",
+                        "Reconcile a single bank statement against the general ledger and flag mismatches",
+                        "Parse an inbound request-for-proposal and populate a response template with known answers",
+                        "Generate a weekly sales anomaly report from customer records",
                       ],
                     },
                     {
-                      tier: "Complex", desc: "~3–6 hrs — multi-system, judgment calls", human: "~$432", aios: "$86 – $173", save: "60–80%",
+                      tier: "Complex", desc: "multi-system, judgment calls", human: "~$648", aios: "$129 – $260", save: "60–80%",
                       examples: [
                         "Audit an expense report against travel policy, cross-check receipts, approve or flag",
-                        "Customer escalation: pull history from CRM, tickets, and billing, draft resolution",
-                        "New hire provisioning: create accounts across AD, Slack, email, and SaaS tools, verify each",
+                        "Customer escalation: pull history from customer records, tickets, and billing, draft resolution",
+                        "New hire provisioning: create accounts across Active Directory, Slack, email, and SaaS tools, verify each",
                         "Contract review: extract key terms, compare against procurement standards, flag deviations",
                         "Insurance claim: pull policy details, validate docs, cross-reference coverage rules, route with recommendation",
                       ],
                     },
                     {
-                      tier: "Expert", desc: "~1–3 days — cross-system orchestration, decision chains", human: "~$1,536", aios: "$307 – $614", save: "60–80%",
+                      tier: "Expert", desc: "cross-system orchestration, decision chains", human: "~$2,304", aios: "$461 – $921", save: "60–80%",
                       examples: [
-                        "Employee offboarding: revoke access across 12 systems, verify each, recover licenses, generate compliance cert",
-                        "SOX audit: pull evidence from 5+ systems against control checklist, identify gaps, generate report",
-                        "RFP response: retrieve case studies, pull pricing, assemble compliance matrix, draft document",
+                        "Employee offboarding: revoke access across 12 systems, verify each, recover licenses, generate a compliance certificate",
+                        "SOX audit: pull evidence from 5+ systems against a control checklist, identify gaps, generate report",
+                        "Request-for-proposal response: retrieve case studies, pull pricing, assemble compliance matrix, draft the document",
                         "Month-end close: reconcile intercompany transactions across 4 entities, resolve discrepancies, post adjustments",
-                        "Vendor risk review: pull financials, check sanctions lists, review SLA performance, score and recommend",
+                        "Vendor risk review: pull financials, check sanctions lists, review service-level performance, score and recommend",
                       ],
                     },
                     {
-                      tier: "Strategic", desc: "~1–4 weeks — end-to-end process, multiple stakeholders", human: "~$7,680+", aios: "$1,536 – $3,072", save: "60–80%",
+                      tier: "Strategic", desc: "end-to-end process, multiple stakeholders", human: "~$11,520+", aios: "$2,304 – $4,608", save: "60–80%",
                       examples: [
                         "Annual vendor renewal cycle: pull spend data, benchmark rates, draft contracts, track through approvals",
                         "Regulatory filing: aggregate data across business units, validate against rules, resolve issues, format and submit",
-                        "M&A data room: extract and organize financials, contracts, IP, compliance docs from both entities",
-                        "Customer churn analysis: pull usage, support history, billing, NPS for flagged accounts, generate risk-scored report",
+                        "Merger data room: extract and organize financials, contracts, intellectual property, and compliance docs from both entities",
+                        "Customer churn analysis: pull usage, support history, billing, and satisfaction scores for flagged accounts, generate a risk-scored report",
                       ],
                     },
                     {
@@ -1091,7 +1947,7 @@ export default function Home() {
                           return next;
                         })}
                       >
-                        <td className="py-3.5 pr-4 font-mono font-medium text-emerald-400">{row.tier}</td>
+                        <td className="py-3.5 pl-[10px] pr-4 font-mono font-medium text-emerald-400">{row.tier}</td>
                         <td className="px-4 py-3.5 text-slate-400">{row.desc}</td>
                         <td className="px-4 py-3.5 text-slate-500">
                           <ul className="list-disc pl-4 space-y-1">
@@ -1101,20 +1957,20 @@ export default function Home() {
                             }
                           </ul>
                           {!isExpanded && row.examples.length > 2 && (
-                            <p className="mt-1.5 pl-4 text-xs text-emerald-400/70">... and {row.examples.length - 2} more</p>
+                            <p className="mt-1.5 pl-4 text-[13px] text-emerald-400/70">... and {row.examples.length - 2} more</p>
                           )}
                         </td>
-                        <td className="px-4 py-3.5 text-right font-mono text-rose-400/70">{row.human}</td>
-                        <td className="px-4 py-3.5 text-right font-mono font-medium text-white">{row.aios}</td>
-                        <td className="pl-4 py-3.5 text-right font-mono text-emerald-400/80">{row.save}</td>
+                        <td className="whitespace-nowrap px-4 py-3.5 text-right font-mono text-rose-400/70">{row.human}</td>
+                        <td className="whitespace-nowrap px-4 py-3.5 text-right font-mono font-medium text-white">{row.aios}</td>
+                        <td className="whitespace-nowrap py-3.5 pl-4 pr-[10px] text-right font-mono text-emerald-400/80">{row.save}</td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
-              <p className="mt-4 text-xs leading-relaxed text-slate-500">
+              <p className="mt-4 text-[13px] leading-relaxed text-slate-500">
                 *Per-task fees are anchored to 20–40% of fully loaded human cost. Pricing is agreed upon during onboarding.<br />
-                **Human cost based on $150K salary (~$200K fully loaded at $96/hr).
+                **Human cost based on $225K salary (~$300K fully loaded at $144/hr).
               </p>
             </div>
           </div>
@@ -1124,19 +1980,19 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── PARTNERSHIP — WHITE GLOVE ROLLOUT ── */}
-        <section id="partnership" className="relative py-24 md:py-32">
+        <section id="rollout" className="relative py-24 md:py-32">
           <SectionScrollLine />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-500/[0.05] blur-[100px]" />
 
           <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-cyan-400">
               WHITE GLOVE ROLLOUT
             </p>
             <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
               Accelerated rollout.{" "}
-              <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4">
+              <span className="underline decoration-cyan-400 decoration-[3px] underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">
                 Optional. Hands-on.
               </span>
             </h2>
@@ -1146,8 +2002,23 @@ export default function Home() {
               service for teams that want white glove support from day one.
             </p>
 
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {[
+            <div className="reveal-up mt-12 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:180ms]">
+              <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+                  <IconRocket className="h-7 w-7" />
+                </div>
+                <div>
+                  <p className="text-lg font-normal text-white">90 days from kickoff to production.</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-400">
+                    Not a proof of concept. Not a demo environment. Real workflows, real data, real outcomes.
+                    We put skin in the game because our pricing depends on your success.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {(() => {
+              const steps = [
                 {
                   step: "01",
                   title: "Scope & Interview",
@@ -1178,31 +2049,37 @@ export default function Home() {
                   title: "Transfer & Own",
                   desc: "Your team learns the platform. We transition to advisory. You own the system, the workflows, and the knowledge base.",
                 },
-              ].map((item, i) => (
-                <div key={item.step} className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 transition hover:bg-white/[0.05]" style={{ animationDelay: `${180 + i * 80}ms` }}>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-cyan-500/10 font-mono text-sm font-medium text-cyan-400">
-                    {item.step}
-                  </span>
-                  <h3 className="mt-4 text-sm font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{item.desc}</p>
-                </div>
-              ))}
-            </div>
+              ];
 
-            <div className="reveal-up mt-12 rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:700ms]">
-              <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
-                  <IconRocket className="h-7 w-7" />
+              return (
+                <div className="relative mt-16">
+                  {/* Desktop: horizontal roadmap axis */}
+                  <div className="pointer-events-none absolute left-0 right-0 top-[18px] hidden h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent lg:block" aria-hidden="true" />
+                  {/* Mobile/tablet: vertical roadmap axis */}
+                  <div className="pointer-events-none absolute bottom-4 left-[18px] top-4 w-px bg-gradient-to-b from-cyan-400/40 via-cyan-400/25 to-transparent lg:hidden" aria-hidden="true" />
+
+                  <ol className="grid gap-10 lg:grid-cols-6 lg:gap-6">
+                    {steps.map((item, i) => (
+                      <li
+                        key={item.step}
+                        className="reveal-up relative flex items-start gap-5 lg:block"
+                        style={{ animationDelay: `${180 + i * 80}ms` }}
+                      >
+                        {/* Lollipop head */}
+                        <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cyan-400/50 bg-[#050a14] font-mono text-[13px] font-medium text-cyan-300 shadow-[0_0_0_4px_rgba(34,211,238,0.06)]">
+                          {item.step}
+                        </div>
+                        {/* Lollipop stem + content */}
+                        <div className="min-w-0 flex-1 lg:mt-5 lg:border-l-0 lg:border-t lg:border-dashed lg:border-cyan-400/15 lg:pl-0 lg:pt-4">
+                          <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                          <p className="mt-2 text-sm leading-relaxed text-slate-500">{item.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <div>
-                  <p className="text-lg font-normal text-white">90 days from kickoff to production.</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-400">
-                    Not a POC. Not a demo environment. Real workflows, real data, real outcomes.
-                    We put skin in the game because our pricing depends on your success.
-                  </p>
-                </div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -1210,18 +2087,22 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── PULSE — APPLICATION SCREENS ── */}
-        <section id="pulse" className="relative bg-[#0a0f1a] py-24 md:py-32">
-          <SectionScrollLine />
+        <section id="platform" className="relative bg-[#0a0f1a] py-24 md:py-32">
+          <SectionScrollLine color="sky" />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-indigo-500/[0.04] blur-[100px]" />
+          <div className="pointer-events-none absolute right-0 top-1/3 -z-10 h-80 w-80 rounded-full bg-sky-500/[0.06] blur-[100px]" />
+          <div className="pointer-events-none absolute -left-10 bottom-1/4 -z-10 h-72 w-72 rounded-full bg-blue-500/[0.05] blur-[90px]" />
 
           <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+            <p className="reveal-up inline-block rounded-full border border-sky-400/25 bg-sky-500/[0.07] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-sky-300">
               INSIDE THE PLATFORM
             </p>
             <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
-              See everything. Control everything.
+              See everything.{" "}
+              <span className="bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(56,189,248,0.45))]">
+                Control everything.
+              </span>
             </h2>
             <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
               AIOS gives you full visibility into every workflow, every agent decision,
@@ -1268,13 +2149,13 @@ export default function Home() {
                   img: "/screen-audit-log.png",
                 },
               ].map((screen, i) => (
-                <div key={screen.title} className="reveal-up group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a1020] transition hover:border-white/[0.12]" style={{ animationDelay: `${180 + i * 80}ms` }} onClick={() => setLightboxImg(screen.img)}>
+                <div key={screen.title} className="reveal-up group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a1020] transition hover:border-sky-400/30" style={{ animationDelay: `${180 + i * 80}ms` }} onClick={() => setLightboxImg(screen.img)}>
                   <div className="relative aspect-[16/9] overflow-hidden">
                     <img src={screen.img} alt={screen.title} className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]" loading="lazy" />
                     <div className="pointer-events-none absolute inset-0" style={{ boxShadow: "inset 0 0 20px 8px #0a1020" }} />
                   </div>
                   <div className="p-5">
-                    <p className="font-mono text-[10px] tracking-[0.2em] text-cyan-400/50">{screen.tag}</p>
+                    <p className="font-mono text-[13px] tracking-[0.2em] text-sky-400/70">{screen.tag}</p>
                     <h3 className="mt-1 text-base font-semibold text-white">{screen.title}</h3>
                     <p className="mt-2 text-[15px] leading-relaxed text-slate-500">{screen.desc}</p>
                   </div>
@@ -1288,7 +2169,7 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── COMPARISON TABLE ── */}
-        <section id="proof" className="relative py-24 md:py-32">
+        <section id="compare" className="relative hidden py-24 md:py-32">
           <SectionScrollLine />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
@@ -1358,7 +2239,7 @@ export default function Home() {
                   ))}
                 </tbody>
               </table>
-              <p className="mt-6 text-xs leading-relaxed text-slate-600">
+              <p className="mt-6 text-[13px] leading-relaxed text-slate-600">
                 *Competitor comparisons based on publicly available documentation, pricing pages, and product announcements
                 as of March 2026. Sources include{" "}
                 <a href="https://www.salesforce.com/agentforce/pricing/" className="text-slate-500 underline hover:text-slate-400" target="_blank" rel="noopener noreferrer">salesforce.com/agentforce</a>,{" "}
@@ -1377,7 +2258,7 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── PEDIGREE — DEEP EXPERTISE ── */}
-        <section id="pedigree" className="relative overflow-hidden bg-[#0a0f1a] py-24 md:py-32">
+        <section id="team" className="relative overflow-hidden bg-[#0a0f1a] py-24 md:py-32">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050a14] to-transparent" />
 
@@ -1391,7 +2272,7 @@ export default function Home() {
 
           <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
             <div>
-              <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[11px] tracking-[0.18em] text-cyan-400">
+              <p className="reveal-up inline-block rounded-full border border-cyan-500/20 bg-cyan-500/5 px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-cyan-400">
                 PEDIGREE
               </p>
               <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white [animation-delay:60ms]">
@@ -1504,7 +2385,7 @@ export default function Home() {
                   {formStatus === "loading" ? "Submitting..." : "Request Demo"}
                 </button>
                 <a
-                  href="#platform"
+                  href="#why-aios"
                   className="rounded-md border border-slate-600 px-6 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
                 >
                   Learn More
@@ -1536,28 +2417,29 @@ export default function Home() {
                 </svg>
                 <span className="text-sm font-medium text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
               </div>
-              <p className="mt-4 text-xs leading-relaxed text-slate-600 whitespace-nowrap">
+              <p className="mt-4 text-[13px] leading-relaxed text-slate-600 whitespace-nowrap">
                  Autonomous Intelligence Operating System
               </p>
             </div>
 
             {/* Product */}
               <div>
-              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
+              <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
               <ul className="mt-4 space-y-2.5">
                 <li><a href="#problem" className="text-sm text-slate-500 transition hover:text-white">Problem</a></li>
-                <li><a href="#platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
+                <li><a href="#why-aios" className="text-sm text-slate-500 transition hover:text-white">Why AIOS</a></li>
+                <li><a href="#use-cases" className="text-sm text-slate-500 transition hover:text-white">Use Cases</a></li>
                 <li><a href="#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
-                <li><a href="#partnership" className="text-sm text-slate-500 transition hover:text-white">Partnership</a></li>
-                <li><a href="#pulse" className="text-sm text-slate-500 transition hover:text-white">Pulse</a></li>
-                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Product</a></li>
-                <li><a href="#pedigree" className="text-sm text-slate-500 transition hover:text-white">Pedigree</a></li>
+                <li><a href="#rollout" className="text-sm text-slate-500 transition hover:text-white">Rollout</a></li>
+                <li><a href="#platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
+                {/* Compare link hidden */}
+                <li><a href="#team" className="text-sm text-slate-500 transition hover:text-white">Team</a></li>
               </ul>
             </div>
 
             {/* Company */}
             <div>
-              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">COMPANY</p>
+              <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">COMPANY</p>
               <ul className="mt-4 space-y-2.5">
                 <li><a href="/about" className="text-sm text-slate-500 transition hover:text-white">About</a></li>
                 <li><a href="/contact" className="text-sm text-slate-500 transition hover:text-white">Contact</a></li>
@@ -1567,16 +2449,16 @@ export default function Home() {
 
             {/* Resources */}
             <div>
-              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">RESOURCES</p>
+              <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">RESOURCES</p>
               <ul className="mt-4 space-y-2.5">
                 <li><a href="#problem" className="text-sm text-slate-500 transition hover:text-white">Industry Problem</a></li>
-                <li><a href="#proof" className="text-sm text-slate-500 transition hover:text-white">Comparison Table</a></li>
+                {/* Comparison Table link hidden */}
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <p className="text-xs font-semibold tracking-[0.12em] text-slate-500">LEGAL</p>
+              <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">LEGAL</p>
               <ul className="mt-4 space-y-2.5">
                 <li><a href="/privacy" className="text-sm text-slate-500 transition hover:text-white">Privacy Policy</a></li>
                 <li><a href="/terms" className="text-sm text-slate-500 transition hover:text-white">Terms of Service</a></li>
@@ -1586,12 +2468,12 @@ export default function Home() {
 
           {/* Bottom bar */}
           <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/[0.04] pt-6 md:flex-row">
-            <span className="font-mono text-xs tracking-[0.08em] text-slate-700">
+            <span className="font-mono text-[13px] tracking-[0.08em] text-slate-700">
               &copy; {year} cvlSoft, LLC. All rights reserved.
             </span>
             <div className="flex gap-6">
-              <a href="/privacy" className="font-mono text-[10px] tracking-wider text-slate-700 transition hover:text-slate-400">Privacy</a>
-              <a href="/terms" className="font-mono text-[10px] tracking-wider text-slate-700 transition hover:text-slate-400">Terms</a>
+              <a href="/privacy" className="font-mono text-[13px] tracking-wider text-slate-700 transition hover:text-slate-400">Privacy</a>
+              <a href="/terms" className="font-mono text-[13px] tracking-wider text-slate-700 transition hover:text-slate-400">Terms</a>
             </div>
           </div>
         </div>

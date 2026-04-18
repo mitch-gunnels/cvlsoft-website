@@ -211,6 +211,21 @@ h6 {
   }
 }
 
+@keyframes blink-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.9em;
+  margin-left: 0.06em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: blink-cursor 1s steps(1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal-up,
   .scale-in,
@@ -221,6 +236,9 @@ h6 {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  .typing-cursor {
+    display: none;
   }
   .bar-fill {
     transform: scaleX(1);
