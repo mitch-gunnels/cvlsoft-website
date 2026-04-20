@@ -1,0 +1,38 @@
+public/linkedin-banner.svg
+  23c8ff3fe106fd81 1-47
+app/page.tsx
+  0aa7b19ebf36ebd2 1628,1630
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "9d36ee9a6f38fbb2d31b368186e3d349148a21a1",
+  "prompts": {
+    "0aa7b19ebf36ebd2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1c8cd575-ce5c-4f40-b061-1149f21c1929",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "23c8ff3fe106fd81": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "571b8ed0-3092-48ad-ab0a-6e3ec0817869",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 82,
+      "total_deletions": 35,
+      "accepted_lines": 47,
+      "overriden_lines": 0
+    }
+  }
+}
