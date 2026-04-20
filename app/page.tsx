@@ -1625,9 +1625,9 @@ export default function Home() {
                       </a>
                     </div>
                     {/* Illustration box — static architecture diagrams */}
-                    <div className="relative hidden overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020] lg:block">
+                    <div className="relative overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0a1020]">
                       <div className="pointer-events-none absolute bottom-0 right-0 h-[70%] w-[70%] rounded-full bg-cyan-500/[0.06] blur-[80px]" />
-                      <div className="flex aspect-[16/10] items-center justify-center p-10">
+                      <div className="flex aspect-[16/10] items-center justify-center p-6 md:p-10">
                         {illustrations[i]}
                       </div>
                     </div>
