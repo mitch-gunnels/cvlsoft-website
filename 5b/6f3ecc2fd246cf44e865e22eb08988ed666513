@@ -1,0 +1,31 @@
+public/logo-mark-256.svg
+  100b8bc61d4b019b 1
+public/logo-signature.svg
+  100b8bc61d4b019b 1
+app/icon.svg
+  100b8bc61d4b019b 1
+app/page.tsx
+  100b8bc61d4b019b 1098,2409
+scripts/send-test-emails.mjs
+  100b8bc61d4b019b 1-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "5b6f3ecc2fd246cf44e865e22eb08988ed666513",
+  "prompts": {
+    "100b8bc61d4b019b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a9eb99fe-d67a-4a0f-9195-c61ed065d63c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 153,
+      "total_deletions": 18,
+      "accepted_lines": 153,
+      "overriden_lines": 0
+    }
+  }
+}
