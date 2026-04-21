@@ -1095,11 +1095,7 @@ export default function Home() {
             : "border border-transparent bg-transparent"
         }`}>
           <a href="#top" className="flex items-center gap-3">
-            <svg viewBox="0 0 48 48" fill="none" className="h-7 w-7" aria-hidden="true">
-              <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
-              <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round"/>
-              <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-            </svg>
+            <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-7 w-7" />
             <span className="text-sm font-medium tracking-tight text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
           </a>
           <div className="flex items-center gap-8">
@@ -2410,11 +2406,7 @@ export default function Home() {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3">
-                <svg viewBox="0 0 48 48" fill="none" className="h-6 w-6" aria-hidden="true">
-                  <path d="M32 10 A18 18 0 1 0 32 38" stroke="#0e7490" strokeWidth="4.5" fill="none" strokeLinecap="round" />
-                  <path d="M30 16 A12 12 0 1 0 30 32" stroke="#22d3ee" strokeWidth="4" fill="none" strokeLinecap="round" />
-                  <path d="M28 21 A6 6 0 1 0 28 27" stroke="#67e8f9" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-                </svg>
+                <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-6 w-6" />
                 <span className="text-sm font-medium text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
               </div>
               <p className="mt-4 text-[13px] leading-relaxed text-slate-600 whitespace-nowrap">
