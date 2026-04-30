@@ -1,0 +1,31 @@
+backlog.md
+  826df887f97e109f 1-32
+app/components/HeroKpiTicker.tsx
+  826df887f97e109f 1-151
+app/page.tsx
+  826df887f97e109f 5-6,1221-1222,1860-1861
+app/components/PricingCalculator.tsx
+  826df887f97e109f 1-210
+app/globals.css
+  826df887f97e109f 214-262,289-291
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "f6cff924cc7a2f8999be74f2b29e8a78e196adf0",
+  "prompts": {
+    "826df887f97e109f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5eabe303-fdba-4ad4-b70c-d61dd635619b",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 452,
+      "total_deletions": 1,
+      "accepted_lines": 451,
+      "overriden_lines": 0
+    }
+  }
+}
