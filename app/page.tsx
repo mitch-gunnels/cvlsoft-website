@@ -2,6 +2,8 @@
 
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
+import HeroKpiTicker from "@/app/components/HeroKpiTicker";
+import PricingCalculator from "@/app/components/PricingCalculator";
 
 // ── Remotion animation players — commented out while Why AIOS uses static architecture diagrams ──
 // import dynamic from "next/dynamic";
@@ -1216,6 +1218,8 @@ export default function Home() {
                   Why We&rsquo;re Different
                 </a>
               </div>
+
+              <HeroKpiTicker heroTypingDone={heroTypingDone} />
             </div>
           </div>
         </section>
@@ -1852,6 +1856,8 @@ export default function Home() {
                 </p>
               </div>
             </div>
+
+            <PricingCalculator />
 
             {/* Task tier table */}
             <div className="reveal-up mt-12 overflow-x-auto [animation-delay:360ms]">

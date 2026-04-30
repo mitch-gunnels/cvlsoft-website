@@ -211,6 +211,55 @@ h6 {
   }
 }
 
+@keyframes ticker-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-marquee {
+  animation: ticker-marquee 28s linear infinite;
+}
+
+/* ── Pricing calculator slider ── */
+
+input[type="range"].ui-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"].ui-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+input[type="range"].ui-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.22);
+}
+
+input[type="range"].ui-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  border: none;
+  cursor: pointer;
+}
+
+input[type="range"].ui-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.35);
+}
+
 @keyframes blink-cursor {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -236,6 +285,9 @@ h6 {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  .ticker-marquee {
+    animation: none;
   }
   .typing-cursor {
     display: none;
