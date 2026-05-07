@@ -211,15 +211,6 @@ h6 {
   }
 }
 
-@keyframes ticker-marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-marquee {
-  animation: ticker-marquee 28s linear infinite;
-}
-
 /* ── Pricing calculator slider ── */
 
 input[type="range"].ui-slider {
@@ -285,9 +276,6 @@ input[type="range"].ui-slider:focus-visible::-webkit-slider-thumb {
     animation: none;
     opacity: 1;
     transform: none;
-  }
-  .ticker-marquee {
-    animation: none;
   }
   .typing-cursor {
     display: none;

@@ -2,7 +2,6 @@
 
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
-import HeroKpiTicker from "@/app/components/HeroKpiTicker";
 import PricingCalculator from "@/app/components/PricingCalculator";
 
 // ── Remotion animation players — commented out while Why AIOS uses static architecture diagrams ──
@@ -656,9 +655,6 @@ function DiagramSecurity() {
       ))}
       <g>
         <text x="300" y="188" fill="#67e8f9" fontSize="8.5" fontWeight="600" letterSpacing="0.14em">AUDIT STREAM</text>
-        <circle cx="388" cy="185" r="2.5" fill="#22d3ee" />
-        <circle cx="388" cy="185" r="4" stroke="#22d3ee" strokeWidth="0.6" strokeOpacity="0.4" fill="none" />
-        <text x="396" y="188" fill="#475569" fontSize="7.5" letterSpacing="0.08em">LIVE</text>
         {auditEntries.map((e, j) => (
           <g key={j} opacity={1 - j * 0.12}>
             <rect x="300" y={196 + j * 12} width="168" height="10" rx="1.5" fill="#0d1322" stroke="#1e293b" strokeWidth="0.5" />
@@ -1110,8 +1106,7 @@ export default function Home() {
                   heroTypingDone ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
               >
-                AIOS captures how your experts actually work, then executes autonomously with guardrails.
-                Not another chatbot. Not another agent framework. <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">An operating system for autonomous intelligence.</span>
+                AIOS interviews your experts to capture how they actually work, turns that knowledge into policy, and runs the work autonomously, in production, with proof. <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">An operating system for autonomous intelligence.</span>
                 <br /><br />
                 No savings, no charge — ever.
               </p>
@@ -1136,8 +1131,6 @@ export default function Home() {
                   Why We&rsquo;re Different
                 </a>
               </div>
-
-              <HeroKpiTicker heroTypingDone={heroTypingDone} />
             </div>
           </div>
         </section>

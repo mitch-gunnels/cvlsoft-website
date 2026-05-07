@@ -4,13 +4,6 @@ Follow-up work from the 12-recommendation design handoff. Items here were intent
 
 ---
 
-## From Rec 01 — Hero KPI Ticker
-
-- [ ] **Replace seed values with real platform metrics.** Ticker currently uses hard-coded seeds with random-walk deltas (`app/components/HeroKpiTicker.tsx`). Needs: metrics endpoint (REST or SSE), refresh cadence (suggest 10–30s poll or WS push), fallback behavior when endpoint is unreachable (freeze on last-good value, log silently, don't show a broken UI).
-- [ ] **GTM sign-off on the 4 signals.** Confirm "tasks executed / saved this week / policy-compliant / approvals logged" are the right 4 KPIs to lead with — these were chosen from the handoff spec, not validated with sales/marketing.
-- [ ] **Pulse-dot timing vs spec.** Handoff asks for ≥0.5 opacity swing over 1.5s; we're using Tailwind's `animate-pulse` (2s, 50% min opacity). Either document as an accepted deviation or add a custom `@keyframes` block that matches the spec exactly.
-- [ ] **Optics of the "saved this week" counter at week boundary.** Currently monotonically increments forever. Real behavior should reset (or snap) at the start of each week, otherwise the number will eventually lose meaning.
-
 ## From Rec 02 — Interactive Savings Calculator
 
 - [ ] **Rates sign-off (blocker for marketing push).** AIOS rates `$0.50 / $6 / $45` per simple/complex/strategic task and human baselines `$2 / $24 / $180` are illustrative values from the handoff spec. Ops + finance need to confirm before the hedge copy ("Estimate only — final pricing is set during onboarding.") is removed.
@@ -31,3 +24,4 @@ Priority 2 (Recs 03, 05, 06, 08) and Priority 3 (Recs 07, 09, 11, 12) are pendin
 
 - **Rec 10 — Cinema Platform Screen.** Decided 2026-04-30 not to ship. The existing 2×3 "Inside the Platform" screenshot grid stays. Note: this also affects Rec 03, which referenced Rec 10 as the mid-page set piece — Rec 03 will need an alternative mid-page anchor (e.g., the savings calculator or a different visual moment) when it gets planned.
 - **Rec 04 — 4×2 Threat Matrix.** Built 2026-05-01, then immediately removed: too much data on the page and not needed. The entire "WHAT THE C-SUITE ACTUALLY WORRIES ABOUT" block (eyebrow + intro + 8 barrier cards) was deleted from `app/page.tsx`, along with the `BARRIERS` constant, the `ThreatMatrix` component, and the `threat-expand` keyframes. The remaining `#problem` section (hero stat, scaling-gap funnel, TCO chart) stays as-is. Source data + AIOS counter copy are preserved in git history if any of it is wanted later.
+- **Rec 01 — Hero KPI Ticker.** Built 2026-04-22 (local random walks), then DB-backed via MongoDB + Vercel Cron 2026-05-06, then dropped 2026-05-06 — not needed. Removed: `HeroKpiTicker` component + its render/import in `app/page.tsx`, the `ticker-marquee` keyframes/class in `globals.css`, the `metrics` API routes, `app/lib/metrics.ts`, `vercel.json`, `.env.example`, and the local `CRON_SECRET`. Implementation + atomic-upsert / timing-safe-auth hardening preserved in git history (see commits prior to the revert) if the ticker is ever wanted back.
