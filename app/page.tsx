@@ -270,88 +270,6 @@ const FUNNEL_STAGES = [
   { label: "Creating substantial value", pct: 4 },
 ];
 
-const BARRIERS: {
-  label: string;
-  stat: string;
-  statDesc: string;
-  source: string;
-  answer: string;
-  detail: string;
-}[] = [
-  {
-    label: "Agent sprawl",
-    stat: "12%",
-    statDesc: "of enterprises run a centralized AI platform",
-    source: "Gravitee, State of AI Agent Security 2026",
-    answer: "One cognitive core, one connector fabric. Every workflow makes the next one smarter.",
-    detail:
-      "Fragmented agents each solve one task and learn in isolation. AIOS runs every process through the same reasoning core and a unified connector fabric, so adding a capability upgrades every workflow at once. You stop maintaining a stack of point solutions and start compounding IP on your own data.",
-  },
-  {
-    label: "Shadow AI breaches",
-    stat: "+$670K",
-    statDesc: "added to the average breach when shadow AI is involved",
-    source: "IBM Cost of a Data Breach 2026",
-    answer: "Plan-before-execute architecture. No action runs without an explicit, policy-approved plan.",
-    detail:
-      "Every AI action is proposed as a plan, checked against policy, then executed. Global and per-execution kill switches halt the system instantly when something drifts. Security teams see exactly what AI is doing in real time, instead of discovering shadow usage in a post-breach forensic.",
-  },
-  {
-    label: "Hallucination exposure",
-    stat: "86%",
-    statDesc: "of finance teams have caught AI fabricating numbers",
-    source: "Workiva / CFO Dive 2026",
-    answer: "Reasoning grounded in your certified knowledge, not generic model priors.",
-    detail:
-      "Outputs are built from your own process IP, captured directly from your experts. If a proposed action crosses a confidence threshold or violates policy, it halts at the reasoning step and routes to a named human approver. Finance ships numbers they can defend line-by-line in an audit.",
-  },
-  {
-    label: "Audit-readiness gap",
-    stat: "78%",
-    statDesc: "of execs can't pass an AI governance audit in 90 days",
-    source: "Grant Thornton AI Impact Survey 2026",
-    answer: "Continuous evidence bundle. Your audit package is the byproduct, not a retrofit.",
-    detail:
-      "Every action is logged with its reasoning step, every policy decision traced, every human approval signed. Compliance evidence accretes as the platform runs, so when external review arrives you hand over a ready package instead of scrambling for six weeks.",
-  },
-  {
-    label: "Governance debt",
-    stat: "6%",
-    statDesc: "have updated AI governance frameworks",
-    source: "Sprinto / Gravitee 2026",
-    answer: "Identity, policy, and audit ship as platform primitives \u2014 not bolted on after a breach.",
-    detail:
-      "79% of enterprises are already deploying agents; only 6% have refreshed governance to match. AIOS closes that gap at the substrate: role-based identity, allow/deny rules, approval gates, and tamper-evident logs live in the core, not in a separate governance tool bought post-incident. Your framework doesn't chase the deployment; it's what the deployment runs on from day one.",
-  },
-  {
-    label: "Expert knowledge attrition",
-    stat: "10K/day",
-    statDesc: "U.S. boomers retiring with tacit process knowledge",
-    source: "Pew Research / U.S. Census projections",
-    answer: "AIOS interviews your experts before they leave, then makes what they know permanent.",
-    detail:
-      "Ten thousand U.S. boomers retire every day, and decades of tacit process knowledge walk out with them. AIOS voice interviews use seven science-backed elicitation techniques to capture how your experts actually complete work. A three-role memory engine \u2014 Generator, Reflector, Curator \u2014 turns every execution into reusable knowledge. The expertise that normally disappears on a retirement or resignation becomes a durable asset on your side of the ledger.",
-  },
-  {
-    label: "Agent-washing",
-    stat: "<1%",
-    statDesc: "of \u201cagentic\u201d vendors ship a real reasoning-capable agent",
-    source: "Gartner, June 2025",
-    answer: "Prove it on a real process in a 90-day pilot. If the work doesn't ship, you don't pay.",
-    detail:
-      "We stake our work on a measured pilot you choose. The cognitive core has to plan, adapt, and execute autonomously against your actual process, not a demo on rails. Every claim we make is verifiable in your environment, on your data, inside a quarter.",
-  },
-  {
-    label: "Project cancellation",
-    stat: "40%+",
-    statDesc: "of agentic AI projects will be canceled by 2027",
-    source: "Gartner, June 2025",
-    answer: "Forward-deployed team embeds until it works. Outcome-based pricing \u2014 failed tasks are free.",
-    detail:
-      "You pay per successful, in-policy task execution, not per seat, per call, or per model token. Our engineers stay embedded with your team through production, not just deployment. We're on the hook for the same outcome you are, which is why the invoice only shows up when the work does.",
-  },
-];
-
 const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
   {
     title: "One brain. Every workflow.",
@@ -1347,45 +1265,6 @@ export default function Home() {
               <p className="mt-3 text-center text-[13px] text-slate-500">
                 Due to escalating costs, unclear business value, or inadequate risk controls. &mdash; Gartner, June 2025
               </p>
-            </div>
-
-            {/* 7 Barriers Grid */}
-            <div className="reveal-up mt-5 rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 [animation-delay:280ms]">
-              <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
-                WHAT THE C-SUITE ACTUALLY WORRIES ABOUT
-              </p>
-              <p className="mt-3 text-base font-medium text-slate-200">
-                Eight structural problems hitting CFOs, COOs, CISOs, and GCs right now. Bolt-on AI can&rsquo;t fix them.
-              </p>
-
-              <div className="mt-6 divide-y divide-white/[0.06]">
-                {BARRIERS.map((b, i) => (
-                  <div key={b.label} className="grid gap-5 py-5 md:grid-cols-3 md:gap-8">
-                    {/* Problem */}
-                    <div className="flex items-start gap-4 md:col-span-1">
-                      <span className="shrink-0 pt-0.5 font-mono text-[13px] font-medium text-slate-500">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-slate-300">{b.label}</p>
-                        <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
-                          <span className="font-mono text-sm font-medium text-rose-400">{b.stat}</span>
-                          <span className="text-[13px] text-slate-500">{b.statDesc}</span>
-                        </div>
-                        <p className="mt-0.5 text-[13px] italic text-slate-600">{b.source}</p>
-                      </div>
-                    </div>
-                    {/* AIOS answer */}
-                    <div className="md:col-span-2 md:border-l md:border-white/[0.08] md:pl-8">
-                      <p className="text-sm font-medium leading-relaxed text-white">
-                        <span className="mr-2 font-mono uppercase tracking-[0.14em] text-cyan-400">AIOS &rarr;</span>
-                        {b.answer}
-                      </p>
-                      <p className="mt-2 text-[13px] leading-relaxed text-slate-400">{b.detail}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* AIOS: The Antithesis — hidden for now, may bring back later */}

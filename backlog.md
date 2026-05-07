@@ -25,8 +25,9 @@ Follow-up work from the 12-recommendation design handoff. Items here were intent
 
 ## Remaining recs — not yet planned
 
-Priority 2 (Recs 03, 04, 05, 06, 08) and Priority 3 (Recs 07, 09, 11, 12) are pending individual plans. See `~/Desktop/design_handoff_cvlsoft_site_upgrade/README.md` for specs.
+Priority 2 (Recs 03, 05, 06, 08) and Priority 3 (Recs 07, 09, 11, 12) are pending individual plans. See `~/Desktop/design_handoff_cvlsoft_site_upgrade/README.md` for specs.
 
 ## Dropped from scope
 
 - **Rec 10 — Cinema Platform Screen.** Decided 2026-04-30 not to ship. The existing 2×3 "Inside the Platform" screenshot grid stays. Note: this also affects Rec 03, which referenced Rec 10 as the mid-page set piece — Rec 03 will need an alternative mid-page anchor (e.g., the savings calculator or a different visual moment) when it gets planned.
+- **Rec 04 — 4×2 Threat Matrix.** Built 2026-05-01, then immediately removed: too much data on the page and not needed. The entire "WHAT THE C-SUITE ACTUALLY WORRIES ABOUT" block (eyebrow + intro + 8 barrier cards) was deleted from `app/page.tsx`, along with the `BARRIERS` constant, the `ThreatMatrix` component, and the `threat-expand` keyframes. The remaining `#problem` section (hero stat, scaling-gap funnel, TCO chart) stays as-is. Source data + AIOS counter copy are preserved in git history if any of it is wanted later.
