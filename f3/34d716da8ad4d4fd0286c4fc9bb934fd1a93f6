@@ -1,0 +1,23 @@
+backlog.md
+  826df887f97e109f 28,33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "f334d716da8ad4d4fd0286c4fc9bb934fd1a93f6",
+  "prompts": {
+    "826df887f97e109f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5eabe303-fdba-4ad4-b70c-d61dd635619b",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels",
+      "messages": [],
+      "total_additions": 190,
+      "total_deletions": 166,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
