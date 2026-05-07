@@ -807,11 +807,9 @@ function DiagramConnectors() {
 /* ── Page ── */
 
 const HERO_HEAD_SEGMENTS: { text: string; gradient?: boolean; breakAfter?: boolean }[] = [
-  { text: "Enterprise AI has a", breakAfter: true },
-  { text: "96% failure rate for a", breakAfter: true },
-  { text: "reason \u2014 " },
-  { text: "it\u2019s built", gradient: true, breakAfter: true },
-  { text: "wrong.", gradient: true },
+  { text: "Stop building agents.", breakAfter: true },
+  { text: "Start shipping " },
+  { text: "outcomes.", gradient: true },
 ];
 const HERO_HEAD_TOTAL = HERO_HEAD_SEGMENTS.reduce((sum, s) => sum + s.text.length, 0);
 const HERO_TYPING_SPEED_MS = 55;
@@ -1106,7 +1104,7 @@ export default function Home() {
                   heroTypingDone ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
               >
-                AIOS interviews your experts to capture how they actually work, turns that knowledge into policy, and runs the work autonomously, in production, with proof. <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">An operating system for autonomous intelligence.</span>
+                Agent frameworks hand your engineers a graph and a bill per node. AIOS interviews your experts, turns their knowledge into policy, and runs the work autonomously in production, with proof. <span className="underline decoration-cyan-400 decoration-2 underline-offset-4 [text-shadow:0_0_22px_rgba(34,211,238,0.4)]">Pay only when the work succeeds.</span>
                 <br /><br />
                 No savings, no charge — ever.
               </p>
@@ -1705,7 +1703,7 @@ export default function Home() {
               your tenant.
             </p>
 
-            <div className="mt-12 grid gap-5 sm:grid-cols-3">
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:180ms]">
                 <p className="font-mono text-sm font-semibold text-emerald-400">Floor Cost Only</p>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">
@@ -1726,6 +1724,15 @@ export default function Home() {
                   If a task fails, escalates, or gets killed, you pay nothing.
                   AIOS only earns when it delivers. Our incentives are your incentives.
                 </p>
+              </div>
+              <div className="reveal-up rounded-lg border border-white/[0.06] bg-white/[0.03] p-6 [animation-delay:360ms]">
+                <p className="font-mono text-sm font-semibold text-emerald-400">Defined in writing</p>
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-slate-400">
+                  <li>Success criteria locked per workflow before go-live.</li>
+                  <li>Quarterly not-to-exceed cap.</li>
+                  <li>Dispute window with full trace evidence.</li>
+                  <li>Annual true-up.</li>
+                </ul>
               </div>
             </div>
 
@@ -2043,7 +2050,7 @@ export default function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
         {/* ── COMPARISON TABLE ── */}
-        <section id="compare" className="relative hidden py-24 md:py-32">
+        <section id="compare" className="relative py-24 md:py-32">
           <SectionScrollLine />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0f1a] to-transparent" />
@@ -2082,8 +2089,10 @@ export default function Home() {
                     ["Kill switches", "Global + tenant + execution", "Single-level", "None", "Single-level", "Single-level"],
                     ["Compliance-grade audit trail", "Built-in, immutable", "Partial", "DIY (LangSmith separate)", "Process-level logs", "Provider-dependent"],
                     ["Human-in-the-loop gates", "Pauses execution until approved", "Notifications", "DIY", "Action Center notifications", "Notifications"],
-                    ["Multi-tenancy", "Architected from day one", "Org-level", "DIY (not architectural)", "Varies", "Provider-dependent"],
-                    ["Pricing model", "Outcome-based — failed = free", "$2/conversation or $0.10/action", "Open source + eng team cost", "Per-bot + platform license", "Per-token consumption"],
+                    ["Multi-tenancy", "Architected from day one", "Org-level", "DIY (thread_id, app-level)", "Varies", "Provider-dependent"],
+                    ["State persistence", "Built-in checkpointing + replay", "Conversation context", "DIY (SQLite/Postgres)", "Process state per bot", "Provider-dependent"],
+                    ["Human-in-the-loop", "Native approval gates", "Notifications", "interrupt() + custom UI", "Action Center notifications", "Notifications"],
+                    ["Pricing model", "Outcome-based — failed = free", "$2/conversation or $0.10/action", "Per-node run + per-min uptime", "Per-bot + platform license", "Per-token consumption"],
                     ["Time to production", "90 days with FDEs", "Weeks to months", "Months of eng build", "Weeks to months", "Weeks to months"],
                     ["Maintenance at scale", "Sublinear", "Linear (agent per task)", "Linear (code per agent)", "Linear (bot per process)", "Linear"],
                   ] as const).map((row, i) => (
