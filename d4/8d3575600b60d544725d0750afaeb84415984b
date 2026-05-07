@@ -1,0 +1,21 @@
+backlog.md
+  s_826df887f97e10::t_4da6e6ed7c854f 27
+app/page.tsx
+  s_826df887f97e10::t_99f36620d6fc86 1109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "d48d3575600b60d544725d0750afaeb84415984b",
+  "prompts": {},
+  "sessions": {
+    "s_826df887f97e10": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5eabe303-fdba-4ad4-b70c-d61dd635619b",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
