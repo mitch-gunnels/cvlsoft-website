@@ -811,6 +811,7 @@ export default function Home() {
   const [formMessage, setFormMessage] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const [headerTone, setHeaderTone] = useState<"dark" | "light">("dark");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activeFeature, setActiveFeature] = useState(0);
   const featureObserverRef = useRef<IntersectionObserver | null>(null);
@@ -979,7 +980,7 @@ export default function Home() {
             </span>
           </a>
           <div
-            className={`flex items-center gap-8 transition-opacity duration-300 ${
+            className={`flex items-center gap-3 md:gap-8 transition-opacity duration-300 ${
               scrolled ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
           >
@@ -1029,8 +1030,63 @@ export default function Home() {
             >
               REQUEST DEMO
             </a>
+
+            {/* Mobile hamburger toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              className={`md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
+                headerTone === "dark" ? "text-white hover:bg-white/[0.06]" : "text-slate-950 hover:bg-slate-950/[0.06]"
+              }`}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </nav>
+
+        {/* Mobile menu panel */}
+        {mobileMenuOpen && scrolled && (
+          <div
+            className={`md:hidden border-t ${
+              headerTone === "dark"
+                ? "border-white/[0.08] bg-[#050a14]"
+                : "border-slate-950/10 bg-[var(--bg-page)]"
+            }`}
+          >
+            <nav className="flex flex-col px-6 py-4">
+              {[
+                ["/#problem", "The Industry Problem"],
+                ["/#why-aios", "Why AIOS"],
+                ["/#pricing", "Pricing"],
+                ["/rollout", "Rollout"],
+                ["/case-studies", "Case Studies"],
+                ["/platform", "Platform"],
+                ["/team", "Team"],
+              ].map(([href, label]) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-3 text-[15px] transition-colors ${
+                    headerTone === "dark"
+                      ? "text-slate-300 hover:text-white"
+                      : "text-slate-700 hover:text-slate-950"
+                  }`}
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
       <main id="top">
@@ -1056,7 +1112,7 @@ export default function Home() {
           {/* Content — vertically centered, takes the available space above
               the BUILT ON row. Each block animates in with `hero-fade-up` and
               its own animation-delay, producing a staggered cascade. */}
-          <div className="relative z-10 flex w-full flex-1 items-center px-6 sm:px-10 lg:px-[120px]">
+          <div className="relative z-10 flex w-full flex-1 items-start pt-24 px-6 sm:px-10 md:items-center md:pt-0 lg:px-[120px]">
             <div className="max-w-4xl">
               <h1 className="hero-fade-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
                 Agentic Operations<br />

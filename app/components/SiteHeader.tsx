@@ -28,6 +28,7 @@ export default function SiteHeader() {
   const isHome = pathname === "/";
   const defaultTone: "dark" | "light" = isDarkPath(pathname) ? "dark" : "light";
   const [tone, setTone] = useState<"dark" | "light">(defaultTone);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { open: openDemoModal } = useDemoModal();
 
   useEffect(() => {
@@ -53,6 +54,11 @@ export default function SiteHeader() {
     };
   }, [defaultTone]);
 
+  // Close mobile menu when navigating to a different route
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const isDark = tone === "dark";
 
   return (
@@ -70,7 +76,7 @@ export default function SiteHeader() {
             AIOS <span className="font-normal text-slate-500">by cvlSoft</span>
           </span>
         </a>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-3 md:gap-8">
           {NAV_ITEMS.map(([href, label]) => {
             const isActive = !href.includes("#") && pathname === href;
             const activeClass = isDark
@@ -113,8 +119,60 @@ export default function SiteHeader() {
               REQUEST DEMO
             </button>
           )}
+
+          {/* Mobile hamburger toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            className={`md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
+              isDark ? "text-white hover:bg-white/[0.06]" : "text-slate-950 hover:bg-slate-950/[0.06]"
+            }`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6">
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
+
+      {/* Mobile menu panel */}
+      {mobileOpen && (
+        <div
+          className={`md:hidden border-t ${
+            isDark ? "border-white/[0.08] bg-[#050a14]" : "border-slate-950/10 bg-[var(--bg-page)]"
+          }`}
+        >
+          <nav className="flex flex-col px-6 py-4">
+            {NAV_ITEMS.map(([href, label]) => {
+              const isActive = !href.includes("#") && pathname === href;
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`py-3 text-[15px] transition-colors ${
+                    isActive
+                      ? isDark
+                        ? "font-medium text-cyan-400"
+                        : "font-medium text-cyan-700"
+                      : isDark
+                        ? "text-slate-300 hover:text-white"
+                        : "text-slate-700 hover:text-slate-950"
+                  }`}
+                >
+                  {label}
+                </a>
+              );
+            })}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
