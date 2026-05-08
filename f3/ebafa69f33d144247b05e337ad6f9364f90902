@@ -1,0 +1,25 @@
+app/components/SiteHeader.tsx
+  s_004113efaf1893::t_6ed401dace3128 31,57-60
+  s_004113efaf1893::t_2437244856f3cb 79
+  s_004113efaf1893::t_35fb3599f6ca9f 122-140,143-175
+app/page.tsx
+  s_004113efaf1893::t_f05e2fb2243b9d 814
+  s_004113efaf1893::t_88bc41887aa5b0 1115
+  s_004113efaf1893::t_5534efcbdae292 983,1033-1051,1054-1089
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "f3ebafa69f33d144247b05e337ad6f9364f90902",
+  "prompts": {},
+  "sessions": {
+    "s_004113efaf1893": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c6076c-18c3-414c-931a-b4b6714cfa28",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
