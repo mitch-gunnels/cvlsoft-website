@@ -1,0 +1,172 @@
+app/case-studies/components/CaseStudyRow.tsx
+  s_3267cd27288ff0::t_2af98fb2dd5798 8,29-30,39,44
+  s_3267cd27288ff0::t_1eaf832673a7be 1-7,9,11,13-15,26-28,31-38,40-43,45-49
+  s_3267cd27288ff0::t_39f62e5ad088ba 10,12,19,24-25
+  s_3267cd27288ff0::t_719a97477a049d 16-18,20-21
+  s_3267cd27288ff0::t_f703595f27f106 22-23
+app/case-studies/components/StatRow.tsx
+  s_3267cd27288ff0::t_5ee3282d920897 1-21
+app/team/page.tsx
+  s_004113efaf1893::t_3ebbdc6c221d8a 62-73
+  s_004113efaf1893::t_315493cce94cad 17-28
+  s_004113efaf1893::t_eb200595b3d745 16
+  s_3267cd27288ff0::t_8c696f9a95c1f2 2
+  s_70aceec3bdb6d4::t_49fbe541f46946 29,33,50,120
+  s_004113efaf1893::t_c2b7091526b556 56-61,74-119
+  s_3267cd27288ff0::t_d17e4317165a4f 121
+app/rollout/page.tsx
+  s_70aceec3bdb6d4::t_44b191fa31e4ff 84-89,102
+  s_70aceec3bdb6d4::t_6af95ad2ede9ff 52,55,58,64
+  s_3267cd27288ff0::t_6b5d561176c8a7 103
+  s_004113efaf1893::t_eb200595b3d745 51
+  s_3267cd27288ff0::t_60cd23de0c5108 1
+app/about/page.tsx
+  s_3267cd27288ff0::t_6c0ead7ae7b2d0 78
+  s_3267cd27288ff0::t_0467149ac8ae66 2
+  s_70aceec3bdb6d4::t_24572fe99adfd2 13-14,17,26,42,65,75
+public/compliance/gdpr.svg
+  s_004113efaf1893::t_6f13f1af9a37e4 1,7-19,21
+  s_004113efaf1893::t_21e91467c6c8bc 2-4
+  s_004113efaf1893::t_1e9c6def617dbc 5-6,20
+app/components/DemoModal.tsx
+  s_70aceec3bdb6d4::t_140a59ad7df9a1 186,189
+  s_3267cd27288ff0::t_385d37a3005ace 1-168,170-185,187-188,190-259
+  s_70aceec3bdb6d4::t_36f2bbc66fa7bd 169
+app/layout.tsx
+  s_3267cd27288ff0::t_7353e43d34a062 4
+  s_70aceec3bdb6d4::t_3c709b529e66d5 5
+  s_3267cd27288ff0::t_db95b5c58f13a7 40,42-44
+  s_70aceec3bdb6d4::t_30eb1cac52c7dc 41
+app/components/DemoButton.tsx
+  s_3267cd27288ff0::t_7ff6aa3f7a1bf3 1-25
+app/components/ScrollReveal.tsx
+  s_70aceec3bdb6d4::t_12ed074ccc6f51 1-47
+app/case-studies/components/PullQuote.tsx
+  s_3267cd27288ff0::t_914438f6b17c1c 1-19
+app/globals.css
+  s_70aceec3bdb6d4::t_f2e70bdb216df5 177-180,190,195-200,205,216-217
+  s_70aceec3bdb6d4::t_d83ec8fdb50edf 239-242,252-255,265-268,276-279
+  s_70aceec3bdb6d4::t_1f292d324388dc 225-229,234-235,247-248,260-261
+  s_70aceec3bdb6d4::t_05f8c5a8eacf72 183-187,191-194,201-204
+app/case-studies/data.ts
+  s_3267cd27288ff0::t_548ae29a56e60a 126
+  s_3267cd27288ff0::t_aec80f83078291 89
+  s_3267cd27288ff0::t_e374daf5bc163e 225
+  s_3267cd27288ff0::t_a0c48c59dde211 92
+  s_3267cd27288ff0::t_0af5eba1d8bea0 123
+  s_3267cd27288ff0::t_e388063a847e70 157
+  s_3267cd27288ff0::t_934f047b11007a 191
+  s_3267cd27288ff0::t_947692e693cc72 194
+  s_3267cd27288ff0::t_3ae03811b9aee3 228
+  s_3267cd27288ff0::t_7a84612307eed1 55
+  s_3267cd27288ff0::t_9cfff45fe41454 16-18
+  s_3267cd27288ff0::t_4193f962a053c0 20-22
+  s_3267cd27288ff0::t_b3e8ce1f8bb054 1-15,19,23-54,56-57,59-88,90-91,93-122,124-125,127-156,158-159,161-190,192-193,195-224,226-227,229-230
+  s_3267cd27288ff0::t_11e17cab1ea218 160
+  s_3267cd27288ff0::t_fd5233518bafb3 58
+app/case-studies/[slug]/page.tsx
+  s_3267cd27288ff0::t_8dd70e8c2f270c 147
+  s_3267cd27288ff0::t_dbbddfe386f268 1-45,47-71,82-95,97-119,121-126,128-133,135-140,142-146,148-152
+  s_3267cd27288ff0::t_ab094f6cdffdd7 46,96,120,127,134,141
+  s_3267cd27288ff0::t_532dcd6a2c0f99 72-74,76-77
+  s_3267cd27288ff0::t_d8c8faf9e72843 75,80-81
+  s_3267cd27288ff0::t_b1cfa4afa0e1eb 78-79
+app/page.tsx
+  s_70aceec3bdb6d4::t_1707727f1c4f72 1662,1665
+  s_70aceec3bdb6d4::t_c686059a16fc01 1664
+  s_70aceec3bdb6d4::t_5fd77be999c6d3 818-819
+  s_70aceec3bdb6d4::t_dd6142deb2060f 1126-1130,1133-1139,1175-1178,1185-1198
+app/platform/page.tsx
+  s_004113efaf1893::t_8348da7d470680 152
+  s_004113efaf1893::t_faa6d03fc841e4 245
+  s_004113efaf1893::t_a0f7c4d12c64d2 173
+  s_004113efaf1893::t_eae3a80fe017fc 21-22
+  s_004113efaf1893::t_0ceac5606ec036 64-69
+  s_004113efaf1893::t_4955996900d5a6 17,28,54-55
+  s_004113efaf1893::t_e2c1e84685ad00 82
+  s_004113efaf1893::t_152674cf64bcb1 90
+  s_004113efaf1893::t_20cbba09a6f73c 260
+  s_70aceec3bdb6d4::t_06eb55a983362e 247,250,253,271-276
+  s_004113efaf1893::t_637728fc0952ec 219,221
+  s_004113efaf1893::t_bd9cf553073e63 145-148
+  s_004113efaf1893::t_9d9f2fae1be355 178-179,182-183,190-191,193
+  s_004113efaf1893::t_40983025066eaa 34
+  s_004113efaf1893::t_23f9345dc55c11 33
+  s_004113efaf1893::t_1af709b0e5c278 45,47,51,59,62
+  s_004113efaf1893::t_91d828f83eb8ef 222-225,232
+  s_004113efaf1893::t_f3a726af900ef5 52
+  s_004113efaf1893::t_2b26290d016d25 41,43
+  s_004113efaf1893::t_70a5f503adabb5 13
+  s_004113efaf1893::t_b0d4c4e1021938 7
+  s_004113efaf1893::t_bb0247ad36bbb0 6,18,20,29,40,44,63,71
+  s_004113efaf1893::t_96f274b64ee5e4 80,84,87-88,93-96,98-100,102-113,115,118-143,150-151,153-154,156-172,174-177,181,194-202,204,206-208,210,239
+  s_004113efaf1893::t_add59e90539e9b 180,184,186-189,192
+  s_004113efaf1893::t_87d249c6276bc8 244,246,248,251,254-255,257-259,261-270,277-278,284
+  s_70aceec3bdb6d4::t_58392060b332ac 83,86,89,97
+  s_004113efaf1893::t_c5f2b95f011935 218,220,226-229,233-237
+  s_004113efaf1893::t_df9bec7fb928c5 209
+  s_004113efaf1893::t_5254b2466b5b20 31,36
+  s_004113efaf1893::t_bf6f65d239eff2 185
+  s_004113efaf1893::t_b21b4319c89127 56-57
+  s_004113efaf1893::t_3b518f1f31ec19 11
+  s_004113efaf1893::t_c4896d201cd5d8 81
+app/contact/page.tsx
+  s_70aceec3bdb6d4::t_ffdefea004dfbe 36
+  s_70aceec3bdb6d4::t_583ea11924fa82 13-14,17
+  s_70aceec3bdb6d4::t_e595f7c57b3875 26
+  s_3267cd27288ff0::t_d9a6e956e0e40b 2
+  s_3267cd27288ff0::t_0cdf382b3d9dc0 20
+app/components/SiteHeader.tsx
+  s_3267cd27288ff0::t_71ca58b7466e7c 28,31
+  s_3267cd27288ff0::t_37ab3c42954494 92-115
+  s_3267cd27288ff0::t_03b9068a7f9bdb 19-25,29
+  s_004113efaf1893::t_c1393c6e5311df 4,30,32-56
+  s_3267cd27288ff0::t_a432cf1aec90e5 5
+public/compliance/eu-ai-act.svg
+  s_004113efaf1893::t_06f8b2deb898ae 5-6,20-21
+  s_004113efaf1893::t_71808901f75711 1,7-19,22
+  s_004113efaf1893::t_97353d9e098a95 2-4
+app/case-studies/components/ChallengeSolution.tsx
+  s_3267cd27288ff0::t_f753ebd9b05f5e 1-32
+app/case-studies/components/InlineDemoForm.tsx
+  s_3267cd27288ff0::t_d659cd7636a296 108,111
+  s_3267cd27288ff0::t_da57b48db61a53 1-107,109-110,112-179
+app/case-studies/page.tsx
+  s_004113efaf1893::t_42d43cf374b62f 20-31
+  s_3267cd27288ff0::t_cf5dfc16ef83aa 2
+  s_3267cd27288ff0::t_4198b8b5773235 19,42
+  s_3267cd27288ff0::t_2a070cfc873951 54
+  s_3267cd27288ff0::t_cc3617c7d22c8e 1,4-5,7-11,18,32-33,35-36,38-39,41,43-46,49-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "3269517c22537d5e848b7eabb90ff5d796115383",
+  "prompts": {},
+  "sessions": {
+    "s_004113efaf1893": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c6076c-18c3-414c-931a-b4b6714cfa28",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_3267cd27288ff0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f64edbb3-ce74-422b-b27c-2f007bc98eb5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_70aceec3bdb6d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d1a0008c-f0c4-4bcb-b35b-cf07ed21529c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
