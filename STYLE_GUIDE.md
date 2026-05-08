@@ -1,162 +1,130 @@
 # cvlSoft Style Guide
 
+**Aesthetic:** Enterprise editorial — distyl.ai-style. Cream body, dark bookends (hero + closing band + footer), single cyan accent, slate-only neutrals.
+
+## Surfaces
+
+| Token | Hex | When |
+|---|---|---|
+| `--bg-page` | `#f4f1ea` | Warm cream — every section between hero and the demo CTA |
+| `--bg-deep` | `#050a14` | Hero, Demo CTA, Footer (bookends) |
+| `--bg-card` | `#ffffff` | Cards on cream — funnel, metric, role, screen, table rows |
+| `--bg-tint` | `#ecfeff` | Cyan-50 — subtle accent fill (badge bg, diagram emphasis) |
+
+Sections opt in to a tone via `data-tone="light" | "dark"`. The sticky header reads this on scroll and flips its palette to match the section under it.
+
+## Ink
+
+| Token | Hex | When |
+|---|---|---|
+| `--ink-primary` | `#0f172a` (slate-950) | Headlines, primary text on cream |
+| `--ink-secondary` | `#334155` (slate-700) | Body emphasis on cream |
+| `--ink-muted` | `#64748b` (slate-500) | Captions, source lines, secondary nav links |
+| `--ink-faint` | `#94a3b8` (slate-400) | Faint labels (rarely used) |
+
+## Single Accent — cvlSoft cyan
+
+The brand mark is the only color allowed besides slate.
+
+| Token | Hex | When |
+|---|---|---|
+| `--accent-on-light` | `#0e7490` (cyan-700) | Cyan against cream — links, emphasis spans, primary CTA bg, diagram strokes |
+| `--accent-on-dark` | `#22d3ee` (cyan-400) | Cyan against deep ink — hero CTA, hero spiral, demo CTA button |
+| `--accent-on-light-soft` | `#67e8f9` (cyan-300) | Tonal accent — hover/focus halos |
+
+**No other colors are allowed.** No rose, amber, emerald, violet, indigo, sky. Multi-color affordance was removed in the 2026-05 redesign — the story is told through copy and white space, not color.
+
+## Hairlines / borders
+
+| Token | Hex | When |
+|---|---|---|
+| `--rule-cool` | `#e2e8f0` (slate-200) | Card borders on cream |
+| `--rule-warm` | `#e6e0d4` | Vertical column rules (utility class `.col-rules`) |
+| `--rule-dark` | `rgba(255,255,255,0.10)` | Card borders, hairlines on dark |
+
 ## Typography
 
-| Role | Font | CSS Variable | Usage |
-|---|---|---|---|
-| Headings | **Space Grotesk** | `--font-heading` | h1–h6, section titles |
-| Body | **Manrope** | `--font-body` | Paragraphs, descriptions, UI text |
-| Mono | **IBM Plex Mono** 400/500 | `--font-code` | Pills, badges, stats, product names |
-
-**Heading sizes** (Tailwind):
-- `h1`: `text-5xl md:text-6xl lg:text-7xl` — `leading-[1.05] tracking-tight`
-- `h2`: `text-3xl md:text-5xl` — `leading-snug font-bold`
-- `h3`: `text-base font-semibold`
-
-**Body sizes**:
-- Primary: `text-base md:text-lg` — `leading-relaxed`
-- Secondary: `text-sm` — `leading-relaxed`
-- Small/labels: `text-xs`
-
-All headings get `letter-spacing: -0.02em` via `globals.css`.
-
----
-
-## Color Palette
-
-| Token | Hex | Usage |
+| Role | Font | Variable |
 |---|---|---|
-| **Slate 950** | `#0f172a` | Primary text, dark backgrounds, buttons |
-| **Slate 800** | `#1e293b` | Subheadings, hover states |
-| **Slate 600** | `#475569` | Body text, secondary labels |
-| **Slate 500** | `#64748b` | Muted text, nav links |
-| **Slate 300** | `#cbd5e1` | Borders, disabled text |
-| **Slate 200** | `#e2e8f0` | Card borders, dividers |
-| **Slate 50** | `#f8fafc` | Subtle backgrounds |
-| **Cyan 700** | `#0e7490` | Brand accent, highlights, AIOS column |
-| **Cyan 600** | `#0891b2` | Gradient start |
-| **Cyan 400** | `#22d3ee` | Gradient end, diagram lines, animations |
-| **Cyan 50** | `#ecfeff` | Icon backgrounds, accent pills |
-| **Rose 500** | `#f43f5e` | Problem stats |
-| **Rose 400** | `#fb7185` | Problem card left border, underline accent |
-| **Amber 600** | `#d97706` | Partial/mixed values in comparison table |
+| Headings | **Space Grotesk** 300 | `--font-heading` |
+| Body | **Manrope** | `--font-body` |
+| Mono | **IBM Plex Mono** 400/500 | `--font-code` |
 
-**CSS variables**:
-- `--bg-root`: `#f7f8fb` — page background
-- `--text-primary`: `#0f172a` — default text
+Headings: `letter-spacing: -0.03em`, weight 300.
 
-**Brand gradient**: `bg-gradient-to-r from-cyan-600 to-cyan-400`
-
----
-
-## Layout
-
-**Container**: `mx-auto max-w-7xl px-6`
-
-Two section patterns:
-- **No background** (hero, observational learning, demo): `max-w-7xl px-6` directly on `<section>`
-- **Full-width background** (problem, differentiators, comparison): `px-6` on inner `<div class="mx-auto max-w-7xl px-6">`, NOT on the section
-
-**Section spacing**: `py-16 md:py-24`
-
-**Grid breakpoints**:
-- 2-column: `lg:grid-cols-2`
-- 3-column cards: `md:grid-cols-2 lg:grid-cols-3`
-- Hero split: `lg:grid-cols-[2fr_3fr]`
-
----
+**Headline conventions (distyl-style):**
+- Sentence case, terminal period: *"Why we're different."* not *"Why We're Different"*
+- Sizes: `text-[clamp(2rem,5vw,3.5rem)]` for h2; hero h1 uses `text-[clamp(2.8rem,6vw,5rem)]`
+- Inline emphasis is a single cyan-700 (or cyan-400 on dark) span — never a gradient.
 
 ## Components
 
-### Pill Badges
+### Pill badge
 
 ```
-rounded-full border px-4 py-1.5 font-mono text-[11px] tracking-[0.18em]
+inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5
+font-mono text-[13px] tracking-[0.18em] text-slate-600
 ```
 
-- Standard: `border-slate-300 bg-white text-slate-600`
-- Accent: `border-cyan-200 bg-cyan-50 text-cyan-700`
-- Sizing: use `inline-block` or `self-start` — never stretch to fill parent
+On dark sections, swap to `border-white/[0.10] bg-white/[0.04] text-slate-300`.
 
-### Cards
+### Card on cream
 
 ```
-rounded-2xl border border-slate-200 bg-white p-6 shadow-sm
+rounded-lg border border-slate-200 bg-white p-6 md:p-8
 ```
 
-- Hover: `hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50`
+No shadow. Hairline border only.
 
-Problem cards add: `border-l-4 border-l-rose-400 bg-slate-50`
-
-### Primary Button
+### Primary button on cream
 
 ```
-rounded-full bg-slate-950 px-7 py-3.5 text-sm font-semibold text-white
-hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-950/20
+rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px]
+font-semibold tracking-[0.08em] text-white hover:bg-cyan-800
 ```
 
-### Secondary Button
+### Primary button on dark
 
 ```
-rounded-full border border-slate-300 bg-white px-7 py-3.5 text-sm font-semibold text-slate-900
-hover:border-slate-500
-```
-
-### CTA Button (on dark)
-
-```
-rounded-full bg-cyan-400 px-8 py-3.5 text-sm font-semibold text-slate-900
+rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950
 hover:bg-cyan-300
 ```
 
-### Form Inputs (on dark)
+### Secondary button
 
 ```
-rounded-xl border border-white/15 bg-white/10 px-5 py-3.5 text-white
-placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400
+rounded-md border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700
+hover:border-slate-500 hover:text-slate-950
 ```
 
----
+## Layout
 
-## Animations
+- Container inner: `lg:pl-[205px] lg:pr-[112px]` to leave room for the SectionScrollLine on the left
+- Section spacing: `py-24 md:py-32`
+- Hero: `flex min-h-screen items-center` — fills the viewport so the page break lands at the cream/dark boundary
 
-| Class | Effect | Duration |
-|---|---|---|
-| `reveal-up` | Fade in + slide up 20px | 800ms, `cubic-bezier(0.2, 0.8, 0.2, 1)` |
-| `float-slow` | Gentle vertical bob 12px | 8s, `ease-in-out`, infinite |
-| `hero-glow` | Cyan radial glow, blurred | Static (pulsed via SVG `<animate>`) |
+## Diagrams (Why AIOS section)
 
-Stagger with `[animation-delay: Xms]` or inline `style={{ animationDelay }}`.
+`DiagramFrame` and the 5 architecture diagrams render on white cards over cream:
+- Grid pattern: `#cbd5e1` (slate-300) at 0.5 opacity
+- Strokes: `#0e7490` (cyan-700) for accent, `#94a3b8`/`#cbd5e1` for hairlines
+- Fills: `#ffffff` for panels, `#ecfeff` (cyan-50) for accent regions, `#f8fafc` for sub-panels
+- Text: `#0f172a` for primary, `#475569` for secondary, `#64748b` for muted, `#0e7490` for cyan labels
+- No vignette, no glow, no dark backgrounds anywhere
 
-All animations disabled under `prefers-reduced-motion: reduce`.
+## Hero (dark only)
 
----
+The hero keeps the spiral SVG and a single cyan-500/[0.06] ambient orb. Indigo and other multi-color orbs were removed. Particles still float subtle cyan.
 
-## SVG Diagram Tokens
+## Sticky header — dynamic tone
 
-| Constant | Size | Color |
-|---|---|---|
-| `NODE_LABEL` | 9px / 600 weight | `#334155` (slate-700) |
-| `CORE_LABEL` | 9.5px / 700 weight | `#0e7490` (cyan-700) |
-| `SUB_LABEL` | 7px / 600 weight | `#475569` (slate-600) |
+The header palette flips based on the section currently under it:
 
-Diagram accent: `#22d3ee` (cyan-400) for lines, dots, pulses.
+- **Dark tone:** transparent → `bg-[#050a14]/70` on scroll, white text, slate-400 nav links, cyan-400 CTA pill on slate-950 text
+- **Light tone:** transparent → cream/80 on scroll, slate-950 logo, slate-600 nav links, cyan-700 CTA pill on white text
 
----
+Detection runs in `useEffect` via a scroll listener that reads `[data-tone]` on each section.
 
-## Dark Sections
+## Vertical column rules (utility)
 
-Used for Demo CTA and email header:
-- Background: `bg-slate-950` / `#0f172a`
-- Decorative orbs: `bg-cyan-500/10`, `bg-indigo-500/10` with `blur-[60px]`
-- Text: `text-white` primary, `text-slate-400` secondary
-
----
-
-## Email
-
-- Max width: 560px, white card on `#f7f8fb` background
-- Header: `#0f172a` background, `cvlSoft` in Courier New 18px bold white
-- Info boxes: `#f0fdfa` (cyan tint) and `#f8fafc` (slate tint), 12px radius
-- Button: `#0f172a` pill, white text, centered with `margin: auto`
-- Footer: 12px text, `#0e7490` links
+`.col-rules` (light) / `.col-rules-dark` (dark) draws faint vertical rules at 1/6 intervals across the section's content width. Apply to the section wrapper for the architectural-grid look.

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-[var(--bg-root)] text-slate-300">
+    <div className="min-h-screen bg-[var(--bg-deep)] text-slate-300">
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
         <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
         <h1 className="text-4xl font-light tracking-[-0.03em] text-white">About cvlSoft</h1>
@@ -66,7 +66,7 @@ export default function About() {
             <p className="mt-3">
               We are not a software vendor that hands you a login and wishes you luck. cvlSoft offers
               optional white glove rollout services where our engineers embed directly with your team
-              to scope workflows, integrate systems, and ship to production in 90 days. Our pricing
+              to scope workflows, integrate systems, and ship to production in weeks. Our pricing
               is outcome-based: we make money when you make money. Failed tasks are free.
             </p>
           </section>

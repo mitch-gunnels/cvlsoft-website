@@ -1,16 +1,46 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────
+   Design tokens
+   • Body sections render on warm cream (--bg-page).
+   • Hero, demo CTA, footer render on deep ink (--bg-deep) to bookend.
+   • Single accent: cvlSoft cyan. Use --accent-on-light for cyan
+     against cream (cyan-700 — readable). Use --accent-on-dark for
+     cyan against ink (cyan-400 — luminous).
+   ────────────────────────────────────────────────────────── */
+
 :root {
-  --bg-root: #050a14;
-  --text-primary: #e2e8f0;
+  /* Surfaces */
+  --bg-page: #fafaf9;          /* near-white — body (almost neutral, faintest warmth) */
+  --bg-deep: #050a14;          /* near-black ink — hero / footer */
+  --bg-card: #ffffff;          /* card on off-white */
+  --bg-tint: #ecfeff;          /* faint cyan tint for accent badges */
+
+  /* Ink */
+  --ink-primary: #0f172a;      /* slate-950 */
+  --ink-secondary: #334155;    /* slate-700 */
+  --ink-muted: #64748b;         /* slate-500 */
+  --ink-faint: #94a3b8;         /* slate-400 — on dark sections */
+
+  /* Rules / borders */
+  --rule-warm: #ededeb;        /* hairline on near-white */
+  --rule-cool: #e2e8f0;        /* slate-200 — neutral hairline */
+  --rule-dark: rgba(255, 255, 255, 0.10);  /* hairline on dark */
+
+  /* Accent */
+  --accent-on-light: #0e7490;  /* cyan-700 */
+  --accent-on-light-soft: #67e8f9; /* cyan-300 */
+  --accent-on-dark: #22d3ee;   /* cyan-400 */
+
+  /* Typography */
   --font-ui: var(--font-body);
   --font-display: var(--font-heading);
   --font-code-ui: var(--font-code);
 }
 
 @theme inline {
-  --color-background: #050a14;
-  --color-foreground: #e2e8f0;
+  --color-background: var(--bg-page);
+  --color-foreground: var(--ink-primary);
   --font-sans: var(--font-ui);
   --font-mono: var(--font-code-ui);
 }
@@ -26,8 +56,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg-root);
-  color: var(--text-primary);
+  background: var(--bg-page);
+  color: var(--ink-primary);
   font-family: var(--font-ui), sans-serif;
 }
 
@@ -42,24 +72,143 @@ h6 {
   font-weight: 300;
 }
 
-/* ── Background grid ── */
+/* ──────────────────────────────────────────────────────────
+   Vertical column rules — distyl-style architectural grid.
+   Apply to a full-bleed wrapper to draw 12 hairline columns
+   across the section, scoped to the max-w-7xl center.
+   ────────────────────────────────────────────────────────── */
 
+.col-rules {
+  position: relative;
+}
+
+.col-rules::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to right,
+    transparent calc((100% - 1px) / 6),
+    var(--rule-warm) calc((100% - 1px) / 6),
+    var(--rule-warm) calc((100% - 1px) / 6 + 1px),
+    transparent calc((100% - 1px) / 6 + 1px)
+  );
+  background-size: calc(100% / 6) 100%;
+  /* Constrain to inner content width (max-w-7xl = 80rem) */
+  max-width: 80rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  opacity: 0.6;
+}
+
+.col-rules-dark::before {
+  background-image: linear-gradient(
+    to right,
+    transparent calc((100% - 1px) / 6),
+    var(--rule-dark) calc((100% - 1px) / 6),
+    var(--rule-dark) calc((100% - 1px) / 6 + 1px),
+    transparent calc((100% - 1px) / 6 + 1px)
+  );
+}
+
+/* Legacy grid-bg (cyan-tinted) — neutralized to slate hairline for
+   any legacy use; column rules above are the preferred treatment. */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
-/* ── Reveal animations ── */
+/* ──────────────────────────────────────────────────────────
+   Hero spiral position — mobile keeps the spiral inside the
+   viewport (right-anchored, vertically centered, no horizontal
+   push); large screens get the original right-of-frame offset.
+   ────────────────────────────────────────────────────────── */
+
+.hero-spiral-frame {
+  transform: translateY(-50%);
+}
+
+@media (min-width: 1024px) {
+  .hero-spiral-frame {
+    transform: translate(375px, calc(-50% - 20px));
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hide scrollbars on the partners horizontal scroller (mobile).
+   ────────────────────────────────────────────────────────── */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Logo marquee — seamless infinite scroll (mobile partners row).
+   The track contains the logo set TWICE; animating from 0 to
+   -50% returns to a position visually identical to the start.
+   ────────────────────────────────────────────────────────── */
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 28s linear infinite;
+}
+
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hero fade-up — runs once on mount.
+   ────────────────────────────────────────────────────────── */
+
+.hero-fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: hero-fade-up 1500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes hero-fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Reveal animations
+   ────────────────────────────────────────────────────────── */
 
 .reveal-up {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(50px);
 }
 
 .reveal-up.in-view {
-  animation: reveal-up 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-up 1500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .scale-in {
@@ -88,7 +237,9 @@ h6 {
   animation: reveal-up 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ── Bar fill (funnel bars, stacked bar segments) ── */
+/* ──────────────────────────────────────────────────────────
+   Bar fill / chart line draw
+   ────────────────────────────────────────────────────────── */
 
 .bar-fill {
   transform: scaleX(0);
@@ -99,8 +250,6 @@ h6 {
 .in-view .bar-fill {
   transform: scaleX(1);
 }
-
-/* ── SVG line draw ── */
 
 .chart-line {
   stroke-dasharray: 600;
@@ -121,7 +270,9 @@ h6 {
   opacity: 1;
 }
 
-/* ── Feature illustration crossfade ── */
+/* ──────────────────────────────────────────────────────────
+   Feature illustration crossfade
+   ────────────────────────────────────────────────────────── */
 
 .feature-fade-enter {
   animation: feature-fade-in 500ms ease forwards;
@@ -138,7 +289,9 @@ h6 {
   }
 }
 
-/* ── Glow & float ── */
+/* ──────────────────────────────────────────────────────────
+   Glow & float (used in dark hero only)
+   ────────────────────────────────────────────────────────── */
 
 .glow-pulse {
   animation: glow-pulse 6s ease-in-out infinite;
@@ -148,7 +301,9 @@ h6 {
   animation: float 8s ease-in-out infinite;
 }
 
-/* ── Scrollytelling timeline ── */
+/* ──────────────────────────────────────────────────────────
+   Scrollytelling timeline (cyan-only — used in hero/dark zones)
+   ────────────────────────────────────────────────────────── */
 
 .feature-step {
   min-height: 120vh;
@@ -156,10 +311,12 @@ h6 {
 
 .timeline-progress {
   transition: height 0.3s ease-out;
-  background: linear-gradient(to bottom, #22d3ee, #0891b2);
+  background: linear-gradient(to bottom, var(--accent-on-dark), var(--accent-on-light));
 }
 
-/* ── Keyframes ── */
+/* ──────────────────────────────────────────────────────────
+   Keyframes
+   ────────────────────────────────────────────────────────── */
 
 @keyframes reveal-up {
   to {
@@ -211,7 +368,9 @@ h6 {
   }
 }
 
-/* ── Pricing calculator slider ── */
+/* ──────────────────────────────────────────────────────────
+   Pricing calculator slider — works on both surfaces
+   ────────────────────────────────────────────────────────── */
 
 input[type="range"].ui-slider {
   -webkit-appearance: none;
@@ -226,29 +385,29 @@ input[type="range"].ui-slider::-webkit-slider-thumb {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  background: var(--ink-primary);
+  box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.18);
   border: none;
   cursor: pointer;
   transition: box-shadow 150ms ease;
 }
 
 input[type="range"].ui-slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.22);
+  box-shadow: 0 0 0 6px rgba(14, 116, 144, 0.26);
 }
 
 input[type="range"].ui-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.15);
+  background: var(--ink-primary);
+  box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.18);
   border: none;
   cursor: pointer;
 }
 
 input[type="range"].ui-slider:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.35);
+  box-shadow: 0 0 0 6px rgba(14, 116, 144, 0.40);
 }
 
 @keyframes blink-cursor {

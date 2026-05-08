@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-[var(--bg-root)] text-slate-300">
+    <div className="min-h-screen bg-[var(--bg-deep)] text-slate-300">
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
         <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
         <h1 className="text-4xl font-light tracking-[-0.03em] text-white">Terms of Service</h1>

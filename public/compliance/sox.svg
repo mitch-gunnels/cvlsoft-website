@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" fill="none">
+  <!-- Capitol-style building icon: pediment + columns + base -->
+  <g stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Pediment (triangle roof) -->
+    <path d="M14 30 L40 16 L66 30 Z" fill="#ffffff" stroke="#ffffff"/>
+    <!-- Architrave -->
+    <line x1="14" y1="34" x2="66" y2="34"/>
+    <!-- Columns -->
+    <line x1="20" y1="36" x2="20" y2="64"/>
+    <line x1="30" y1="36" x2="30" y2="64"/>
+    <line x1="40" y1="36" x2="40" y2="64"/>
+    <line x1="50" y1="36" x2="50" y2="64"/>
+    <line x1="60" y1="36" x2="60" y2="64"/>
+    <!-- Base steps -->
+    <line x1="16" y1="66" x2="64" y2="66"/>
+    <line x1="13" y1="70" x2="67" y2="70"/>
+    <line x1="10" y1="74" x2="70" y2="74"/>
+  </g>
+
+  <!-- Text block -->
+  <text x="86" y="40" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="800" letter-spacing="1" fill="#ffffff">SOX</text>
+  <text x="86" y="62" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="2" fill="#ffffff">COMPLIANT</text>
+</svg>

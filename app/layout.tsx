@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import SiteFooter from "./components/SiteFooter";
 import "./globals.css";
 
 const headingFont = Space_Grotesk({
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable} antialiased`}>
         {children}
+        <SiteFooter />
         <Analytics />
       </body>
     </html>

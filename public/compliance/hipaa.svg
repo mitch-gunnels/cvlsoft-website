@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" fill="none">
+  <!-- Caduceus: staff with wings and entwined serpents -->
+  <g stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Central staff -->
+    <line x1="40" y1="14" x2="40" y2="78"/>
+    <!-- Top knob -->
+    <circle cx="40" cy="13" r="2.6" fill="#ffffff"/>
+    <!-- Wings -->
+    <path d="M40 22 C28 18 20 22 14 28 C22 26 28 28 33 32"/>
+    <path d="M40 22 C52 18 60 22 66 28 C58 26 52 28 47 32"/>
+    <path d="M40 28 C30 26 24 30 19 35 C26 34 31 36 35 39"/>
+    <path d="M40 28 C50 26 56 30 61 35 C54 34 49 36 45 39"/>
+    <!-- Left serpent -->
+    <path d="M40 36 C30 40 30 48 40 52 C50 56 50 64 40 68"/>
+    <!-- Right serpent -->
+    <path d="M40 36 C50 40 50 48 40 52 C30 56 30 64 40 68"/>
+    <!-- Snake heads -->
+    <path d="M30 36 C26 34 26 30 30 28"/>
+    <path d="M50 36 C54 34 54 30 50 28"/>
+  </g>
+
+  <!-- Text block -->
+  <text x="80" y="40" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="800" letter-spacing="1" fill="#ffffff">HIPAA</text>
+  <text x="80" y="62" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="14" font-weight="600" letter-spacing="2" fill="#ffffff">CERTIFIED</text>
+</svg>
