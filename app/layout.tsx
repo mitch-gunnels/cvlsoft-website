@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { DemoModalProvider } from "./components/DemoModal";
+import ScrollReveal from "./components/ScrollReveal";
 import SiteFooter from "./components/SiteFooter";
 import "./globals.css";
 
@@ -35,8 +37,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable} antialiased`}>
-        {children}
-        <SiteFooter />
+        <DemoModalProvider>
+          <ScrollReveal />
+          {children}
+          <SiteFooter />
+        </DemoModalProvider>
         <Analytics />
       </body>
     </html>

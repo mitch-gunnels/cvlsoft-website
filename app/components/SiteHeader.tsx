@@ -1,6 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDemoModal } from "./DemoModal";
 
 const NAV_ITEMS: [string, string][] = [
   ["/#problem", "The Industry Problem"],
@@ -14,9 +16,44 @@ const NAV_ITEMS: [string, string][] = [
 
 const DARK_ROUTES = new Set(["/rollout", "/case-studies", "/platform", "/team"]);
 
+function isDarkPath(pathname: string): boolean {
+  if (DARK_ROUTES.has(pathname)) return true;
+  // Dynamic case study detail pages: /case-studies/[slug]
+  if (pathname.startsWith("/case-studies/")) return true;
+  return false;
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
-  const isDark = DARK_ROUTES.has(pathname);
+  const isHome = pathname === "/";
+  const defaultTone: "dark" | "light" = isDarkPath(pathname) ? "dark" : "light";
+  const [tone, setTone] = useState<"dark" | "light">(defaultTone);
+  const { open: openDemoModal } = useDemoModal();
+
+  useEffect(() => {
+    const HEADER_PROBE_Y = 64;
+    const onScroll = () => {
+      const sections = document.querySelectorAll<HTMLElement>("[data-tone]");
+      let active: "dark" | "light" | null = null;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= HEADER_PROBE_Y && rect.bottom > HEADER_PROBE_Y) {
+          const t = section.dataset.tone;
+          if (t === "light" || t === "dark") active = t;
+        }
+      });
+      setTone(active ?? defaultTone);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [defaultTone]);
+
+  const isDark = tone === "dark";
 
   return (
     <header
@@ -52,16 +89,30 @@ export default function SiteHeader() {
               </a>
             );
           })}
-          <a
-            href="/#demo"
-            className={
-              isDark
-                ? "rounded-md bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition-colors hover:bg-cyan-300"
-                : "rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-white transition-colors hover:bg-cyan-800"
-            }
-          >
-            REQUEST DEMO
-          </a>
+          {isHome ? (
+            <a
+              href="/#demo"
+              className={
+                isDark
+                  ? "rounded-md bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition-colors hover:bg-cyan-300"
+                  : "rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-white transition-colors hover:bg-cyan-800"
+              }
+            >
+              REQUEST DEMO
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={openDemoModal}
+              className={
+                isDark
+                  ? "rounded-md bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition-colors hover:bg-cyan-300"
+                  : "rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-white transition-colors hover:bg-cyan-800"
+              }
+            >
+              REQUEST DEMO
+            </button>
+          )}
         </div>
       </nav>
     </header>

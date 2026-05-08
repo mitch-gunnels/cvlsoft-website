@@ -3,101 +3,72 @@ import SiteHeader from "../components/SiteHeader";
 const CAPABILITIES = [
   {
     num: "01",
-    title: "Authored by SMEs, not engineers",
-    lead: "The platform interviews your experts and watches them work — workflows write themselves before a single line of code is touched.",
+    title: "Capture knowledge from your experts",
+    lead: "AIOS AI interviews (voice & chat) your experts and watches them work, converting tribal knowledge, undocumented processes, and SOPs into structured workflow primitives.",
     proofs: [
       "AI Interviewer runs structured elicitation conversations and authors workflows live.",
       "AIOS Observer watches a desktop, converses via voice, and documents undocumented processes.",
-      "Visual Workflow Studio — drag-and-drop ReactFlow editor with 10 node types and live validation.",
+      "Visual Workflow Studio: drag-and-drop graph editor with 10 node types and live validation.",
     ],
-    stinger: "Most platforms ask SMEs to provide feedback. AIOS lets them author.",
+    stinger: "AIOS AI extracts SME tacit knowledge.",
   },
   {
     num: "02",
-    title: "Adaptive cognitive execution",
-    lead: "Steps describe what to do; the runtime resolves how at execution time using available connectors. New systems plug in without rewriting workflows.",
+    title: "Generate workflows that adapt",
+    lead: "The cognitive core converts captured processes into intent-based, AI-native workflows. Steps describe what to do; the runtime resolves how at execution time.",
     proofs: [
-      "Intent-based nodes plus a LangGraph-powered Super Agent and a deterministic DAG walker.",
-      "Conditional branching with replan-on-rerun — three-way verdicts (approved / rerun / rejected) feed back into the plan.",
-      "Scheduling, webhook gates, and a documented REST API drive runs from any system.",
+      "Workflow Templates seed graphs with mapped fields and data pipelines.",
+      "Conditional branching with replan-on-rerun: three-way verdicts (approved / rerun / rejected) feed back into the plan.",
+      "Knowledge Sets and prompts attach to nodes, so context flows into every step.",
     ],
     stinger: "Scripted workflows lock you in. AIOS resolves how at runtime.",
   },
   {
     num: "03",
-    title: "Default-deny by construction",
-    lead: "Every action is gated, every tool call is scoped, every execution is reversible. Safety is the substrate, not a feature.",
+    title: "Govern and validate every action",
+    lead: "Plan-before-execute, policy-gated tool calls, and human-in-the-loop approval at every action. Safety is the substrate, not a feature.",
     proofs: [
-      "Default-deny policy engine with per-tenant overrides.",
+      "Policy engine with per-tenant overrides controlling every tool call.",
       "Circuit breakers, kill switches, and human-in-the-loop gates at any node.",
-      "Per-tenant LLM guardrails via LiteLLM proxy and an immutable audit ledger that survives cascade deletes.",
+      "Eval Gates: workflows can't promote Draft → Staging → Production without passing trajectory tests, custom LLM evaluators, and regression suites.",
+      "Per-tenant LLM guardrails and an immutable audit ledger that survives cascade deletes.",
     ],
-    stinger: "Most platforms claim guardrails. AIOS commits to default-deny — and proves it with the audit ledger.",
+    stinger: "Most platforms claim guardrails. AIOS proves it with the immutable audit ledger.",
   },
   {
     num: "04",
-    title: "Compounding memory",
-    lead: "The platform doesn't just run workflows — it remembers them. Every execution makes the next one cheaper, faster, and more accurate.",
+    title: "Execute adaptively across every system",
+    lead: "Adaptive execution against your real systems, with every action audited and scoped to a revocable identity.",
     proofs: [
-      "Layered memory — episodic, semantic-graph, and procedural memory that persists across runs.",
-      "Knowledge RAG — upload, chunk, embed; attach Knowledge Sets to specific nodes for context-aware execution.",
-      "Evolving Context Playbook — self-improving bullet library with auto-creation, dedup, pruning, and preview.",
+      "Connector ecosystem: REST, DB, terminal, email, Jira, Slack, Google Workspace, LinkedIn, webhooks; encrypted credential vault with auto OAuth refresh.",
+      "Scheduling, webhook gates, and a documented REST API drive runs from any system.",
+      "Multi-tenant isolation, sandbox environments, and MFA + SAML/OIDC + RBAC across 19+ resource types.",
     ],
-    stinger: "Most platforms forget between runs. AIOS gets smarter every run.",
+    stinger: "Enterprise reliability is a phrase. AIOS proves it with the sandbox and the audit ledger.",
   },
   {
     num: "05",
-    title: "Enterprise-ready operations, day one",
-    lead: "Multi-tenant, observable, governed, and metered to the token. Built for the people who have to sign off, not just the people who build.",
+    title: "Observe everything in real time",
+    lead: "See every step the platform takes, from the overall workflow down to each individual decision and tool call. Every action is timed, costed, and replayable.",
     proofs: [
-      "Connector ecosystem — REST, DB, terminal, email, Jira, Slack, Google Workspace, LinkedIn, webhooks; encrypted credential vault with auto OAuth refresh.",
-      "Spend tracking — token-level cost ledger per execution, workflow, and tenant.",
-      "Live observability — WebSocket execution streams plus OTLP telemetry to Grafana Cloud (Tempo / Loki / Prometheus); MFA + SAML/OIDC + RBAC + sandbox environments.",
+      "5-level execution traces (pipeline → agent → LLM → tool → walker node) over WebSocket streams plus OTLP telemetry to Grafana Cloud (Tempo / Loki / Prometheus).",
+      "Every input, output, and decision logged with full lineage.",
+      "Spend tracking: token-level cost ledger per execution, workflow, and tenant.",
+      "Operator Dashboard: daily loop view of approvals, alerts, and run health.",
     ],
-    stinger: "Enterprise reliability is a phrase. AIOS ships the spend ledger, the OTLP pipe, and the sandbox.",
-  },
-];
-
-const FEATURE_GROUPS = [
-  {
-    title: "Build & Design",
-    items: ["Visual Workflow Studio", "AI Interviewer", "AIOS Observer", "Workflow Templates"],
+    stinger: "Observability isn't a phrase. AIOS ships the spend ledger, the OTLP pipe, and the dashboard.",
   },
   {
-    title: "Autonomous Execution",
-    items: ["Intent-Based Nodes", "Agentic Executor", "Conditional Branching & Approvals", "Scheduling & Webhook Gates"],
-  },
-  {
-    title: "Safety & Governance",
-    items: [
-      "Default-Deny Policy Engine",
-      "Circuit Breakers & Kill Switches",
-      "Human-in-the-Loop Gates",
-      "Per-Tenant LLM Guardrails",
-      "Immutable Audit Ledger",
-      "Release Pipeline",
-      "MFA + SSO",
+    num: "06",
+    title: "Memory that compounds with every run",
+    lead: "Every execution feeds layered memory and a self-improving context playbook. The platform doesn't just run workflows; it remembers them.",
+    proofs: [
+      "Layered memory: episodic, semantic-graph, and procedural memory that persists across runs.",
+      "Knowledge RAG: upload, chunk, embed, then attach Knowledge Sets to specific nodes for context-aware execution.",
+      "Three-way verdicts (approved / rerun / rejected) feed plans, evals, and memory simultaneously, so humans, evaluators, and outcomes all write back to the core.",
+      "Evolving Context Playbook: self-improving library with auto-creation, dedup, pruning, and preview.",
     ],
-  },
-  {
-    title: "Knowledge & Memory",
-    items: ["Layered Memory", "Knowledge RAG", "Evolving Context Playbook"],
-  },
-  {
-    title: "Connectors & Integrations",
-    items: ["Connector Ecosystem", "Encrypted Credential Vault", "Native + Community Connectors"],
-  },
-  {
-    title: "Enterprise Operations",
-    items: [
-      "Multi-Tenant Isolation",
-      "Spend Tracking",
-      "Sandbox Environments",
-      "Live Observability",
-      "Operator Dashboard",
-      "Admin Controls",
-      "Public REST API",
-    ],
+    stinger: "Most platforms forget between runs. AIOS gets smarter every run.",
   },
 ];
 
@@ -106,273 +77,211 @@ export default function PlatformPage() {
     <div className="min-h-screen bg-[#050a14] text-slate-100">
       <SiteHeader />
 
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24">
-        <div className="px-6 sm:px-20 lg:px-[112px]">
-          <p className="inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
-            INSIDE THE PLATFORM
+      {/* ── PLATFORM CAPABILITIES — capabilities list + flow graphic side-by-side ── */}
+      <section data-tone="dark" className="relative pt-32 pb-20 md:pt-40 md:pb-28">
+        <div className="mx-auto max-w-5xl px-6 sm:px-10">
+          <p className="reveal-up inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
+            HOW AIOS WORKS
           </p>
-          <h1 className="mt-6 text-[clamp(2rem,5vw,3.75rem)] font-light leading-[1.05] tracking-[-0.03em] text-white">
-            One cognitive core. <span className="text-cyan-400">Default-deny by construction.</span> Memory that compounds.
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl">
-            AIOS is the autonomous intelligence operating system for enterprises that need outcomes, not experiments.
-          </p>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS — flow graphic + compliance badges ── */}
-      <section className="relative pb-20 md:pb-28">
-        <div className="px-6 sm:px-20 lg:px-[112px]">
-          <div className="grid gap-12 lg:grid-cols-[1fr_minmax(360px,440px)] lg:items-center lg:gap-16">
-            <div>
-              <p className="inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
-                HOW AIOS WORKS
-              </p>
-              <h2 className="mt-6 text-[clamp(1.75rem,4vw,2.75rem)] font-light leading-[1.1] tracking-[-0.03em] text-white">
-                From tribal knowledge to <span className="text-cyan-400">auditable execution</span>.
-              </h2>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-400">
-                AIOS captures what your experts know, converts it into adaptive cognitive workflows, and runs them under default-deny governance — with every action logged for audit.
-              </p>
-
-              <div className="mt-8">
-                <p className="font-mono text-[12px] tracking-[0.22em] text-slate-500">CERTIFIED FOR ENTERPRISE</p>
-                <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  <div className="flex items-center gap-2.5">
-                    <img src="/compliance/soc2.svg" alt="" aria-hidden="true" className="h-10 w-auto" />
-                    <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-[0.14em] text-white">SOC 2</p>
-                      <p className="text-[11px] tracking-[0.14em] text-slate-500">TYPE II</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <img src="/compliance/hipaa.svg" alt="" aria-hidden="true" className="h-10 w-auto" />
-                    <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-[0.14em] text-white">HIPAA</p>
-                      <p className="text-[11px] tracking-[0.14em] text-slate-500">CERTIFIED</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <img src="/compliance/sox.svg" alt="" aria-hidden="true" className="h-10 w-auto" />
-                    <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-[0.14em] text-white">SOX</p>
-                      <p className="text-[11px] tracking-[0.14em] text-slate-500">COMPLIANT</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04]">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.6" className="h-5 w-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-[0.14em] text-white">EU AI ACT</p>
-                      <p className="text-[11px] tracking-[0.14em] text-slate-500">READY</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04]">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.6" className="h-5 w-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0-1.105.895-2 2-2s2 .895 2 2v2a2 2 0 01-4 0v-2zM5 13a7 7 0 1114 0 7 7 0 01-14 0z" />
-                      </svg>
-                    </div>
-                    <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-[0.14em] text-white">GDPR</p>
-                      <p className="text-[11px] tracking-[0.14em] text-slate-500">COMPLIANT</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* ── Flow graphic — numbered pipeline with self-evolution loop ── */}
-            <div className="relative mx-auto w-full max-w-md">
-              <div className="relative pl-12">
-                {/* Loop arrow on the left — annotated with self-evolution */}
-                <svg
-                  viewBox="0 0 60 760"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-0 top-0 h-full w-12"
-                >
-                  <defs>
-                    <marker id="aios-flow-arrow" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-                      <path d="M2 2 L10 6 L2 10 Z" fill="#22d3ee" />
-                    </marker>
-                  </defs>
-                  {/* dashed loop path — origin from bottom output up to top input */}
-                  <path
-                    d="M 52 740 Q 8 740 8 700 L 8 60 Q 8 20 52 20"
-                    fill="none"
-                    stroke="#22d3ee"
-                    strokeWidth="1.5"
-                    strokeDasharray="5 5"
-                    markerEnd="url(#aios-flow-arrow)"
-                  />
-                  <circle cx="52" cy="740" r="4" fill="#22d3ee" />
-                </svg>
-
-                {/* "Self-Evolution" label vertically centered on the loop */}
-                <div className="pointer-events-none absolute -left-2 top-1/2 -translate-y-1/2 -rotate-90 whitespace-nowrap font-mono text-[10px] tracking-[0.22em] text-cyan-400">
-                  SELF-EVOLUTION
-                </div>
-
-                {/* Top pill — input */}
-                <div className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3.5 text-center">
-                  <p className="text-[14px] font-semibold tracking-tight text-white">
-                    Tribal Knowledge · SOPs · Tools
-                  </p>
-                </div>
-
-                {/* Stacked numbered stages with icons */}
-                <div className="mt-2 space-y-1.5">
-                  {[
-                    {
-                      num: "01",
-                      title: "Capture",
-                      copy: "AIOS Interviewer + Observer extract tribal knowledge from SMEs and screens.",
-                      bg: "bg-cyan-400/[0.06]",
-                    },
-                    {
-                      num: "02",
-                      title: "Generate",
-                      copy: "Cognitive core converts processes into intent-based AI-native workflows.",
-                      bg: "bg-cyan-400/[0.10]",
-                    },
-                    {
-                      num: "03",
-                      title: "Govern",
-                      copy: "Plan-before-execute, default-deny policy, and human-in-the-loop gates approve every action.",
-                      bg: "bg-cyan-400/[0.16]",
-                    },
-                    {
-                      num: "04",
-                      title: "Execute & Learn",
-                      copy: "Adaptive execution across connectors. Every outcome flows back into layered memory.",
-                      bg: "bg-cyan-400/[0.22]",
-                    },
-                  ].map((row) => (
-                    <div key={row.num} className={`flex items-start gap-3 rounded-md px-4 py-4 ${row.bg}`}>
-                      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-400/40 bg-[#050a14] font-mono text-[11px] font-medium text-cyan-400">
-                        {row.num}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-[13px] font-semibold tracking-tight text-white">{row.title}</p>
-                        <p className="mt-0.5 text-[13px] leading-snug text-slate-300">{row.copy}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Bottom pill — output */}
-                <div className="mt-2 rounded-full bg-cyan-400 px-6 py-3.5 text-center shadow-[0_4px_16px_rgba(34,211,238,0.25)]">
-                  <p className="text-[14px] font-semibold tracking-tight text-slate-950">
-                    Executed Workflow + Audit Trail
-                  </p>
-                </div>
-              </div>
-
-              {/* Memory layer — facts about self-evolution */}
-              <div className="mt-6 rounded-lg border border-cyan-400/20 bg-white/[0.03] p-5">
-                <div className="flex items-center gap-2.5">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.6" className="h-5 w-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
-                  <p className="font-mono text-[12px] tracking-[0.2em] text-cyan-400">MEMORY · SELF-EVOLUTION</p>
-                </div>
-                <p className="mt-3 text-[13px] leading-relaxed text-slate-300">
-                  Every run feeds <span className="font-medium text-white">episodic, semantic-graph, and procedural memory</span>. The Evolving Context Playbook auto-creates, dedups, and prunes itself. Each execution makes the next one cheaper, faster, and more accurate.
-                </p>
-                <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-                  <div>
-                    <p className="font-mono text-lg font-medium text-cyan-400">3×</p>
-                    <p className="mt-1 text-[11px] leading-tight text-slate-500">memory layers per run</p>
-                  </div>
-                  <div className="border-x border-white/[0.08]">
-                    <p className="font-mono text-lg font-medium text-cyan-400">∞</p>
-                    <p className="mt-1 text-[11px] leading-tight text-slate-500">runs informing the core</p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-lg font-medium text-cyan-400">↓</p>
-                    <p className="mt-1 text-[11px] leading-tight text-slate-500">cost per task over time</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative pb-16 md:pb-24">
-        <div className="px-6 sm:px-20 lg:px-[112px]">
-          <div className="space-y-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.06]">
-            {CAPABILITIES.map((cap) => (
-              <div key={cap.num} className="bg-[#050a14] p-6 md:p-10">
-                <div className="grid gap-6 md:grid-cols-[120px_1fr] md:gap-10">
-                  <div>
-                    <p className="font-mono text-[13px] tracking-[0.22em] text-cyan-400">{cap.num}</p>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
-                      {cap.title}
-                    </h2>
-                    <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-slate-300 md:text-base">
-                      {cap.lead}
-                    </p>
-                    <ul className="mt-5 space-y-2.5">
-                      {cap.proofs.map((p) => (
-                        <li key={p} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-slate-400">
-                          <span className="mt-[7px] block h-1 w-1 shrink-0 rounded-full bg-cyan-400" />
-                          <span>{p}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-5 border-l-2 border-cyan-400 pl-4 text-[14px] italic leading-relaxed text-slate-500">
-                      {cap.stinger}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative pb-24 md:pb-32">
-        <div className="px-6 sm:px-20 lg:px-[112px]">
-          <p className="inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
-            FEATURE INDEX
-          </p>
-          <h2 className="mt-6 text-[clamp(1.75rem,4vw,2.5rem)] font-light tracking-[-0.03em] text-white">
-            Everything <span className="text-cyan-400">in the box.</span>
+          <h2 className="reveal-up mt-6 text-[clamp(1.75rem,4vw,2.75rem)] font-light leading-[1.1] tracking-[-0.03em] text-white [animation-delay:60ms]">
+            From tribal knowledge to <span className="text-cyan-400">auditable execution</span>.
           </h2>
+          <p className="reveal-up mt-5 max-w-2xl text-lg leading-relaxed text-slate-400 [animation-delay:120ms]">
+            AIOS captures what your experts know, converts it into adaptive cognitive workflows, and runs them under policy-gated governance, with every action logged for audit.
+          </p>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURE_GROUPS.map((group) => (
-              <div key={group.title} className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-6">
-                <h3 className="font-mono text-[13px] tracking-[0.18em] text-cyan-400">{group.title.toUpperCase()}</h3>
-                <ul className="mt-4 space-y-2">
-                  {group.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-slate-300">
-                      <span className="mt-[7px] block h-1 w-1 shrink-0 rounded-full bg-slate-500" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+          <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_minmax(360px,440px)] lg:items-start lg:gap-16">
+            {/* LEFT — capabilities list */}
+            <div className="space-y-12">
+              {CAPABILITIES.map((cap) => (
+                <div key={cap.num} className="reveal-up">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-[13px] tracking-[0.22em] text-cyan-400">{cap.num}</span>
+                    <h3 className="text-xl font-medium tracking-tight text-white md:text-2xl">{cap.title}</h3>
+                  </div>
+                  <p className="mt-3 text-[15px] leading-relaxed text-slate-300">{cap.lead}</p>
+                  <ul className="mt-4 space-y-2">
+                    {cap.proofs.map((p) => (
+                      <li key={p} className="flex items-start gap-2.5 text-[14px] leading-relaxed text-slate-400">
+                        <span className="mt-[7px] block h-1 w-1 shrink-0 rounded-full bg-cyan-400" />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 border-l-2 border-cyan-400 pl-4 text-[13px] italic leading-relaxed text-slate-500">
+                    {cap.stinger}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* RIGHT — sticky flow graphic + memory callout + badges */}
+            <div className="lg:sticky lg:top-28">
+              <div className="relative mx-auto w-full max-w-md">
+                <div className="relative pl-12">
+                  {/* Loop arrow on the left — annotated with self-evolution */}
+                  <svg
+                    viewBox="0 0 60 760"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-0 top-0 h-full w-12"
+                  >
+                    <defs>
+                      <marker id="aios-flow-arrow" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M2 2 L10 6 L2 10 Z" fill="#22d3ee" />
+                      </marker>
+                    </defs>
+                    <path
+                      d="M 52 740 Q 8 740 8 700 L 8 60 Q 8 20 52 20"
+                      fill="none"
+                      stroke="#22d3ee"
+                      strokeWidth="1.5"
+                      strokeDasharray="5 5"
+                      markerEnd="url(#aios-flow-arrow)"
+                    />
+                    <circle cx="52" cy="740" r="4" fill="#22d3ee" />
+                  </svg>
+
+                  {/* Loop label — "Self-Evolving System" rotated along the loop arrow */}
+                  <div className="pointer-events-none absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 whitespace-nowrap bg-[#050a14] px-2 font-mono text-[11px] font-medium tracking-[0.18em] text-cyan-400">
+                    SELF-EVOLVING SYSTEM
+                  </div>
+
+                  <div className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3.5 text-center">
+                    <p className="text-[14px] font-semibold tracking-tight text-white">
+                      Knowledge & Context Engine
+                    </p>
+                  </div>
+
+                  <div className="mt-2 space-y-1.5">
+                    {[
+                      {
+                        num: "01",
+                        title: "Capture",
+                        copy: "AIOS Interviewer + Observer extract tribal knowledge from SMEs and screens.",
+                        bg: "bg-cyan-400/[0.06]",
+                      },
+                      {
+                        num: "02",
+                        title: "Generate",
+                        copy: "Cognitive core converts processes into intent-based AI-native workflows.",
+                        bg: "bg-cyan-400/[0.10]",
+                      },
+                      {
+                        num: "03",
+                        title: "Govern",
+                        copy: "Plan-before-execute, policy-gated tool calls, and human-in-the-loop approval at every action.",
+                        bg: "bg-cyan-400/[0.16]",
+                      },
+                      {
+                        num: "04",
+                        title: "Execute",
+                        copy: "Adaptive execution across connectors with full audit logging on every action.",
+                        bg: "bg-cyan-400/[0.18]",
+                      },
+                      {
+                        num: "05",
+                        title: "Observe",
+                        copy: "Live traces, spend ledger, and OTLP telemetry to Grafana. Every run visible in real time.",
+                        bg: "bg-cyan-400/[0.24]",
+                      },
+                      {
+                        num: "06",
+                        title: "Memory & Self-Evolve",
+                        copy: "Every run feeds episodic, semantic-graph, and procedural memory. Each execution makes the next one cheaper, faster, more accurate.",
+                        bg: "bg-cyan-400/[0.32]",
+                      },
+                    ].map((row) => (
+                      <div key={row.num} className={`flex items-start gap-3 rounded-md px-4 py-4 ${row.bg}`}>
+                        <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-400/40 bg-[#050a14] font-mono text-[11px] font-medium text-cyan-400">
+                          {row.num}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-semibold tracking-tight text-white">{row.title}</p>
+                          <p className="mt-0.5 text-[13px] leading-snug text-slate-300">{row.copy}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-2 rounded-full bg-cyan-400 px-6 py-3.5 text-center shadow-[0_4px_16px_rgba(34,211,238,0.25)]">
+                    <p className="text-[14px] font-semibold tracking-tight text-slate-950">
+                      Cognitive Execution Engine
+                    </p>
+                  </div>
+                </div>
+
               </div>
-            ))}
+            </div>
           </div>
 
-          <div className="mt-16">
-            <a
-              href="/#demo"
-              className="inline-block rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold tracking-tight text-slate-950 transition hover:bg-cyan-300"
-            >
-              Request a Demo
-            </a>
+          {/* ── Compliance badges — full content-width row below grid ── */}
+          <div className="reveal-up mt-16 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6">
+            <p className="font-mono text-[12px] tracking-[0.22em] text-slate-500">CERTIFIED FOR ENTERPRISE</p>
+            <div className="mt-5 flex flex-wrap items-center gap-x-10 gap-y-5">
+              <img src="/compliance/soc2.svg" alt="SOC 2 Type II" className="reveal-up h-12 w-auto [animation-delay:120ms]" />
+              <img src="/compliance/hipaa.svg" alt="HIPAA Certified" className="reveal-up h-12 w-auto [animation-delay:200ms]" />
+              <img src="/compliance/sox.svg" alt="SOX Compliant" className="reveal-up h-12 w-auto [animation-delay:280ms]" />
+              <div className="reveal-up flex items-center gap-2.5 [animation-delay:360ms]">
+                <img src="/compliance/eu-ai-act.svg" alt="" aria-hidden="true" className="h-12 w-12" />
+                <div className="leading-tight text-left">
+                  <p className="text-[11px] font-semibold tracking-[0.14em] text-white">EU AI ACT</p>
+                  <p className="text-[11px] tracking-[0.14em] text-slate-500">READY</p>
+                </div>
+              </div>
+              <div className="reveal-up flex items-center gap-2.5 [animation-delay:440ms]">
+                <img src="/compliance/gdpr.svg" alt="" aria-hidden="true" className="h-12 w-12" />
+                <div className="leading-tight text-left">
+                  <p className="text-[11px] font-semibold tracking-[0.14em] text-white">GDPR</p>
+                  <p className="text-[11px] tracking-[0.14em] text-slate-500">COMPLIANT</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ── TIME TO EARNINGS — light background break ── */}
+      <section data-tone="light" className="relative bg-[var(--bg-page)] py-24 text-slate-950 md:py-32">
+        <div className="mx-auto max-w-5xl px-6 sm:px-10">
+          <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-600">
+            TIME TO EARNINGS
+          </p>
+          <h2 className="reveal-up mt-6 text-[clamp(1.75rem,4vw,2.75rem)] font-light leading-[1.1] tracking-[-0.03em] text-slate-950 [animation-delay:60ms]">
+            Earnings in weeks. <span className="text-cyan-700">Not pilots in years.</span>
+          </h2>
+          <p className="reveal-up mt-5 max-w-2xl text-lg leading-relaxed text-slate-700 [animation-delay:120ms]">
+            AIOS is outcome-priced infrastructure, not a science project. Failed tasks are free, every workflow is metered to the token, and our engineers embed with your team to ship measurable savings to your P&amp;L from the very first month.
+          </p>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                title: "Observational Learning",
+                body: "The AIOS Interviewer and Observer let your SMEs author workflows by talking, not coding. Time-to-first-workflow is measured in hours, not quarters.",
+              },
+              {
+                title: "Compounding Returns",
+                body: "Every successful run feeds layered memory and prunes the cost of the next one. Outcome-based pricing keeps the incentives aligned: failed tasks are free, every win compounds.",
+              },
+              {
+                title: "Forward-Deployed Engineers",
+                body: "cvlSoft engineers embed with your team to scope, build, and ship workflows to production in weeks. We carry the skin in the game; we get paid when you save.",
+              },
+            ].map((card, i) => (
+              <div
+                key={card.title}
+                className="reveal-up rounded-lg border border-slate-300 bg-white p-6"
+                style={{ animationDelay: `${i * 90}ms` }}
+              >
+                <h3 className="text-base font-semibold text-cyan-700">{card.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-slate-700">{card.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

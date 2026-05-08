@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import DemoButton from "../components/DemoButton";
 
 export const metadata: Metadata = {
   title: "About cvlSoft — The Company Behind AIOS",
@@ -9,11 +10,11 @@ export default function About() {
   return (
     <div className="min-h-screen bg-[var(--bg-deep)] text-slate-300">
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
-        <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
-        <h1 className="text-4xl font-light tracking-[-0.03em] text-white">About cvlSoft</h1>
+        <a href="/" className="reveal-up mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
+        <h1 className="reveal-up text-4xl font-light tracking-[-0.03em] text-white [animation-delay:60ms]">About cvlSoft</h1>
 
         <div className="mt-12 space-y-10 text-base leading-relaxed text-slate-400">
-          <section>
+          <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">The Mission</h2>
             <p className="mt-3">
               Cognitive Venture Labs (cvlSoft) builds AIOS, the Autonomous Intelligence Operating System. We believe enterprise AI
@@ -22,7 +23,7 @@ export default function About() {
             </p>
           </section>
 
-          <section>
+          <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">The Problem We Solve</h2>
             <p className="mt-3">
               96% of enterprise AI never reaches production. The industry builds a separate agent for every
@@ -38,7 +39,7 @@ export default function About() {
             </p>
           </section>
 
-          <section>
+          <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">Deep Expertise, Not Just Code</h2>
             <p className="mt-3">
               cvlSoft was founded by experts who have spent years in the trenches of enterprise
@@ -61,7 +62,7 @@ export default function About() {
             </p>
           </section>
 
-          <section>
+          <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">How We Work</h2>
             <p className="mt-3">
               We are not a software vendor that hands you a login and wishes you luck. cvlSoft offers
@@ -71,10 +72,10 @@ export default function About() {
             </p>
           </section>
 
-          <section>
+          <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">Get in Touch</h2>
             <p className="mt-3">
-              Interested in learning more? <a href="/#demo" className="text-cyan-400 underline hover:text-cyan-300">Request a demo</a> or
+              Interested in learning more? <DemoButton className="text-cyan-400 underline hover:text-cyan-300">Request a demo</DemoButton> or
               email us at <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a>.
             </p>
           </section>

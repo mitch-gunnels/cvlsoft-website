@@ -1,3 +1,4 @@
+import DemoButton from "../components/DemoButton";
 import SiteHeader from "../components/SiteHeader";
 
 const STEPS = [
@@ -47,20 +48,20 @@ export default function RolloutPage() {
       <SiteHeader />
 
       <section className="relative pt-32 pb-24 md:pt-40 md:pb-32">
-        <div className="px-6 sm:px-20 lg:px-[112px]">
-          <p className="inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
+        <div className="mx-auto max-w-5xl px-6 sm:px-10">
+          <p className="reveal-up inline-block rounded-full border border-white/[0.12] bg-white/[0.04] px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-400">
             WHITE GLOVE ROLLOUT
           </p>
-          <h1 className="mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white">
+          <h1 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-white [animation-delay:60ms]">
             Accelerated rollout. <span className="text-cyan-400">Optional. Hands-on.</span>
           </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl">
+          <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-400 md:text-xl [animation-delay:120ms]">
             AIOS is self-serve out of the box. But if you want to move fast, our engineers
             embed directly with your team to get you to production in weeks. An optional
             service for teams that want white glove support from day one.
           </p>
 
-          <div className="mt-12 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 md:p-8">
+          <div className="reveal-up mt-12 rounded-lg border border-white/[0.08] bg-white/[0.03] p-6 md:p-8 [animation-delay:180ms]">
             <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-8">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-cyan-400/10 text-cyan-400">
                 <IconRocket className="h-7 w-7" />
@@ -80,8 +81,12 @@ export default function RolloutPage() {
             <div className="pointer-events-none absolute bottom-4 left-[18px] top-4 w-px bg-white/[0.08] lg:hidden" aria-hidden="true" />
 
             <ol className="grid gap-10 lg:grid-cols-6 lg:gap-6">
-              {STEPS.map((item) => (
-                <li key={item.step} className="relative flex items-start gap-5 lg:block">
+              {STEPS.map((item, idx) => (
+                <li
+                  key={item.step}
+                  className="reveal-up relative flex items-start gap-5 lg:block"
+                  style={{ animationDelay: `${idx * 80}ms` }}
+                >
                   <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cyan-400/60 bg-[#050a14] font-mono text-[13px] font-medium text-cyan-400 shadow-[0_0_0_4px_rgba(34,211,238,0.08)]">
                     {item.step}
                   </div>
@@ -94,13 +99,8 @@ export default function RolloutPage() {
             </ol>
           </div>
 
-          <div className="mt-16">
-            <a
-              href="/#demo"
-              className="inline-block rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold tracking-tight text-slate-950 transition hover:bg-cyan-300"
-            >
-              Request a Demo
-            </a>
+          <div className="reveal-up mt-16">
+            <DemoButton />
           </div>
         </div>
       </section>

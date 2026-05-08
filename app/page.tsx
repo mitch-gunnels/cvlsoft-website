@@ -815,25 +815,8 @@ export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
   const featureObserverRef = useRef<IntersectionObserver | null>(null);
 
-  /* Scroll-triggered reveal animations */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-
-    document
-      .querySelectorAll(".reveal-up, .scale-in, .cascade, .row-fade")
-      .forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+  /* Reveal animations are handled globally by <ScrollReveal /> in
+     app/layout.tsx — every page on the site inherits the same behavior. */
 
   /* Navbar scroll shadow + dynamic tone — flip header palette as the section
      under it transitions between cream and dark surfaces. Sections opt in via
@@ -1140,10 +1123,20 @@ export default function Home() {
                 </span>
               </span>
             );
+            // Logos cascade left-to-right after the CTAs settle.
+            // Desktop logos use a global index across both groups so the
+            // cascade doesn't restart at "BUILT ON".
+            const LOGO_BASE_DELAY = 720;
+            const LOGO_STEP = 80;
             return (
               <>
-                {/* Mobile — continuous-loop marquee with per-cell column rules */}
-                <div className="relative z-10 overflow-hidden border-t border-white/[0.10] pt-5 pb-6 md:hidden">
+                {/* Mobile — continuous-loop marquee with per-cell column rules.
+                    The whole row fades up as one (the marquee animates its own
+                    transform internally, so a per-logo cascade would fight it). */}
+                <div
+                  className="hero-fade-up relative z-10 overflow-hidden border-t border-white/[0.10] pt-5 pb-6 md:hidden"
+                  style={{ animationDelay: `${LOGO_BASE_DELAY}ms` }}
+                >
                   <p className="mb-4 text-center font-mono text-[11px] tracking-[0.22em] text-slate-500">
                     PARTNERED WITH · BUILT ON
                   </p>
@@ -1179,23 +1172,30 @@ export default function Home() {
                         gi === 0 ? "lg:pl-[120px]" : "border-l border-white/[0.10] lg:pr-[120px]"
                       }`}
                     >
-                      <p className="font-mono text-[11px] tracking-[0.22em] text-slate-500">
+                      <p
+                        className="hero-stagger font-mono text-[11px] tracking-[0.22em] text-slate-500"
+                        style={{ animationDelay: `${LOGO_BASE_DELAY - 80}ms` }}
+                      >
                         {group.eyebrow}
                       </p>
                       <ul
                         className="mt-3 grid items-center gap-y-3"
                         style={{ gridTemplateColumns: `repeat(${group.items.length}, minmax(0, 1fr))` }}
                       >
-                        {group.items.map((b, i) => (
-                          <li
-                            key={b.name}
-                            className={`flex items-center justify-center gap-2.5 px-4 ${
-                              i > 0 ? "border-l border-white/[0.08]" : ""
-                            }`}
-                          >
-                            <Logo b={b} />
-                          </li>
-                        ))}
+                        {group.items.map((b, i) => {
+                          const globalIndex = gi === 0 ? i : partnered.length + i;
+                          return (
+                            <li
+                              key={b.name}
+                              className={`hero-stagger flex items-center justify-center gap-2.5 px-4 ${
+                                i > 0 ? "border-l border-white/[0.08]" : ""
+                              }`}
+                              style={{ animationDelay: `${LOGO_BASE_DELAY + globalIndex * LOGO_STEP}ms` }}
+                            >
+                              <Logo b={b} />
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   ))}
@@ -1659,10 +1659,10 @@ export default function Home() {
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-cyan-500/10 blur-[60px]" />
 
             <h2 className="reveal-up relative text-center text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              Embed with us.
+              Not hype. <span className="text-cyan-400">Real enterprise agentic AI.</span>
             </h2>
-            <p className="reveal-up relative mt-4 text-center text-xl leading-relaxed text-slate-400 md:text-2xl [animation-delay:120ms]">
-              Our engineers sit with your operators until the work runs autonomously. We get paid when it does.
+            <p className="reveal-up relative mt-4 text-center text-2xl leading-relaxed text-slate-300 md:text-4xl [animation-delay:120ms]">
+              See it now.
             </p>
 
             <form className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
