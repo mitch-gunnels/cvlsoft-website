@@ -1097,9 +1097,9 @@ export default function Home() {
           <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
             {/* Subtle glow behind spiral */}
             <div className="absolute right-[5%] top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-cyan-500/[0.06] blur-[120px]" />
-            {/* Spiral with left fade */}
+            {/* Spiral with left fade — hidden on mobile, shown md+ */}
             <div
-              className="hero-spiral-frame absolute right-0 top-1/2 h-[153.3%] w-[93.7%]"
+              className="hero-spiral-frame absolute right-0 top-1/2 hidden h-[153.3%] w-[93.7%] md:block"
               style={{
                 maskImage: "linear-gradient(to right, transparent 0%, black 35%)",
                 WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 35%)",
