@@ -812,6 +812,8 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [headerTone, setHeaderTone] = useState<"dark" | "light">("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [diagramModal, setDiagramModal] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activeFeature, setActiveFeature] = useState(0);
   const featureObserverRef = useRef<IntersectionObserver | null>(null);
@@ -850,6 +852,25 @@ export default function Home() {
   }, []);
 
   /* Scrollytelling feature observer */
+  /* Viewport size detection — drives mobile-vs-desktop behavior for the
+     Why AIOS diagram interaction (modal on mobile, inline expand on desktop). */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  /* Close modal on Escape key */
+  useEffect(() => {
+    if (diagramModal === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDiagramModal(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [diagramModal]);
+
   useEffect(() => {
     featureObserverRef.current = new IntersectionObserver(
       (entries) => {
@@ -1602,8 +1623,14 @@ export default function Home() {
                     >
                       <button
                         type="button"
-                        aria-expanded={isExpanded}
-                        onClick={() => setExpandedFeature(isExpanded ? null : i)}
+                        aria-expanded={isMobile ? false : isExpanded}
+                        onClick={() => {
+                          if (isMobile) {
+                            setDiagramModal(i);
+                          } else {
+                            setExpandedFeature(isExpanded ? null : i);
+                          }
+                        }}
                         className="grid w-full cursor-pointer items-start gap-8 px-6 py-7 text-left transition-colors hover:bg-slate-50 lg:grid-cols-[5fr_7fr_auto] lg:items-center lg:gap-14 lg:px-10 lg:py-10"
                       >
                         <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
@@ -1621,7 +1648,7 @@ export default function Home() {
                           +
                         </span>
                       </button>
-                      {isExpanded && (
+                      {isExpanded && !isMobile && (
                         <div className="feature-fade-enter px-6 pt-2.5 pb-8 lg:px-10 lg:pb-12">
                           <div className="mx-auto w-4/5 overflow-hidden rounded-[20px] border border-slate-200 bg-white">
                             <div className="flex aspect-[16/10] items-center justify-center p-6 md:p-10">
@@ -1800,6 +1827,45 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* ── Mobile diagram modal — opens when a Why AIOS row is tapped on mobile ── */}
+      {diagramModal !== null && (() => {
+        const illustrations = [
+          <DiagramOneBrain key="d0" />,
+          <DiagramInterview key="d1" />,
+          <DiagramSelfEvolving key="d2" />,
+          <DiagramSecurity key="d3" />,
+          <DiagramConnectors key="d4" />,
+        ];
+        const item = DIFFERENTIATORS[diagramModal];
+        return (
+          <div
+            className="fixed inset-0 z-50 flex flex-col bg-slate-950/85 backdrop-blur md:hidden"
+            onClick={() => setDiagramModal(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={item.title}
+          >
+            <button
+              type="button"
+              onClick={() => setDiagramModal(null)}
+              aria-label="Close"
+              className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="flex flex-1 flex-col px-4 pt-16 pb-6" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-2xl font-light tracking-[-0.02em] text-white">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.description}</p>
+              <div className="mt-6 flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-white/[0.08] bg-white p-4">
+                <div className="w-full">{illustrations[diagramModal]}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
     </div>
   );
