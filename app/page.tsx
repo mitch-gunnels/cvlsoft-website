@@ -268,30 +268,35 @@ const FUNNEL_STAGES = [
   { label: "Creating substantial value", pct: 4 },
 ];
 
-const DIFFERENTIATORS: { title: string; description: string; icon: ReactNode }[] = [
+const DIFFERENTIATORS: { title: string; subtitle: string; description: string; icon: ReactNode }[] = [
   {
     title: "One brain. Every workflow.",
-    description: "Traditional platforms build a separate agent for every task — hundreds of brittle bots you have to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
+    subtitle: "Less to maintain. No tech debt compounds. Reduced attack surface, keeping you safe!",
+    description: "Traditional platforms build a separate agent for every task, leaving you with hundreds of brittle bots to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
     icon: <IconCpu className="h-5 w-5" />,
   },
   {
     title: "AIOS AI interviews your experts",
+    subtitle: "Capture their know-how before they walk out the door.",
     description: "AIOS AI conducts voice interviews just like a human, using seven science-backed elicitation techniques to understand how your experts complete complex tasks. While they talk, AIOS AI captures their screen, detects decision signals, and automatically builds certified, executable agentic workflows from what it learns.",
     icon: <IconEye className="h-5 w-5" />,
   },
   {
     title: "Self-evolving autonomous agents",
-    description: "Every execution makes the system smarter. A three-role memory engine — Generator, Reflector, Curator — captures outcomes, surfaces patterns, and persists validated insights as reusable knowledge. No manual retraining. No prompt tuning. Continuous autonomous improvement.",
+    subtitle: "Gets better every run. No retraining, no consultants.",
+    description: "Every execution makes the system smarter. A three-role memory engine (Generator, Reflector, Curator) captures outcomes, surfaces patterns, and persists validated insights as reusable knowledge. No manual retraining. No prompt tuning. Continuous autonomous improvement.",
     icon: <IconGrid className="h-5 w-5" />,
   },
   {
     title: "Security-first posture.",
+    subtitle: "Can’t take an action your policy doesn’t allow.",
     description: "Every action is blocked unless an explicit policy allows it. A deterministic policy engine with allow/deny controls, global and per-execution kill switches that halt instantly, and human-in-the-loop approval gates with compliance-grade audit logging.",
     icon: <IconShield className="h-5 w-5" />,
   },
   {
     title: "Universal connector fabric",
-    description: "Hundreds of connectors — REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace — unified under one execution contract. Add a connector and every cognitive core uses it immediately.",
+    subtitle: "Plugs into the stack you already run.",
+    description: "Hundreds of connectors (REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace), unified under one execution contract. Add a connector and every cognitive core uses it immediately.",
     icon: <IconLink className="h-5 w-5" />,
   },
 ];
@@ -1145,9 +1150,8 @@ export default function Home() {
               </h1>
 
               <p className="hero-fade-up mt-6 max-w-[720px] text-xl font-normal text-slate-400 [animation-delay:280ms]">
-                The industry&rsquo;s AI failure rate is 96%.{" "}
-                <span className="text-cyan-400">Ours is zero — we get paid when you save.</span>
-                {" "}Our forward deployed teams embed with operators across enterprises of every size and turn their processes into autonomous systems.
+                We ship autonomous operations, not AI pilots. Our engineers embed with your team, automate the work that matters most, and{" "}
+                <span className="text-cyan-400">only get paid when it saves you money.</span>
               </p>
 
               <div className="hero-fade-up mt-10 flex flex-wrap gap-3 [animation-delay:520ms]">
@@ -1413,7 +1417,7 @@ export default function Home() {
                   { title: "Trust & governance", desc: "Deterministic policy guardrails, plan-before-execute, evidence-grade audit trails." },
                   { title: "Cascading failure", desc: "Circuit breakers, hierarchical kill switches, deterministic safety at every step." },
                   { title: "Architecture complexity", desc: "Pre-built cognitive core replaces DIY agent sprawl. No architecture to maintain." },
-                  { title: "Talent gap", desc: "AI-powered knowledge extraction from SMEs — no ML engineers required." },
+                  { title: "Talent gap", desc: "AI-powered knowledge extraction from SMEs. No ML engineers required." },
                   { title: "ROI from day one", desc: "Outcome-based pricing. You pay per successful task. Failed tasks are free." },
                 ].map((item) => (
                   <div key={item.title}>
@@ -1571,7 +1575,7 @@ export default function Home() {
                     One platform. Three modes. <tspan fill="#22d3ee" fontWeight="500">The 90% in the middle</tspan> is where enterprises actually operate.
                   </text>
                   <text x="600" y="570" textAnchor="middle" fill="#64748b" fontSize="12">
-                    AIOS handles all three — but the sweet spot is Deterministic Intelligence.
+                    AIOS handles all three, but the sweet spot is Deterministic Intelligence.
                   </text>
                 </svg>
               </div>
@@ -1596,7 +1600,7 @@ export default function Home() {
             <p className="reveal-up mt-5 mb-12 md:mb-16 max-w-2xl text-lg leading-relaxed text-slate-600 md:text-xl [animation-delay:120ms]">
               The industry builds an agent for every task.{" "}
               <span className="font-medium text-cyan-700">AIOS builds cognition</span>
-              {" "}— adaptive intelligence that reasons about any workflow,
+              : adaptive intelligence that reasons about any workflow,
               selects any tool, and scales without maintenance debt. &nbsp;
               <span className="font-medium text-cyan-700">Stop building brittle AI agents. Start building intelligence.</span>
             </p>
@@ -1633,9 +1637,14 @@ export default function Home() {
                         }}
                         className="grid w-full cursor-pointer items-start gap-8 px-6 py-7 text-left transition-colors hover:bg-slate-50 lg:grid-cols-[5fr_7fr_auto] lg:items-center lg:gap-14 lg:px-10 lg:py-10"
                       >
-                        <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
-                          {item.title}
-                        </h3>
+                        <div>
+                          <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
+                            {item.title}
+                          </h3>
+                          <p className="mt-2 text-[14px] font-medium leading-snug text-cyan-700 md:text-[15px]">
+                            {item.subtitle}
+                          </p>
+                        </div>
                         <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
                           {item.description}
                         </p>
@@ -1666,11 +1675,16 @@ export default function Home() {
                   Locks the section's pitch with the headline outcome. */}
               <div className="border-t border-slate-200">
                 <div className="grid w-full items-start gap-8 px-6 py-7 lg:grid-cols-[5fr_7fr_auto] lg:items-center lg:gap-14 lg:px-10 lg:py-10">
-                  <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
-                    Time to Earnings
-                  </h3>
+                  <div>
+                    <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
+                      Time to Earnings
+                    </h3>
+                    <p className="mt-2 text-[14px] font-medium leading-snug text-cyan-700 md:text-[15px]">
+                      No multi-year pilots. You only pay when it actually saves you money.
+                    </p>
+                  </div>
                   <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
-                    We generate measurable earnings impact in weeks, not years — with our pricing tied to a <span className="text-cyan-700">100% production success bar.</span>
+                    We generate measurable earnings impact in weeks, not years, with our pricing tied to a <span className="text-cyan-700">100% production success bar.</span>
                   </p>
                   <span aria-hidden="true" className="hidden lg:block lg:w-[1ch]" />
                 </div>
@@ -1858,7 +1872,8 @@ export default function Home() {
             </button>
             <div className="flex flex-1 flex-col px-4 pt-16 pb-6" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-2xl font-light tracking-[-0.02em] text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.description}</p>
+              <p className="mt-1.5 text-[13px] font-medium leading-snug text-cyan-400">{item.subtitle}</p>
+              <p className="mt-3 text-sm leading-relaxed text-slate-300">{item.description}</p>
               <div className="mt-6 flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-white/[0.08] bg-white p-4">
                 <div className="w-full">{illustrations[diagramModal]}</div>
               </div>

@@ -279,6 +279,38 @@ h6 {
   animation-fill-mode: forwards;
 }
 
+.flow-graphic .flow-piece,
+.flow-graphic .flow-loop {
+  opacity: 0;
+  transform: translateY(18px);
+  will-change: opacity, transform;
+}
+
+.flow-graphic.in-view .flow-piece,
+.flow-graphic.in-view .flow-loop {
+  animation-name: reveal-up;
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: forwards;
+}
+
+.flow-graphic.in-view .flow-loop {
+  animation-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up,
+  .scale-in,
+  .cascade,
+  .row-fade,
+  .flow-graphic .flow-piece,
+  .flow-graphic .flow-loop {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ──────────────────────────────────────────────────────────
    Bar fill / chart line draw
    ────────────────────────────────────────────────────────── */

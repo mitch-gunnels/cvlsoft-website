@@ -118,13 +118,13 @@ export default function PlatformPage() {
             {/* RIGHT — sticky flow graphic + memory callout + badges */}
             <div className="lg:sticky lg:top-28">
               <div className="relative mx-auto w-full max-w-md">
-                <div className="relative pl-12">
+                <div className="flow-graphic relative pl-12">
                   {/* Loop arrow on the left — annotated with self-evolution */}
                   <svg
                     viewBox="0 0 60 760"
                     preserveAspectRatio="none"
                     aria-hidden="true"
-                    className="pointer-events-none absolute left-0 top-0 h-full w-12"
+                    className="flow-loop pointer-events-none absolute left-0 top-0 h-full w-12"
                   >
                     <defs>
                       <marker id="aios-flow-arrow" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
@@ -143,11 +143,13 @@ export default function PlatformPage() {
                   </svg>
 
                   {/* Loop label — "Self-Evolving System" rotated along the loop arrow */}
-                  <div className="pointer-events-none absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 whitespace-nowrap bg-[#050a14] px-2 font-mono text-[11px] font-medium tracking-[0.18em] text-cyan-400">
-                    SELF-EVOLVING SYSTEM
+                  <div className="pointer-events-none absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 whitespace-nowrap bg-[#050a14] px-2">
+                    <span className="flow-piece block font-mono text-[11px] font-medium tracking-[0.18em] text-cyan-400 [animation-delay:220ms]">
+                      SELF-EVOLVING SYSTEM
+                    </span>
                   </div>
 
-                  <div className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3.5 text-center">
+                  <div className="flow-piece rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3.5 text-center [animation-delay:80ms]">
                     <p className="text-[14px] font-semibold tracking-tight text-white">
                       Knowledge & Context Engine
                     </p>
@@ -192,7 +194,11 @@ export default function PlatformPage() {
                         bg: "bg-cyan-400/[0.32]",
                       },
                     ].map((row) => (
-                      <div key={row.num} className={`flex items-start gap-3 rounded-md px-4 py-4 ${row.bg}`}>
+                      <div
+                        key={row.num}
+                        className={`flow-piece flex items-start gap-3 rounded-md px-4 py-4 ${row.bg}`}
+                        style={{ animationDelay: `${180 + Number(row.num) * 80}ms` }}
+                      >
                         <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-400/40 bg-[#050a14] font-mono text-[11px] font-medium text-cyan-400">
                           {row.num}
                         </span>
@@ -204,7 +210,7 @@ export default function PlatformPage() {
                     ))}
                   </div>
 
-                  <div className="mt-2 rounded-full bg-cyan-400 px-6 py-3.5 text-center shadow-[0_4px_16px_rgba(34,211,238,0.25)]">
+                  <div className="flow-piece mt-2 rounded-full bg-cyan-400 px-6 py-3.5 text-center shadow-[0_4px_16px_rgba(34,211,238,0.25)] [animation-delay:760ms]">
                     <p className="text-[14px] font-semibold tracking-tight text-slate-950">
                       Cognitive Execution Engine
                     </p>

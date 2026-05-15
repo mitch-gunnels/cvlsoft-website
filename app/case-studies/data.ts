@@ -55,7 +55,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: "/case-studies/insurer.jpg",
     gradient:
       "bg-[radial-gradient(ellipse_at_top_left,#1e3a8a_0%,#0c4a6e_45%,#020617_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
+    overlay: "from-cyan-400/55 to-sky-700/50",
   },
   {
     slug: "regional-bank-aml",
@@ -89,7 +89,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: "/case-studies/bank.jpg",
     gradient:
       "bg-[radial-gradient(ellipse_at_top_right,#312e81_0%,#1e1b4b_50%,#020617_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
+    overlay: "from-cyan-400/55 to-sky-700/50",
   },
   {
     slug: "f500-manufacturer-procurement",
@@ -123,7 +123,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: "/case-studies/manufacturer.jpg",
     gradient:
       "bg-[radial-gradient(ellipse_at_bottom_right,#134e4a_0%,#083344_50%,#020617_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
+    overlay: "from-cyan-400/55 to-sky-700/50",
   },
   {
     slug: "health-system-rev-cycle",
@@ -157,7 +157,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: "/case-studies/health.jpg",
     gradient:
       "bg-[radial-gradient(ellipse_at_top,#0e7490_0%,#0f172a_55%,#020617_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
+    overlay: "from-cyan-400/55 to-sky-700/50",
   },
   {
     slug: "f100-retailer-cx",
@@ -191,40 +191,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: "/case-studies/retailer.jpg",
     gradient:
       "bg-[radial-gradient(ellipse_at_top_left,#9f1239_0%,#831843_45%,#1e1b4b_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
-  },
-  {
-    slug: "enterprise-saas-it",
-    vertical: "Enterprise SaaS",
-    category: "IT & Identity Operations",
-    headlineStat: "100% Day-One Provisioning",
-    summary:
-      "A public SaaS company governed every provisioning and offboarding event under a default-deny cognitive core — eliminating shadow access and audit prep.",
-    lede:
-      "A public SaaS company with eight thousand employees and six hundred SaaS apps had a four-day average provisioning lag and audit findings on every offboarding cycle. AIOS encoded the IT runbooks, governed the actions, and turned the audit into a non-event.",
-    timeframe: "7 weeks to production",
-    client: "Public SaaS company, ~8,000 employees",
-    impact: [
-      { value: "100%", label: "Day-one provisioning" },
-      { value: "22hr → 4min", label: "Offboarding window" },
-      { value: "0", label: "Audit findings" },
-    ],
-    challenge: [
-      "Six hundred apps. Eight thousand employees. Average four-day provisioning lag, which meant new hires sat idle. Offboarding misses turned into audit findings every cycle.",
-      "Service accounts had god-mode access. Twenty percent of breaches industry-wide now involve shadow AI; this team was one bad week away from being a statistic.",
-    ],
-    solution: [
-      "AIOS Interviewer captured the IT runbooks — including the parts that lived in Slack threads. The cognitive core orchestrated provisioning across all six hundred apps, scoped to revocable identities with circuit breakers and kill switches at every node.",
-      "Default-deny policy enforced separation of duties without slowing the work. Every access grant logged to an immutable audit ledger. MFA, SSO, and per-tenant LLM guardrails came as part of the platform.",
-      "Provisioning became a one-message workflow. Offboarding became instant.",
-    ],
-    quote: {
-      text: "Our auditors called AIOS the cleanest evidence package they've reviewed.",
-      attribution: "Chief Information Security Officer",
-    },
-    image: "/case-studies/saas.jpg",
-    gradient:
-      "bg-[radial-gradient(ellipse_at_bottom_left,#0f766e_0%,#0c4a6e_50%,#020617_100%)]",
-    overlay: "from-indigo-500/45 to-violet-800/45",
+    overlay: "from-cyan-400/55 to-sky-700/50",
   },
 ];

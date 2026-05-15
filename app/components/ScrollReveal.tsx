@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 /**
  * Mounts a single IntersectionObserver that adds `.in-view` to any element
- * with `.reveal-up`, `.scale-in`, `.cascade`, or `.row-fade` once it scrolls
+ * with `.reveal-up`, `.scale-in`, `.cascade`, `.row-fade`, or `.flow-graphic` once it scrolls
  * into the user's reading area. A MutationObserver picks up nodes added
  * later (e.g., expanded sections, route transitions on the same layout).
  *
@@ -15,7 +15,7 @@ import { useEffect } from "react";
 export default function ScrollReveal() {
   useEffect(() => {
     const SELECTOR =
-      ".reveal-up:not(.in-view), .scale-in:not(.in-view), .cascade:not(.in-view), .row-fade:not(.in-view)";
+      ".reveal-up:not(.in-view), .scale-in:not(.in-view), .cascade:not(.in-view), .row-fade:not(.in-view), .flow-graphic:not(.in-view)";
 
     const observer = new IntersectionObserver(
       (entries) => {
