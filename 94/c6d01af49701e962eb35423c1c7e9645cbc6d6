@@ -1,0 +1,57 @@
+app/globals.css
+  s_cb2a1eb017e2e8::t_8ba5b8966c3b49 282-313
+app/components/ScrollReveal.tsx
+  s_cb2a1eb017e2e8::t_e9501c9cded0b0 7,18
+app/case-studies/data.ts
+  s_470920434866e6::t_490aee34d490d8 58,92,126,160,194
+app/page.tsx
+  s_70aceec3bdb6d4::t_9fa75c94408c76 1687
+  s_70aceec3bdb6d4::t_b0e4507b8f9053 286-287
+  s_70aceec3bdb6d4::t_365367e263ce2d 1678-1685
+  s_70aceec3bdb6d4::t_30809d6fc5c3bc 1578
+  s_70aceec3bdb6d4::t_0a7c2015b0ec4a 274
+  s_70aceec3bdb6d4::t_f39a382888924c 299
+  s_70aceec3bdb6d4::t_49282e758e2d50 1154
+  s_70aceec3bdb6d4::t_f91a1dfbc0238d 275
+  s_70aceec3bdb6d4::t_d93fd97f537807 1640-1647
+  s_70aceec3bdb6d4::t_da5c62ef21ddea 1875-1876
+  s_70aceec3bdb6d4::t_a1056cf625389b 1153
+  s_70aceec3bdb6d4::t_ccc04a305cf97d 1420
+  s_70aceec3bdb6d4::t_452b9af0e0362b 271,280,292,298
+  s_70aceec3bdb6d4::t_2721e70bd4bf54 1603
+app/platform/page.tsx
+  s_cb2a1eb017e2e8::t_d832ae1ad1821e 121,127,152,197-201,213
+  s_cb2a1eb017e2e8::t_4e7825b56d2950 146-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "94c6d01af49701e962eb35423c1c7e9645cbc6d6",
+  "prompts": {},
+  "sessions": {
+    "s_470920434866e6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e577473-b66a-4976-ad67-47e202fadfb1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_70aceec3bdb6d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d1a0008c-f0c4-4bcb-b35b-cf07ed21529c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_cb2a1eb017e2e8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e290b-cf65-7241-ad19-01f0d6683618",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
