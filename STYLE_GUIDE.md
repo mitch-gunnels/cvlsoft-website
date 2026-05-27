@@ -1,14 +1,14 @@
 # cvlSoft Style Guide
 
-**Aesthetic:** Enterprise editorial — distyl.ai-style. Cream body, dark bookends (hero + closing band + footer), single cyan accent, slate-only neutrals.
+**Aesthetic:** Enterprise editorial — distyl.ai-style. Near-white body, dark bookends (hero + closing band + footer), single cyan accent, slate-only neutrals.
 
 ## Surfaces
 
 | Token | Hex | When |
 |---|---|---|
-| `--bg-page` | `#f4f1ea` | Warm cream — every section between hero and the demo CTA |
+| `--bg-page` | `#fafaf9` | Near-white (faintest warmth) — every section between hero and the demo CTA |
 | `--bg-deep` | `#050a14` | Hero, Demo CTA, Footer (bookends) |
-| `--bg-card` | `#ffffff` | Cards on cream — funnel, metric, role, screen, table rows |
+| `--bg-card` | `#ffffff` | Cards on near-white — funnel, metric, role, screen, table rows |
 | `--bg-tint` | `#ecfeff` | Cyan-50 — subtle accent fill (badge bg, diagram emphasis) |
 
 Sections opt in to a tone via `data-tone="light" | "dark"`. The sticky header reads this on scroll and flips its palette to match the section under it.
@@ -17,8 +17,8 @@ Sections opt in to a tone via `data-tone="light" | "dark"`. The sticky header re
 
 | Token | Hex | When |
 |---|---|---|
-| `--ink-primary` | `#0f172a` (slate-950) | Headlines, primary text on cream |
-| `--ink-secondary` | `#334155` (slate-700) | Body emphasis on cream |
+| `--ink-primary` | `#0f172a` (slate-950) | Headlines, primary text on near-white |
+| `--ink-secondary` | `#334155` (slate-700) | Body emphasis on near-white |
 | `--ink-muted` | `#64748b` (slate-500) | Captions, source lines, secondary nav links |
 | `--ink-faint` | `#94a3b8` (slate-400) | Faint labels (rarely used) |
 
@@ -28,7 +28,7 @@ The brand mark is the only color allowed besides slate.
 
 | Token | Hex | When |
 |---|---|---|
-| `--accent-on-light` | `#0e7490` (cyan-700) | Cyan against cream — links, emphasis spans, primary CTA bg, diagram strokes |
+| `--accent-on-light` | `#0e7490` (cyan-700) | Cyan against near-white — links, emphasis spans, primary CTA bg, diagram strokes |
 | `--accent-on-dark` | `#22d3ee` (cyan-400) | Cyan against deep ink — hero CTA, hero spiral, demo CTA button |
 | `--accent-on-light-soft` | `#67e8f9` (cyan-300) | Tonal accent — hover/focus halos |
 
@@ -38,8 +38,8 @@ The brand mark is the only color allowed besides slate.
 
 | Token | Hex | When |
 |---|---|---|
-| `--rule-cool` | `#e2e8f0` (slate-200) | Card borders on cream |
-| `--rule-warm` | `#e6e0d4` | Vertical column rules (utility class `.col-rules`) |
+| `--rule-cool` | `#e2e8f0` (slate-200) | Card borders on near-white |
+| `--rule-warm` | `#ededeb` | Vertical column rules (utility class `.col-rules`) |
 | `--rule-dark` | `rgba(255,255,255,0.10)` | Card borders, hairlines on dark |
 
 ## Typography
@@ -68,7 +68,7 @@ font-mono text-[13px] tracking-[0.18em] text-slate-600
 
 On dark sections, swap to `border-white/[0.10] bg-white/[0.04] text-slate-300`.
 
-### Card on cream
+### Card on near-white
 
 ```
 rounded-lg border border-slate-200 bg-white p-6 md:p-8
@@ -76,7 +76,7 @@ rounded-lg border border-slate-200 bg-white p-6 md:p-8
 
 No shadow. Hairline border only.
 
-### Primary button on cream
+### Primary button on near-white
 
 ```
 rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px]
@@ -101,11 +101,11 @@ hover:border-slate-500 hover:text-slate-950
 
 - Container inner: `lg:pl-[205px] lg:pr-[112px]` to leave room for the SectionScrollLine on the left
 - Section spacing: `py-24 md:py-32`
-- Hero: `flex min-h-screen items-center` — fills the viewport so the page break lands at the cream/dark boundary
+- Hero: `flex min-h-screen items-center` — fills the viewport so the page break lands at the near-white/dark boundary
 
 ## Diagrams (Why AIOS section)
 
-`DiagramFrame` and the 5 architecture diagrams render on white cards over cream:
+`DiagramFrame` and the 5 architecture diagrams render on white cards over near-white:
 - Grid pattern: `#cbd5e1` (slate-300) at 0.5 opacity
 - Strokes: `#0e7490` (cyan-700) for accent, `#94a3b8`/`#cbd5e1` for hairlines
 - Fills: `#ffffff` for panels, `#ecfeff` (cyan-50) for accent regions, `#f8fafc` for sub-panels
@@ -121,7 +121,7 @@ The hero keeps the spiral SVG and a single cyan-500/[0.06] ambient orb. Indigo a
 The header palette flips based on the section currently under it:
 
 - **Dark tone:** transparent → `bg-[#050a14]/70` on scroll, white text, slate-400 nav links, cyan-400 CTA pill on slate-950 text
-- **Light tone:** transparent → cream/80 on scroll, slate-950 logo, slate-600 nav links, cyan-700 CTA pill on white text
+- **Light tone:** transparent → near-white/80 on scroll, slate-950 logo, slate-600 nav links, cyan-700 CTA pill on white text
 
 Detection runs in `useEffect` via a scroll listener that reads `[data-tone]` on each section.
 
