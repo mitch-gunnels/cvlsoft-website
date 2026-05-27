@@ -1,0 +1,39 @@
+PRODUCT.md
+  s_94525f8f7a974e::t_c3a784f231ad1f 1-110
+playwright.config.ts
+  s_94525f8f7a974e::t_e64c9fa9400adb 1-20
+DESIGN.md
+  s_94525f8f7a974e::t_84d7d879020114 1-2,4-198
+  s_94525f8f7a974e::t_4b988f63927c86 3
+STYLE_GUIDE.md
+  s_94525f8f7a974e::t_89544214e39958 41-42
+  s_94525f8f7a974e::t_476f68f203052d 20-21
+  s_94525f8f7a974e::t_651f589774bccb 31
+  s_94525f8f7a974e::t_9061c5f1251137 71,79
+  s_94525f8f7a974e::t_44af1a1c2ac7df 124
+  s_94525f8f7a974e::t_39c392c9c4c744 3,9,11
+  s_94525f8f7a974e::t_77216120b97221 104
+  s_94525f8f7a974e::t_5256aae3dcd0f2 108
+.impeccable/critique/2026-05-27T00-56-45Z__app-page-tsx.md
+  s_94525f8f7a974e::t_2fb23271abf5cd 1-53
+e2e/home.spec.ts
+  s_94525f8f7a974e::t_d3fce5677780ff 1-6
+package.json
+  s_94525f8f7a974e::t_b0a962bce7c1f1 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f7e3ebf391f19a63932f654106de9fc3d2ec3608",
+  "prompts": {},
+  "sessions": {
+    "s_94525f8f7a974e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1f98599-ff60-474b-9c15-c25f2c99818b",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
