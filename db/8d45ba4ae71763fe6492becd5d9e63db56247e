@@ -1,0 +1,31 @@
+app/globals.css
+  s_6b7072c031890e::t_2d37c58b5b5ac7 321
+  s_6b7072c031890e::t_1e96a9f14f6f1f 239-240,253-254,267-268,280-281,295-296
+  s_6b7072c031890e::t_70cffa9c83b628 204
+  s_6b7072c031890e::t_83f31ea68e8d83 245
+  s_6b7072c031890e::t_829e037efa6b9b 302
+  s_6b7072c031890e::t_d78e8f6905a17b 286
+  s_6b7072c031890e::t_65f6ed2b6ae9d7 410,418,426
+  s_6b7072c031890e::t_8258b1c546430b 273
+  s_6b7072c031890e::t_66d380158ac251 526
+  s_6b7072c031890e::t_5f00d9adbefd61 259
+  s_6b7072c031890e::t_51afe83b250f38 191,196,202,207,214
+  s_6b7072c031890e::t_58322812c1e33a 193
+  s_6b7072c031890e::t_3b081df5f5da87 224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "db8d45ba4ae71763fe6492becd5d9e63db56247e",
+  "prompts": {},
+  "sessions": {
+    "s_6b7072c031890e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfb1e5da-12e4-44d5-ac06-0299e2c58c56",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
