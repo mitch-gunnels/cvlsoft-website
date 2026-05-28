@@ -188,27 +188,30 @@ h6 {
 .hero-fade-up {
   opacity: 0;
   transform: translateY(32px);
+  filter: blur(14px);
   animation-name: hero-fade-up;
-  animation-duration: 900ms;
+  animation-duration: 1400ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
 }
 
 .hero-stagger {
   opacity: 0;
   transform: translateY(16px);
+  filter: blur(12px);
   animation-name: hero-fade-up;
-  animation-duration: 700ms;
+  animation-duration: 1200ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
 }
 
 @keyframes hero-fade-up {
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -218,6 +221,7 @@ h6 {
     animation: none;
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
 
@@ -232,12 +236,13 @@ h6 {
 .reveal-up {
   opacity: 0;
   transform: translateY(28px);
-  will-change: opacity, transform;
+  filter: blur(14px);
+  will-change: opacity, transform, filter;
 }
 
 .reveal-up.in-view {
   animation-name: reveal-up;
-  animation-duration: 750ms;
+  animation-duration: 1250ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
 }
@@ -245,12 +250,13 @@ h6 {
 .scale-in {
   opacity: 0;
   transform: scale(0.94);
-  will-change: opacity, transform;
+  filter: blur(14px);
+  will-change: opacity, transform, filter;
 }
 
 .scale-in.in-view {
   animation-name: scale-in;
-  animation-duration: 650ms;
+  animation-duration: 1150ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
 }
@@ -258,23 +264,26 @@ h6 {
 .cascade {
   opacity: 0;
   transform: translateY(20px);
-  will-change: opacity, transform;
+  filter: blur(12px);
+  will-change: opacity, transform, filter;
 }
 
 .cascade.in-view {
   animation-name: cascade;
-  animation-duration: 650ms;
+  animation-duration: 1150ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
 }
 
 .row-fade {
   opacity: 0;
+  filter: blur(12px);
+  will-change: opacity, filter;
 }
 
 .row-fade.in-view {
   animation-name: reveal-up;
-  animation-duration: 500ms;
+  animation-duration: 1000ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
 }
@@ -283,13 +292,14 @@ h6 {
 .flow-graphic .flow-loop {
   opacity: 0;
   transform: translateY(18px);
-  will-change: opacity, transform;
+  filter: blur(12px);
+  will-change: opacity, transform, filter;
 }
 
 .flow-graphic.in-view .flow-piece,
 .flow-graphic.in-view .flow-loop {
   animation-name: reveal-up;
-  animation-duration: 700ms;
+  animation-duration: 1200ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: forwards;
 }
@@ -308,6 +318,7 @@ h6 {
     animation: none;
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
 
@@ -396,6 +407,7 @@ h6 {
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -403,6 +415,7 @@ h6 {
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -410,6 +423,7 @@ h6 {
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -509,6 +523,7 @@ input[type="range"].ui-slider:focus-visible::-webkit-slider-thumb {
     animation: none;
     opacity: 1;
     transform: none;
+    filter: none;
   }
   .typing-cursor {
     display: none;
