@@ -1139,9 +1139,9 @@ export default function Home() {
               the BUILT ON row. Each block animates in with `hero-fade-up` and
               its own animation-delay, producing a staggered cascade. */}
           <div className="relative z-10 flex w-full flex-1 items-start pt-24 px-6 sm:px-10 md:items-center md:pt-0 lg:px-[120px]">
-            <div className="max-w-4xl">
+            <div className="max-w-6xl">
               <h1 className="hero-fade-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                Agentic Operations<br />
+                Autonomous Agentic Solutions<br />
                 Delivering Measurable<br />
                 Outcomes in{" "}
                 <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(34,211,238,0.45))]">
@@ -1150,7 +1150,7 @@ export default function Home() {
               </h1>
 
               <p className="hero-fade-up mt-6 max-w-[720px] text-xl font-normal text-slate-400 [animation-delay:280ms]">
-                We ship autonomous operations, not AI pilots. Our engineers embed with your team, automate the work that matters most, and{" "}
+                We ship autonomous agentic solutions, not AI pilots. Our engineers embed with your team, automate the work that matters most, and{" "}
                 <span className="text-cyan-400">only get paid when it saves you money.</span>
               </p>
 
