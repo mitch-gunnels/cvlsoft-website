@@ -1,0 +1,40 @@
+app/components/SiteHeader.tsx
+  s_6b7072c031890e::t_324b8447ca6d4f 16,19
+app/page.tsx
+  s_6b7072c031890e::t_d4882fc8adcbbf 1626-1629,1637,1639-1661,1663
+  s_6b7072c031890e::t_8e6288061f1fa9 281-284,298-308
+  s_6b7072c031890e::t_a8bf4ca5715ccf 1737,1744-1745,1761-1764
+  s_6b7072c031890e::t_44d3253208394d 1748-1749
+  s_6b7072c031890e::t_519da8f4853442 1869-1877
+  s_6b7072c031890e::t_edad4431dd615e 1741
+  s_6b7072c031890e::t_94021f4a133ef6 1630-1634
+  s_6b7072c031890e::t_ef5597360b8dd1 87-94
+PRICING.md
+  s_6b7072c031890e::t_eaf782102b0eb8 152-153
+  s_c682c115493079::t_12a74a4d43c678 1-3,7-151
+  s_6b7072c031890e::t_a3ca6d7a49a3c5 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4f109ff4e45f81098510f37cbe651bcb0b4d3a92",
+  "prompts": {},
+  "sessions": {
+    "s_6b7072c031890e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfb1e5da-12e4-44d5-ac06-0299e2c58c56",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_c682c115493079": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43d0525e-832a-4fd9-8fff-838708787b51",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
