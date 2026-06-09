@@ -1,0 +1,19 @@
+app/page.tsx
+  s_6b7072c031890e::t_58cbd793418f90 1096-1097,1099-1111,1113-1118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3ef30037a6b3d4b668e93490e1f0eec822767963",
+  "prompts": {},
+  "sessions": {
+    "s_6b7072c031890e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfb1e5da-12e4-44d5-ac06-0299e2c58c56",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
