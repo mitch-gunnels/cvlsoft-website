@@ -84,6 +84,14 @@ function IconLink({ className }: { className?: string }) {
   );
 }
 
+function IconBolt({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+    </svg>
+  );
+}
+
 /* ── Section scroll indicator (sticky dot + line) ──
    Single accent (cvlSoft cyan). `tone` lets each section pick the
    surface its rule renders against — `light` for cream sections,
@@ -270,16 +278,10 @@ const FUNNEL_STAGES = [
 
 const DIFFERENTIATORS: { title: string; subtitle: string; description: string; icon: ReactNode }[] = [
   {
-    title: "One brain. Every workflow.",
-    subtitle: "Less to maintain. No tech debt compounds. Reduced attack surface, keeping you safe!",
-    description: "Traditional platforms build a separate agent for every task, leaving you with hundreds of brittle bots to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
-    icon: <IconCpu className="h-5 w-5" />,
-  },
-  {
-    title: "AIOS AI interviews your experts",
-    subtitle: "Capture their know-how before they walk out the door.",
-    description: "AIOS AI conducts voice interviews just like a human, using seven science-backed elicitation techniques to understand how your experts complete complex tasks. While they talk, AIOS AI captures their screen, detects decision signals, and automatically builds certified, executable agentic workflows from what it learns.",
-    icon: <IconEye className="h-5 w-5" />,
+    title: "Time to Earnings",
+    subtitle: "No multi-year pilots. You only pay when it actually saves you money.",
+    description: "We generate measurable earnings impact in weeks, not years, with our pricing tied to a 100% production success bar. Outcome-based by design: every workflow that ships has to pay for itself, or it doesn't ship.",
+    icon: <IconBolt className="h-5 w-5" />,
   },
   {
     title: "Self-evolving autonomous agents",
@@ -292,6 +294,18 @@ const DIFFERENTIATORS: { title: string; subtitle: string; description: string; i
     subtitle: "Can’t take an action your policy doesn’t allow.",
     description: "Every action is blocked unless an explicit policy allows it. A deterministic policy engine with allow/deny controls, global and per-execution kill switches that halt instantly, and human-in-the-loop approval gates with compliance-grade audit logging.",
     icon: <IconShield className="h-5 w-5" />,
+  },
+  {
+    title: "Expert Knowledge Extraction",
+    subtitle: "Capture their know-how before they walk out the door.",
+    description: "AIOS AI conducts voice interviews just like a human, using seven science-backed elicitation techniques to understand how your experts complete complex tasks. While they talk, AIOS AI captures their screen, detects decision signals, and automatically builds certified, executable agentic workflows from what it learns.",
+    icon: <IconEye className="h-5 w-5" />,
+  },
+  {
+    title: "Agnostic Cognitive Core",
+    subtitle: "Less to maintain. No tech debt compounds. Reduced attack surface, keeping you safe!",
+    description: "Traditional platforms build a separate agent for every task, leaving you with hundreds of brittle bots to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
+    icon: <IconCpu className="h-5 w-5" />,
   },
   {
     title: "Universal connector fabric",
@@ -1015,7 +1029,6 @@ export default function Home() {
               ["/#why-aios", "Why AIOS"],
               ["/#pricing", "Pricing"],
               ["/rollout", "Rollout"],
-              ["/case-studies", "Case Studies"],
               ["/platform", "Platform"],
               ["/team", "Team"],
             ].map(([href, label]) => {
@@ -1093,7 +1106,6 @@ export default function Home() {
                 ["/#why-aios", "Why AIOS"],
                 ["/#pricing", "Pricing"],
                 ["/rollout", "Rollout"],
-                ["/case-studies", "Case Studies"],
                 ["/platform", "Platform"],
                 ["/team", "Team"],
               ].map(([href, label]) => (
@@ -1611,20 +1623,44 @@ export default function Home() {
                 right; expanded diagrams are constrained to max-w-[500px]. */}
             <div className="reveal-up overflow-hidden rounded-lg border border-slate-200 border-t-[3px] border-t-cyan-700 bg-white [animation-delay:160ms]">
               {(() => {
-                const illustrations = [
-                  <DiagramOneBrain key="d0" />,
-                  <DiagramInterview key="d1" />,
-                  <DiagramSelfEvolving key="d2" />,
-                  <DiagramSecurity key="d3" />,
-                  <DiagramConnectors key="d4" />,
+                // Index 0 (Time to Earnings) renders as a static lead row — no diagram.
+                // illustrations[i] aligns with DIFFERENTIATORS[i] for i >= 1.
+                const illustrations: (ReactNode | null)[] = [
+                  null,
+                  <DiagramSelfEvolving key="d1" />,
+                  <DiagramSecurity key="d2" />,
+                  <DiagramInterview key="d3" />,
+                  <DiagramOneBrain key="d4" />,
+                  <DiagramConnectors key="d5" />,
                 ];
                 return DIFFERENTIATORS.map((item, i) => {
+                  const isStatic = i === 0;
                   const isExpanded = expandedFeature === i;
+                  const rowClass = i > 0 ? "border-t border-slate-200" : "";
+
+                  if (isStatic) {
+                    return (
+                      <div key={item.title} className={rowClass}>
+                        <div className="grid w-full items-start gap-8 px-6 py-7 lg:grid-cols-[5fr_7fr_auto] lg:items-center lg:gap-14 lg:px-10 lg:py-10">
+                          <div>
+                            <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
+                              {item.title}
+                            </h3>
+                            <p className="mt-2 text-[14px] font-medium leading-snug text-cyan-700 md:text-[15px]">
+                              {item.subtitle}
+                            </p>
+                          </div>
+                          <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
+                            {item.description}
+                          </p>
+                          <span aria-hidden="true" className="hidden lg:block lg:w-[1ch]" />
+                        </div>
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div
-                      key={item.title}
-                      className={i > 0 ? "border-t border-slate-200" : ""}
-                    >
+                    <div key={item.title} className={rowClass}>
                       <button
                         type="button"
                         aria-expanded={isMobile ? false : isExpanded}
@@ -1671,24 +1707,6 @@ export default function Home() {
                 });
               })()}
 
-              {/* Closing summary row — non-clickable, no +/expand affordance.
-                  Locks the section's pitch with the headline outcome. */}
-              <div className="border-t border-slate-200">
-                <div className="grid w-full items-start gap-8 px-6 py-7 lg:grid-cols-[5fr_7fr_auto] lg:items-center lg:gap-14 lg:px-10 lg:py-10">
-                  <div>
-                    <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
-                      Time to Earnings
-                    </h3>
-                    <p className="mt-2 text-[14px] font-medium leading-snug text-cyan-700 md:text-[15px]">
-                      No multi-year pilots. You only pay when it actually saves you money.
-                    </p>
-                  </div>
-                  <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
-                    We generate measurable earnings impact in weeks, not years, with our pricing tied to a <span className="text-cyan-700">100% production success bar.</span>
-                  </p>
-                  <span aria-hidden="true" className="hidden lg:block lg:w-[1ch]" />
-                </div>
-              </div>
             </div>
 
           </div>
@@ -1716,19 +1734,19 @@ export default function Home() {
               {[
                 {
                   title: "Floor Cost Only",
-                  body: "Your platform fee covers the bare cost of running your tenant. Infrastructure, connectors, tokens, security, unlimited users. No margin added.",
+                  body: "Your platform fee covers the bare cost of running your tenant. Infrastructure, connectors, tokens, security, unlimited users.",
                 },
                 {
                   title: "Per-Task Outcomes",
-                  body: "Each workflow has a per-task price anchored to 20-40% of what you'd pay a human. You save 60-80% on every successful task. Token costs baked in.",
+                  body: "Each workflow has a per-task price anchored to 20-40% of what you'd pay a human. You save 60-80% on every successful task.",
                 },
                 {
-                  title: "Failed = Free",
-                  body: "If a task fails, escalates, or gets killed, you pay nothing. AIOS only earns when it delivers. Our incentives are your incentives.",
+                  title: "Failed = Free*",
+                  body: "If a task fails, escalates, or gets killed, you pay no outcome fee. AIOS only earns when it delivers. Our incentives are your incentives.",
                 },
                 {
-                  title: "Defined in writing",
-                  body: "Success criteria locked per workflow before go-live. Quarterly not-to-exceed cap. Dispute window with full trace evidence. Annual true-up.",
+                  title: "Skin in the Game",
+                  body: "Our revenue is tied directly to your savings. If your workflows stop paying for themselves, our paychecks stop too. No one in the building gets paid before you do.",
                 },
               ].map((card) => (
                 <div
@@ -1740,6 +1758,10 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+            <p className="reveal-up mt-6 max-w-3xl text-[13px] leading-relaxed text-slate-500 [animation-delay:240ms]">
+              *Tokens consumed during a failed attempt are passed through at provider cost + 5%. Bring your own key (BYOK) and a failed task is completely free.
+            </p>
           </div>
         </section>
 
@@ -1844,12 +1866,15 @@ export default function Home() {
 
       {/* ── Mobile diagram modal — opens when a Why AIOS row is tapped on mobile ── */}
       {diagramModal !== null && (() => {
-        const illustrations = [
-          <DiagramOneBrain key="d0" />,
-          <DiagramInterview key="d1" />,
-          <DiagramSelfEvolving key="d2" />,
-          <DiagramSecurity key="d3" />,
-          <DiagramConnectors key="d4" />,
+        // Aligned with DIFFERENTIATORS by index. Index 0 (Time to Earnings) is
+        // non-tappable in the row list, so null here is unreachable.
+        const illustrations: (ReactNode | null)[] = [
+          null,
+          <DiagramSelfEvolving key="d1" />,
+          <DiagramSecurity key="d2" />,
+          <DiagramInterview key="d3" />,
+          <DiagramOneBrain key="d4" />,
+          <DiagramConnectors key="d5" />,
         ];
         const item = DIFFERENTIATORS[diagramModal];
         return (

@@ -9,18 +9,14 @@ const NAV_ITEMS: [string, string][] = [
   ["/#why-aios", "Why AIOS"],
   ["/#pricing", "Pricing"],
   ["/rollout", "Rollout"],
-  ["/case-studies", "Case Studies"],
   ["/platform", "Platform"],
   ["/team", "Team"],
 ];
 
-const DARK_ROUTES = new Set(["/rollout", "/case-studies", "/platform", "/team"]);
+const DARK_ROUTES = new Set(["/rollout", "/platform", "/team"]);
 
 function isDarkPath(pathname: string): boolean {
-  if (DARK_ROUTES.has(pathname)) return true;
-  // Dynamic case study detail pages: /case-studies/[slug]
-  if (pathname.startsWith("/case-studies/")) return true;
-  return false;
+  return DARK_ROUTES.has(pathname);
 }
 
 export default function SiteHeader() {

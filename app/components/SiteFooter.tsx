@@ -25,7 +25,6 @@ export default function SiteFooter() {
               <li><a href="/#why-aios" className="text-sm text-slate-500 transition hover:text-white">Why AIOS</a></li>
               <li><a href="/#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
               <li><a href="/rollout" className="text-sm text-slate-500 transition hover:text-white">Rollout</a></li>
-              <li><a href="/case-studies" className="text-sm text-slate-500 transition hover:text-white">Case Studies</a></li>
               <li><a href="/platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
               <li><a href="/team" className="text-sm text-slate-500 transition hover:text-white">Team</a></li>
             </ul>

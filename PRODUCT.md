@@ -95,7 +95,6 @@ Words and phrases that are NOT us:
 | `/` | Hero → Problem → Why AIOS → Platform → Compare → Pricing → Rollout → Team → Demo CTA | Dark hero/CTA/footer, near-white body |
 | `/platform` | Deep-dive: cognitive core, connector fabric, memory engine, governance | Same bookend pattern as `/` |
 | `/about`, `/team`, `/rollout` | Founder + process IP signal | Near-white throughout |
-| `/case-studies` | Outcomes-first, named where possible | Near-white throughout |
 | `/contact` | Single funnel: demo request | Near-white |
 | `/privacy`, `/terms` | Long-form legal | Near-white |
 
