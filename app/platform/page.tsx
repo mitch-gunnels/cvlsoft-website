@@ -93,8 +93,12 @@ export default function PlatformPage() {
           <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_minmax(360px,440px)] lg:items-start lg:gap-16">
             {/* LEFT — capabilities list */}
             <div className="space-y-12">
-              {CAPABILITIES.map((cap) => (
-                <div key={cap.num} className="reveal-up">
+              {CAPABILITIES.map((cap, i) => (
+                <div
+                  key={cap.num}
+                  className={i < 2 ? "hero-fade-up" : "reveal-up"}
+                  style={i === 1 ? { animationDelay: "220ms" } : undefined}
+                >
                   <div className="flex items-baseline gap-3">
                     <span className="font-mono text-[13px] tracking-[0.22em] text-cyan-400">{cap.num}</span>
                     <h3 className="text-xl font-medium tracking-tight text-white md:text-2xl">{cap.title}</h3>
