@@ -1,0 +1,39 @@
+app/privacy/page.tsx
+  s_c301a40fe03a90::t_29fa3c916c559d 14
+  s_c301a40fe03a90::t_e74feb5ab4100f 255-271
+thesis/THESIS.md
+  s_6b7072c031890e::t_71f13cd55e025d 1-6,8,10,12-22,24,26,28-70,72,74-76,78-80,82-84,86,88,90-102,104,108,110,112-130,132,134,136,138,174,176,182,184,186-211,213-215,217,219-251,253
+  s_6b7072c031890e::t_8f50c7373ba661 106,153,178,180
+thesis/RESEARCH_DATA.md
+  s_6b7072c031890e::t_3154c71321f385 1-313
+thesis/COMPETITIVE_MAP.md
+  s_6b7072c031890e::t_f77fdca9a0e959 1-441
+thesis/pdf-style.css
+  s_6b7072c031890e::t_f984235acd03ed 1-165
+thesis/SALES_COLLATERAL.md
+  s_6b7072c031890e::t_855073a7b7c268 1-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "a99ae41312d2fc499bd7cbeac1cc39fd098c9214",
+  "prompts": {},
+  "sessions": {
+    "s_6b7072c031890e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfb1e5da-12e4-44d5-ac06-0299e2c58c56",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_c301a40fe03a90": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "06d9b906-9f02-4bc1-8742-03e9ab363206",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
