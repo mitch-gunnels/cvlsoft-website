@@ -304,7 +304,7 @@ export default function TermsOfService() {
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">Notices:</strong> All legal notices must be sent in writing to
-              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a> or to the address specified in your service agreement.
+              <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a> or to the address specified in your service agreement.
             </p>
           </section>
 
@@ -312,7 +312,7 @@ export default function TermsOfService() {
             <h2 className="text-lg font-medium text-white">22. Contact</h2>
             <p className="mt-3">
               Questions about these Terms? Contact us at:<br />
-              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>
+              <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>
             </p>
           </section>
         </div>

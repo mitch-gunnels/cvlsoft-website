@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
         <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
         <h1 className="text-4xl font-light tracking-[-0.03em] text-white">Privacy Policy</h1>
-        <p className="mt-2 text-sm text-slate-500">Last updated: March 28, 2026</p>
+        <p className="mt-2 text-sm text-slate-500">Last updated: June 18, 2026</p>
 
         <div className="mt-12 space-y-10 text-sm leading-relaxed text-slate-400">
           <section>
@@ -149,7 +149,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Withdraw Consent:</strong> Where processing is based on consent, you may withdraw that consent at any time.</li>
             </ul>
             <p className="mt-3">
-              To exercise any of these rights, contact us at <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>.
+              To exercise any of these rights, contact us at <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>.
               We will respond to verified requests within thirty (30) days. We will not discriminate against you for
               exercising your privacy rights.
             </p>
@@ -170,7 +170,7 @@ export default function PrivacyPolicy() {
               <li><strong className="text-slate-300">Non-Discrimination:</strong> We will not discriminate against you for exercising any of your CCPA/CPRA rights.</li>
             </ul>
             <p className="mt-3">
-              To submit a request, email <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a> with the subject
+              To submit a request, email <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a> with the subject
               line &ldquo;California Privacy Request.&rdquo; We may need to verify your identity before processing your request.
             </p>
           </section>
@@ -211,7 +211,7 @@ export default function PrivacyPolicy() {
               in your jurisdiction). We do not knowingly collect personal information from children. If we become
               aware that we have collected personal information from a child without appropriate consent, we will
               take steps to delete that information promptly. If you believe we have inadvertently collected information
-              from a child, please contact us at <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>.
+              from a child, please contact us at <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>.
             </p>
           </section>
 
@@ -252,14 +252,30 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">18. Contact Us</h2>
+            <h2 className="text-lg font-medium text-white">18. AIOS as an MCP Connector (External AI Agents)</h2>
+            <p className="mt-3">
+              The AIOS platform can be connected to external AI agents (such as Anthropic Claude or OpenAI
+              ChatGPT) as a remote <strong className="text-slate-300">Model Context Protocol (MCP)</strong> connector,
+              allowing those agents to run the workflows you choose to expose. This is opt-in and governed by an
+              OAuth 2.1 sign-in:
+            </p>
+            <ul className="mt-3 list-inside list-disc space-y-2">
+              <li><strong className="text-slate-300">What you authorize:</strong> Connecting an external agent sends you through an AIOS consent screen. The credential it receives is clipped to running and reading workflows &mdash; never more than your own account can do &mdash; and is limited to your own category scope. You choose, per workflow, exactly which input parameters are exposed; nothing is offered to an agent until a tenant administrator activates that exposure.</li>
+              <li><strong className="text-slate-300">What the external agent can see:</strong> Only the name, description, and input schema of your active exposed skills (within the connecting credential&rsquo;s category scope), the parameters the agent supplies on a call, and the execution outcome it reads back. Workflows you have not exposed, and data outside the credential&rsquo;s scope, remain invisible to it.</li>
+              <li><strong className="text-slate-300">Data sent to the AI provider:</strong> When you use such a connector, the parameters and results exchanged with the external agent are also processed by that provider (Anthropic, OpenAI, etc.) under <em>their</em> privacy policy, which you should review. cvlSoft does not control how the connecting provider handles that data.</li>
+              <li><strong className="text-slate-300">Records &amp; control:</strong> AIOS records each external invocation (an audit and billing record retained like any other execution) so administrators retain a full trail. You can withdraw a skill, pause an exposure, or revoke the connector&rsquo;s grant at any time, which immediately stops further access.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-medium text-white">19. Contact Us</h2>
             <p className="mt-3">
               If you have questions about this Privacy Policy, wish to exercise your privacy rights, or have concerns
               about our data practices, contact us at:
             </p>
             <p className="mt-3">
               <strong className="text-slate-300">cvlSoft, LLC</strong><br />
-              Email: <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a><br />
+              Email: <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a><br />
               General: <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a><br />
               516 Huntington Dr., Ball Ground, GA 30107
             </p>

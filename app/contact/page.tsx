@@ -39,7 +39,7 @@ export default function Contact() {
               For technical assistance, account management, security vulnerabilities,
               privacy requests, legal notices, or questions about our Terms of Service
               and Privacy Policy:<br />
-              <a href="mailto:support@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.com</a>
+              <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>
             </p>
             <p className="mt-2 text-sm text-slate-500">
               Support SLAs are defined in your service agreement. Security reports are acknowledged within 24 hours. Privacy requests are processed within 30 days.
