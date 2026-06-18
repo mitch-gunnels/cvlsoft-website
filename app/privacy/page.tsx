@@ -276,7 +276,7 @@ export default function PrivacyPolicy() {
             <p className="mt-3">
               <strong className="text-slate-300">cvlSoft, LLC</strong><br />
               Email: <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a><br />
-              General: <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a><br />
+              General: <a href="mailto:sales@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.net</a><br />
               516 Huntington Dr., Ball Ground, GA 30107
             </p>
             <p className="mt-3">

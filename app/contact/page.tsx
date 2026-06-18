@@ -28,7 +28,7 @@ export default function Contact() {
             <p className="mt-3">
               For general questions, pricing inquiries, enterprise agreements, demo requests,
               or partnership opportunities:<br />
-              <a href="mailto:sales@cvlsoft.com" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.com</a>
+              <a href="mailto:sales@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">sales@cvlsoft.net</a>
             </p>
             <p className="mt-2 text-sm text-slate-500">We typically respond within one business day.</p>
           </section>

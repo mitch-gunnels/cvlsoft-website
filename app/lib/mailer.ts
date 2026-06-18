@@ -117,7 +117,7 @@ function buildConfirmationEmail(firstName: string): string {
 export async function sendConfirmationEmail(to: string, name: string): Promise<void> {
   const firstName = name.split(" ")[0] || "there";
   await transporter.sendMail({
-    from: `"cvlSoft" <sales@cvlsoft.com>`,
+    from: `"cvlSoft" <sales@cvlsoft.net>`,
     to,
     subject: "cvlSoft — AIOS Demo Request",
     html: buildConfirmationEmail(firstName),
@@ -139,8 +139,8 @@ export async function sendNotificationEmail(data: {
   company: string;
 }): Promise<void> {
   await transporter.sendMail({
-    from: `"cvlSoft Website" <sales@cvlsoft.com>`,
-    to: "sales@cvlsoft.com",
+    from: `"cvlSoft Website" <sales@cvlsoft.net>`,
+    to: "sales@cvlsoft.net",
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
     html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">
