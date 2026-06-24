@@ -5,69 +5,36 @@ const CAPABILITIES = [
     num: "01",
     title: "Capture knowledge from your experts",
     lead: "AIOS AI interviews (voice & chat) your experts and watches them work, converting tribal knowledge, undocumented processes, and SOPs into structured workflow primitives.",
-    proofs: [
-      "AI Interviewer runs structured elicitation conversations and authors workflows live.",
-      "AIOS Observer watches a desktop, converses via voice, and documents undocumented processes.",
-      "Visual Workflow Studio: drag-and-drop graph editor with 10 node types and live validation.",
-    ],
     stinger: "AIOS AI extracts SME tacit knowledge.",
   },
   {
     num: "02",
     title: "Generate workflows that adapt",
     lead: "The cognitive core converts captured processes into intent-based, AI-native workflows. Steps describe what to do; the runtime resolves how at execution time.",
-    proofs: [
-      "Workflow Templates seed graphs with mapped fields and data pipelines.",
-      "Conditional branching with replan-on-rerun: three-way verdicts (approved / rerun / rejected) feed back into the plan.",
-      "Knowledge Sets and prompts attach to nodes, so context flows into every step.",
-    ],
     stinger: "Scripted workflows lock you in. AIOS resolves how at runtime.",
   },
   {
     num: "03",
     title: "Govern and validate every action",
     lead: "Plan-before-execute, policy-gated tool calls, and human-in-the-loop approval at every action. Safety is the substrate, not a feature.",
-    proofs: [
-      "Policy engine with per-tenant overrides controlling every tool call.",
-      "Circuit breakers, kill switches, and human-in-the-loop gates at any node.",
-      "Eval Gates: workflows can't promote Draft → Staging → Production without passing trajectory tests, custom LLM evaluators, and regression suites.",
-      "Per-tenant LLM guardrails and an immutable audit ledger that survives cascade deletes.",
-    ],
     stinger: "Most platforms claim guardrails. AIOS proves it with the immutable audit ledger.",
   },
   {
     num: "04",
     title: "Execute adaptively across every system",
     lead: "Adaptive execution against your real systems, with every action audited and scoped to a revocable identity.",
-    proofs: [
-      "Connector ecosystem: REST, DB, terminal, email, Jira, Slack, Google Workspace, LinkedIn, webhooks; encrypted credential vault with auto OAuth refresh.",
-      "Scheduling, webhook gates, and a documented REST API drive runs from any system.",
-      "Multi-tenant isolation, sandbox environments, and MFA + SAML/OIDC + RBAC across 19+ resource types.",
-    ],
     stinger: "Enterprise reliability is a phrase. AIOS proves it with the sandbox and the audit ledger.",
   },
   {
     num: "05",
     title: "Observe everything in real time",
     lead: "See every step the platform takes, from the overall workflow down to each individual decision and tool call. Every action is timed, costed, and replayable.",
-    proofs: [
-      "5-level execution traces (pipeline → agent → LLM → tool → walker node) over WebSocket streams plus OTLP telemetry to Grafana Cloud (Tempo / Loki / Prometheus).",
-      "Every input, output, and decision logged with full lineage.",
-      "Spend tracking: token-level cost ledger per execution, workflow, and tenant.",
-      "Operator Dashboard: daily loop view of approvals, alerts, and run health.",
-    ],
     stinger: "Observability isn't a phrase. AIOS ships the spend ledger, the OTLP pipe, and the dashboard.",
   },
   {
     num: "06",
     title: "Memory that compounds with every run",
     lead: "Every execution feeds layered memory and a self-improving context playbook. The platform doesn't just run workflows; it remembers them.",
-    proofs: [
-      "Layered memory: episodic, semantic-graph, and procedural memory that persists across runs.",
-      "Knowledge RAG: upload, chunk, embed, then attach Knowledge Sets to specific nodes for context-aware execution.",
-      "Three-way verdicts (approved / rerun / rejected) feed plans, evals, and memory simultaneously, so humans, evaluators, and outcomes all write back to the core.",
-      "Evolving Context Playbook: self-improving library with auto-creation, dedup, pruning, and preview.",
-    ],
     stinger: "Most platforms forget between runs. AIOS gets smarter every run.",
   },
 ];
@@ -104,14 +71,6 @@ export default function PlatformPage() {
                     <h3 className="text-xl font-medium tracking-tight text-white md:text-2xl">{cap.title}</h3>
                   </div>
                   <p className="mt-3 text-[15px] leading-relaxed text-slate-300">{cap.lead}</p>
-                  <ul className="mt-4 space-y-2">
-                    {cap.proofs.map((p) => (
-                      <li key={p} className="flex items-start gap-2.5 text-[14px] leading-relaxed text-slate-400">
-                        <span className="mt-[7px] block h-1 w-1 shrink-0 rounded-full bg-cyan-400" />
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
                   <p className="mt-4 border-l-2 border-cyan-400 pl-4 text-[13px] italic leading-relaxed text-slate-500">
                     {cap.stinger}
                   </p>

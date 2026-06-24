@@ -3,7 +3,7 @@ import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { DemoModalProvider } from "./components/DemoModal";
 import ScrollReveal from "./components/ScrollReveal";
-import SiteFooter from "./components/SiteFooter";
+import ConditionalFooter from "./components/ConditionalFooter";
 import "./globals.css";
 
 const headingFont = Space_Grotesk({
@@ -40,7 +40,7 @@ export default function RootLayout({
         <DemoModalProvider>
           <ScrollReveal />
           {children}
-          <SiteFooter />
+          <ConditionalFooter />
         </DemoModalProvider>
         <Analytics />
       </body>
