@@ -139,8 +139,12 @@ export async function sendNotificationEmail(data: {
   company: string;
 }): Promise<void> {
   await transporter.sendMail({
-    from: `"cvlSoft Website" <sales@cvlsoft.net>`,
+    // Send AS the authenticated SMTP account so From != To (sales@cvlsoft.net),
+    // otherwise Gmail files this self-addressed mail in Sent and it never hits
+    // the Inbox. replyTo points at the lead so "Reply" reaches the prospect.
+    from: `"cvlSoft Website" <${process.env.SMTP_USER}>`,
     to: "sales@cvlsoft.net",
+    replyTo: data.email,
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
     html: `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:24px;">

@@ -49,6 +49,21 @@
   box-sizing: border-box;
 }
 
+/* All interactive buttons get a pointer cursor (Tailwind's reset leaves
+   native buttons at the default arrow). Disabled controls show not-allowed. */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+[type="button"]:not(:disabled),
+[type="submit"]:not(:disabled),
+[type="reset"]:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 html {
   scroll-behavior: smooth;
 }

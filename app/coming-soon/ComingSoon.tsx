@@ -59,7 +59,7 @@ export default function ComingSoon() {
             <button
               type="button"
               onClick={openDemoModal}
-              className="cursor-pointer rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20"
+              className="rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20"
             >
               Request early access
             </button>
