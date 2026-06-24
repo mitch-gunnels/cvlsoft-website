@@ -1,0 +1,35 @@
+app/coming-soon/ComingSoon.tsx
+  s_fe5d31d2185068::t_4b706a3772bdd0 1-25,27-30,32-40,43,47-61,63-84
+  s_fe5d31d2185068::t_9684e3d9cbffe6 41-42
+  s_fe5d31d2185068::t_95d508fe0d7289 62
+  s_fe5d31d2185068::t_11b9c10ed37bae 26,31
+  s_fe5d31d2185068::t_b41d34f3c0a006 44-46
+app/components/ConditionalFooter.tsx
+  s_fe5d31d2185068::t_512b620ff7e626 7-9
+  s_fe5d31d2185068::t_800486b9465568 1-6,10-15
+middleware.ts
+  s_fe5d31d2185068::t_be2e37a0812deb 1-20
+app/coming-soon/page.tsx
+  s_fe5d31d2185068::t_785ea7ab658808 1-12
+app/layout.tsx
+  s_fe5d31d2185068::t_aa3b60582f74ab 43
+  s_fe5d31d2185068::t_293edd8b295b08 6
+CLAUDE.md
+  s_fe5d31d2185068::t_7ff283c00fa3c7 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "0fee1dc6d887f6065576c26e08aaddd1be202061",
+  "prompts": {},
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
