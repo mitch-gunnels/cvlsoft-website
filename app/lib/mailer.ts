@@ -43,11 +43,13 @@ interface SendMailOptions {
 
 async function sendMail(opts: SendMailOptions): Promise<void> {
   const transporter = getTransporter();
+  const fromHeader = opts.from ?? SMTP_FROM;
   await transporter.sendMail({
-    from: opts.from ?? SMTP_FROM,
-    // Pin the envelope sender (bounce + SPF) to the authenticated account so a
-    // custom brand From never breaks deliverability — matches the AIOS platform.
-    ...(SMTP_USER ? { sender: SMTP_USER } : {}),
+    from: fromHeader,
+    // Pin the envelope sender (bounce + SPF) to SMTP_FROM only when a custom
+    // From is used, so a custom From never breaks deliverability — matches the
+    // AIOS platform mailer exactly.
+    ...(opts.from && opts.from !== SMTP_FROM ? { sender: SMTP_FROM } : {}),
     to: Array.isArray(opts.to) ? opts.to.join(", ") : opts.to,
     ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
     subject: opts.subject,
