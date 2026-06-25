@@ -1,16 +1,62 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT ?? 465),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+/* SMTP setup mirrors the AIOS platform mailer (apps/api/src/lib/mailer.ts):
+   the visible `From` is a brand address (sales@cvlsoft.net) while the envelope
+   sender — bounce + SPF — stays pinned to the authenticated SMTP account, so a
+   custom From is always deliverable. Env keys accept both the platform's names
+   (SMTP_USERNAME/SMTP_PASSWORD/SMTP_SECURE/SMTP_FROM) and this site's original
+   keys (SMTP_USER/SMTP_PASS) so production keeps working unchanged. */
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = Number(process.env.SMTP_PORT ?? 465);
+const SMTP_SECURE = process.env.SMTP_SECURE
+  ? process.env.SMTP_SECURE === "true"
+  : SMTP_PORT === 465;
+const SMTP_USER = process.env.SMTP_USERNAME ?? process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASSWORD ?? process.env.SMTP_PASS;
+// Visible brand From shown to recipients (overridable per-send).
+const SMTP_FROM = process.env.SMTP_FROM ?? `"cvlSoft" <sales@cvlsoft.net>`;
+
+let _transporter: Transporter | null = null;
+function getTransporter(): Transporter {
+  if (!_transporter) {
+    _transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: SMTP_SECURE,
+      ...(SMTP_USER ? { auth: { user: SMTP_USER, pass: SMTP_PASS } } : {}),
+    });
+  }
+  return _transporter;
+}
+
+interface SendMailOptions {
+  to: string | string[];
+  subject: string;
+  html: string;
+  /** Visible From override; defaults to SMTP_FROM (the brand address). */
+  from?: string;
+  replyTo?: string;
+  attachLogo?: boolean;
+}
+
+async function sendMail(opts: SendMailOptions): Promise<void> {
+  const transporter = getTransporter();
+  await transporter.sendMail({
+    from: opts.from ?? SMTP_FROM,
+    // Pin the envelope sender (bounce + SPF) to the authenticated account so a
+    // custom brand From never breaks deliverability — matches the AIOS platform.
+    ...(SMTP_USER ? { sender: SMTP_USER } : {}),
+    to: Array.isArray(opts.to) ? opts.to.join(", ") : opts.to,
+    ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
+    subject: opts.subject,
+    html: opts.html,
+    ...(opts.attachLogo
+      ? { attachments: [{ filename: "logo.png", content: getLogoBuffer(), cid: "aios-logo" }] }
+      : {}),
+  });
+}
 
 function findLogoPath(): string {
   const candidates = [
@@ -20,6 +66,15 @@ function findLogoPath(): string {
     if (existsSync(p)) return p;
   }
   return candidates[0]!;
+}
+
+// The logo never changes at runtime — read it once instead of per email.
+let _logoBuffer: Buffer | null = null;
+function getLogoBuffer(): Buffer {
+  if (!_logoBuffer) {
+    _logoBuffer = readFileSync(findLogoPath());
+  }
+  return _logoBuffer;
 }
 
 function buildConfirmationEmail(firstName: string): string {
@@ -116,18 +171,13 @@ function buildConfirmationEmail(firstName: string): string {
 
 export async function sendConfirmationEmail(to: string, name: string): Promise<void> {
   const firstName = name.split(" ")[0] || "there";
-  await transporter.sendMail({
-    from: `"cvlSoft" <sales@cvlsoft.net>`,
+  // Visible From = sales@cvlsoft.net (SMTP_FROM); envelope sender stays on the
+  // authenticated account inside sendMail for deliverability.
+  await sendMail({
     to,
     subject: "cvlSoft — AIOS Demo Request",
     html: buildConfirmationEmail(firstName),
-    attachments: [
-      {
-        filename: "logo.png",
-        content: readFileSync(findLogoPath()),
-        cid: "aios-logo",
-      },
-    ],
+    attachLogo: true,
   });
 }
 
@@ -138,11 +188,11 @@ export async function sendNotificationEmail(data: {
   phone: string;
   company: string;
 }): Promise<void> {
-  await transporter.sendMail({
-    // Send AS the authenticated SMTP account so From != To (sales@cvlsoft.net),
-    // otherwise Gmail files this self-addressed mail in Sent and it never hits
-    // the Inbox. replyTo points at the lead so "Reply" reaches the prospect.
-    from: `"cvlSoft Website" <${process.env.SMTP_USER}>`,
+  // Visible From = sales@cvlsoft.net (SMTP_FROM); to = sales@cvlsoft.net. The
+  // envelope sender (set in sendMail) is the authenticated account, so this is
+  // NOT a self-addressed message and lands in the sales@cvlsoft.net Inbox.
+  // replyTo points at the lead so "Reply" reaches the prospect.
+  await sendMail({
     to: "sales@cvlsoft.net",
     replyTo: data.email,
     subject: `New Demo Request: ${data.firstName} ${data.lastName} — ${data.company}`,
