@@ -1,0 +1,19 @@
+app/lib/mailer.ts
+  s_fe5d31d2185068::t_5f54e0a5ddf612 46,48-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "1f8e0b9ecd3021be0c6ae18b36502ef53fb5e218",
+  "prompts": {},
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
