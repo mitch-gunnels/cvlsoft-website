@@ -1,0 +1,40 @@
+telecom/app/lines/[id]/page.tsx
+  s_b42059ab30fd6a::t_00d05e9ad46838 1
+  s_b42059ab30fd6a::t_bfcd08f3871fc5 59-68
+telecom/lib/db/seed.ts
+  s_b42059ab30fd6a::t_1454c08acac2b0 15-16
+  s_b42059ab30fd6a::t_77ecb55922c451 26-31
+  s_b42059ab30fd6a::t_14495cfc04ba6f 70
+telecom/components/Header.tsx
+  s_b42059ab30fd6a::t_b815d295ed11a8 17
+telecom/app/page.tsx
+  s_b42059ab30fd6a::t_b8c61caa69e816 106-111
+  s_b42059ab30fd6a::t_d6f342176852f0 1
+telecom/app/phones/[slug]/page.tsx
+  s_b42059ab30fd6a::t_42faa664459386 1-69
+telecom/app/phones/page.tsx
+  s_b42059ab30fd6a::t_fca6e4ab517711 1-42
+telecom/components/OrderPhone.tsx
+  s_b42059ab30fd6a::t_218a70e277b7e3 1-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "c8c0c4e36e3f19bb10477f29f8b1d68eb4322f8d",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
