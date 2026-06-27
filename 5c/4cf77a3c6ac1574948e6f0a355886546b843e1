@@ -1,0 +1,24 @@
+public/3d97494d327cf5fe6716cee7185722cb.html
+  s_fe5d31d2185068::t_5522a6752a4bee 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "5c4cf77a3c6ac1574948e6f0a355886546b843e1",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
