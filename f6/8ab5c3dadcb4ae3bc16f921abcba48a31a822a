@@ -1,0 +1,30 @@
+telecom/app/phones/page.tsx
+  s_b42059ab30fd6a::t_9f1b2beef7745c 1,3-5
+telecom/app/overview/page.tsx
+  s_b42059ab30fd6a::t_0a794858163cdb 1-119
+telecom/components/Header.tsx
+  s_b42059ab30fd6a::t_b653bb1fe22d20 16,18
+telecom/app/page.tsx
+  s_b42059ab30fd6a::t_86cd021389d78b 3-4,6-7,11-15,19-31,33-36,39-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "f68ab5c3dadcb4ae3bc16f921abcba48a31a822a",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
