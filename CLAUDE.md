@@ -1,17 +1,14 @@
 # CLAUDE.md
 
-## Coming-soon gate (TEMPORARY)
+## Coming-soon gate (REMOVED 2026-06-27)
 
-The site is currently gated behind the coming-soon page. Visiting `/` serves
-`/coming-soon` while keeping the URL at `/`. The real home page is untouched at
-`app/page.tsx`.
+The site is **live** — the coming-soon gate has been removed: `middleware.ts` is
+deleted and `app/components/ConditionalFooter.tsx` no longer lists `"/"` in
+`NO_FOOTER_ROUTES`. `/` serves the real home page (`app/page.tsx`) with the global
+footer. The `/coming-soon` page still exists but is no longer the default.
 
-**To go live (remove the gate):**
-1. Delete `middleware.ts` (the root-path rewrite).
-2. In `app/components/ConditionalFooter.tsx`, remove `"/"` from `NO_FOOTER_ROUTES`
-   (leave `"/coming-soon"`).
-
-After this, `/` serves the real home page again and the global footer returns.
+To re-gate, re-add a root-path rewrite middleware to `/coming-soon` and put `"/"`
+back in `NO_FOOTER_ROUTES`.
 
 ## Monorepo: demo shop (`shop/`)
 
