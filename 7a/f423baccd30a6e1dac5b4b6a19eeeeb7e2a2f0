@@ -1,0 +1,12 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "7af423baccd30a6e1dac5b4b6a19eeeeb7e2a2f0",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
