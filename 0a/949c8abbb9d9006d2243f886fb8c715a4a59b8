@@ -1,0 +1,230 @@
+shop/app/layout.tsx
+  s_b42059ab30fd6a::t_e7854c90800c54 2-43
+  s_c43a41ae3d0705::t_0e3dba81af8f45 1,44-46
+shop/README.md
+  s_b42059ab30fd6a::t_1e7fee4631c240 1,4-8
+  s_b42059ab30fd6a::t_e8a1e08850ee4a 72
+  s_b42059ab30fd6a::t_0c184d5585e1b4 3,10-53,56,58-59,61-63,67,70,75-84,86-89,91-106
+  s_b42059ab30fd6a::t_23bc3770999b56 65
+  s_b42059ab30fd6a::t_df810290a12381 54-55,57,60,64,66,68-69,73-74
+  s_b42059ab30fd6a::t_100acb6ca5d0e1 85,90
+  s_b42059ab30fd6a::t_cb778cbc1a9d77 2
+  s_b42059ab30fd6a::t_1441f3ca51d941 9
+  s_b42059ab30fd6a::t_23fe584cd88bc7 71
+shop/lib/db/index.ts
+  s_b42059ab30fd6a::t_bc11af69bc2573 1-4,9-10,12-31
+  s_b42059ab30fd6a::t_4f7c99bbf80449 5-8,11
+shop/app/api/cart/items/route.ts
+  s_b42059ab30fd6a::t_dc007a195f8ce6 1-12,14-16,18-19,21-28,43-45,51-52,54-62,64-67
+  s_b42059ab30fd6a::t_51571828782b2c 13,17,20,29-42,46-50,53,63
+shop/app/api/cart/items/[id]/route.ts
+  s_b42059ab30fd6a::t_adceb03bcddad9 1-36,43-56
+  s_b42059ab30fd6a::t_5ee69044342856 37-42
+shop/app/orders/page.tsx
+  s_b42059ab30fd6a::t_e707e6da58bc68 1-80
+shop/app/products/[slug]/page.tsx
+  s_b42059ab30fd6a::t_953582ce520d7e 1-7,9-63,76-81,85-90,96-98,110-112,114-122
+  s_b42059ab30fd6a::t_3317497943cba7 8
+  s_b42059ab30fd6a::t_e02e24859e4c80 65,72-75,82-84,91-95,99-109,113
+  s_b42059ab30fd6a::t_e8b576f66e9e30 64,66-71
+shop/app/api/checkout/confirm/route.ts
+  s_b42059ab30fd6a::t_6f1e9485418e9e 1-54
+shop/app/checkout/success/page.tsx
+  s_b42059ab30fd6a::t_28469e8d4580e9 1-95
+shop/lib/db/migrate.ts
+  s_b42059ab30fd6a::t_ffbe2af0403508 1-17
+shop/components/ProductCard.tsx
+  s_b42059ab30fd6a::t_958a81b24e62d7 1-22,33-36
+  s_b42059ab30fd6a::t_eec97b5731f07e 23,25-32
+  s_b42059ab30fd6a::t_d76d5aca612553 24
+shop/app/account/actions.ts
+  s_b42059ab30fd6a::t_8ab217097c5c35 1-24
+shop/app/api/products/[id]/route.ts
+  s_b42059ab30fd6a::t_18e27276712fec 1-21
+shop/app/api/webhooks/stripe/route.ts
+  s_b42059ab30fd6a::t_728eded5bd784b 13
+  s_b42059ab30fd6a::t_83ccb0e37c85ae 1-12,14-56
+shop/app/cart/page.tsx
+  s_b42059ab30fd6a::t_cd3e0cb361139e 1-11,13,21-144,146-210
+  s_b42059ab30fd6a::t_f42d02274fee32 145
+  s_b42059ab30fd6a::t_7ee333639a21a9 12,14-20
+shop/lib/cart.ts
+  s_b42059ab30fd6a::t_ff84698fa592f4 36,42
+  s_b42059ab30fd6a::t_24ed5d731d909c 1-35,37-41,43-67
+shop/components/RequestReturn.tsx
+  s_b42059ab30fd6a::t_a91577a701b7e2 1-43
+shop/lib/ids.ts
+  s_b42059ab30fd6a::t_8fd73235446c79 1-15
+shop/components/BuyBox.tsx
+  s_b42059ab30fd6a::t_0a22fadc8a7e35 1-110
+shop/lib/orders.ts
+  s_b42059ab30fd6a::t_e2649ca9594faf 38
+  s_b42059ab30fd6a::t_a031b0e5ce956e 2-37,39-62,64,73-74,79-99
+  s_b42059ab30fd6a::t_ba4a87d015d282 1
+  s_b42059ab30fd6a::t_55845926374c7a 63,65-72,75-78
+shop/docker-compose.yml
+  s_b42059ab30fd6a::t_b193cfaed96ca9 1-17
+tsconfig.json
+  s_b42059ab30fd6a::t_034820d5888cd5 33
+eslint.config.mjs
+  s_b42059ab30fd6a::t_4c6cee21ef78ed 15-17
+shop/lib/stripe.ts
+  s_b42059ab30fd6a::t_aa249bec77d0d2 1-20
+shop/app/globals.css
+  s_b42059ab30fd6a::t_97af2afbf8fd34 4-35
+  s_c43a41ae3d0705::t_88bc6725eb31c0 1-3
+shop/app/account/page.tsx
+  s_b42059ab30fd6a::t_bf13302a07aba2 1-72
+shop/app/api/checkout/route.ts
+  s_b42059ab30fd6a::t_c348dec743b536 2-35,46,48-80
+  s_b42059ab30fd6a::t_f83d4f33181e5f 36-45,47
+  s_b42059ab30fd6a::t_3075c204d994c8 1
+shop/app/orders/[id]/page.tsx
+  s_b42059ab30fd6a::t_2c19cb0d6b6f1d 1-105
+shop/app/api/me/route.ts
+  s_b42059ab30fd6a::t_7da6542c890192 1-11
+shop/drizzle.config.ts
+  s_b42059ab30fd6a::t_c872ba6b9e1925 1
+  s_b42059ab30fd6a::t_b86e9150db4c0b 2-13
+CLAUDE.md
+  s_b42059ab30fd6a::t_52380d762255d2 15-17,19-31
+  s_b42059ab30fd6a::t_0ef60bd6ff3b57 18
+shop/drizzle/0000_careless_christian_walker.sql
+  s_b42059ab30fd6a::t_8b69c9ef9faf51 1-121
+shop/lib/config.ts
+  s_b42059ab30fd6a::t_e02ac53e6c1510 6-11
+  s_b42059ab30fd6a::t_18de0eb0f9b6ae 3-5
+  s_b42059ab30fd6a::t_5f0fcd05bc5b2a 12-14
+  s_b42059ab30fd6a::t_9ff1d103d0ac9c 1-2,15-24
+shop/lib/db/seed.ts
+  s_b42059ab30fd6a::t_5cbb0c09e266bc 10
+  s_b42059ab30fd6a::t_9392fbafe1f393 47-50,53-54,57-66,69-72,75-76,79-80
+  s_b42059ab30fd6a::t_d2fdff6a1dbc7d 93
+  s_b42059ab30fd6a::t_1533af5d0c5c95 1-9,11-15,19-20,26-27,31-33,39,42-45,81-88,103-104,106-113,115-116,118-122,148-151,153-154,157-160,162-166,168-198,200-212
+  s_b42059ab30fd6a::t_57b261c3cad4e9 199
+  s_b42059ab30fd6a::t_092614b0052742 16-18,21-25,28-30,34-38,40-41,46,51-52,55-56,67-68,73-74,77-78,89-92,94-102,105,117,123-143,145-147,152,155-156,161,167
+  s_b42059ab30fd6a::t_ef36104f8997da 114
+  s_b42059ab30fd6a::t_b27cb0ffd09492 144
+shop/app/api/categories/route.ts
+  s_b42059ab30fd6a::t_f4b723d1d11aed 1-20
+shop/app/api/orders/[id]/route.ts
+  s_b42059ab30fd6a::t_6bb10543d440f9 1-24
+shop/app/api/products/route.ts
+  s_b42059ab30fd6a::t_0e0c8bbe185159 1-58
+shop/next.config.ts
+  s_b42059ab30fd6a::t_c30daabba174ed 8-17
+  s_b42059ab30fd6a::t_5ccc11c2fc3934 4-7
+  s_b42059ab30fd6a::t_f54ed9c2ce88a0 1-3
+  s_b42059ab30fd6a::t_81f4957970ea82 18-20
+shop/lib/serializers.ts
+  s_b42059ab30fd6a::t_1161cc759cbade 62
+  s_b42059ab30fd6a::t_e483017990bfff 44-61,63-75,77-83,85-88
+  s_b42059ab30fd6a::t_aa562d961b4c40 25-35
+  s_b42059ab30fd6a::t_ec2bef178db40b 1,10-24,36-43,89-92
+  s_b42059ab30fd6a::t_64d22a2acbd1f7 76,84
+  s_b42059ab30fd6a::t_104c5837c3a6d6 2-9
+shop/lib/auth.ts
+  s_b42059ab30fd6a::t_fbb040fc54b6ea 1-38
+shop/package.json
+  s_b42059ab30fd6a::t_b64c05e734a670 12,15
+  s_b42059ab30fd6a::t_73b2e640378bba 6-11,13-14
+  s_b42059ab30fd6a::t_413b910b8329b0 3-5
+  s_b42059ab30fd6a::t_337d4c3cdfda55 16-18
+  s_b42059ab30fd6a::t_08caa5843cc10f 1-2,19-42
+shop/app/api/orders/route.ts
+  s_b42059ab30fd6a::t_e11f3eb10a98ed 1-18
+shop/lib/storefront.ts
+  s_b42059ab30fd6a::t_c8bf2f5b119b65 1-56
+shop/app/api/returns/route.ts
+  s_b42059ab30fd6a::t_888ac28177e3e0 24,31-35,39,42,61-64,70-74,81-96,106,112-119
+  s_b42059ab30fd6a::t_6c6d45ea6e5e5d 1-3,5-23,25-30,36-38,40-41,43-60,65-69,75-80,97-105,107-111,120-127
+  s_b42059ab30fd6a::t_135b587f332e5a 4
+shop/app/api/openapi/route.ts
+  s_b42059ab30fd6a::t_535b8e37337b26 77
+  s_b42059ab30fd6a::t_8fea80456646ab 139,143-152
+  s_b42059ab30fd6a::t_a8fa453a3e673c 1-76,78-138,140-142,153-166
+shop/lib/db/schema.ts
+  s_b42059ab30fd6a::t_70dad2df5be8a0 159-160
+  s_b42059ab30fd6a::t_fd092b6943b2cf 177-178
+  s_b42059ab30fd6a::t_ff08650377ec80 1-36,54-94,97-98,106-138,140,142-158,161-176,179-265
+  s_b42059ab30fd6a::t_a394320e09d442 37-53
+  s_b42059ab30fd6a::t_1a011527dd0ead 95-96,99-105
+  s_b42059ab30fd6a::t_152cdad7a126c2 139,141
+  s_b42059ab30fd6a::t_4a29c41d91a2f7 266
+shop/lib/load-env.ts
+  s_b42059ab30fd6a::t_8c55ac26a75b3d 1-10
+shop/app/page.tsx
+  s_b42059ab30fd6a::t_a35b982596b9d2 1-5,9-20,22-23,26-63
+  s_b42059ab30fd6a::t_5bfaf5bedd500f 7-8
+  s_b42059ab30fd6a::t_f7ce308d9961af 21,24-25
+  s_b42059ab30fd6a::t_8c9125d95881be 6
+  s_b42059ab30fd6a::t_d16467e1ede875 64-66
+shop/app/api/cart/route.ts
+  s_b42059ab30fd6a::t_c577dac869dd3f 1-22
+shop/components/Header.tsx
+  s_b42059ab30fd6a::t_36f884a4358a9c 1-52
+shop/app/products/page.tsx
+  s_b42059ab30fd6a::t_ed14000a445cb6 24
+  s_b42059ab30fd6a::t_e58bf866fe6f21 1-23,25-62
+shop/lib/api.ts
+  s_b42059ab30fd6a::t_b5ae03dcf3ed1e 1-74
+shop/.gitignore
+  s_b42059ab30fd6a::t_929707d10fcb6b 1-41
+shop/AGENTS.md
+  s_b42059ab30fd6a::t_5f36775ab4be13 1-5
+shop/CLAUDE.md
+  s_b42059ab30fd6a::t_6b7458704b2386 1
+shop/drizzle/meta/0000_snapshot.json
+  s_b42059ab30fd6a::t_7477a7583b8fbc 1-843
+shop/drizzle/meta/_journal.json
+  s_b42059ab30fd6a::t_89e490cb908367 1-13
+shop/eslint.config.mjs
+  s_b42059ab30fd6a::t_8febd509e1ed4f 1-18
+shop/pnpm-lock.yaml
+  s_b42059ab30fd6a::t_00119e343073e9 1-5147
+shop/pnpm-workspace.yaml
+  s_b42059ab30fd6a::t_1f17270594b9a6 1-3
+shop/postcss.config.mjs
+  s_b42059ab30fd6a::t_c19680a9a502c4 1-7
+shop/public/file.svg
+  s_b42059ab30fd6a::t_c62d705513726a 1
+shop/public/globe.svg
+  s_b42059ab30fd6a::t_0b4679f774abea 1
+shop/public/next.svg
+  s_b42059ab30fd6a::t_850e3945444c75 1
+shop/public/vercel.svg
+  s_b42059ab30fd6a::t_ae1abf3e7916dc 1
+shop/public/window.svg
+  s_b42059ab30fd6a::t_ad7d8ddea5e7d9 1
+shop/tsconfig.json
+  s_b42059ab30fd6a::t_a229e7b7f34138 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "0a949c8abbb9d9006d2243f886fb8c715a4a59b8",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_c43a41ae3d0705": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "be5c902e-0cba-47f0-99a9-d608be5ff340",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
