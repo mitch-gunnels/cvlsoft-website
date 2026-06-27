@@ -1,0 +1,173 @@
+telecom/components/NewTicket.tsx
+  s_b42059ab30fd6a::t_c2401e6775f04b 1-57
+telecom/app/api/lines/[id]/route.ts
+  s_b42059ab30fd6a::t_45f99b5bb3debb 1-40
+telecom/app/api/network/route.ts
+  s_b42059ab30fd6a::t_2a6e4f2f4754ff 1-30
+telecom/app/account/actions.ts
+  s_b42059ab30fd6a::t_ff7ff0adae4f3a 1-19
+telecom/lib/serializers.ts
+  s_b42059ab30fd6a::t_de3941378047ed 1-113
+telecom/app/api/devices/[id]/route.ts
+  s_b42059ab30fd6a::t_451b807f1db789 1-17
+telecom/lib/ids.ts
+  s_b42059ab30fd6a::t_0d1d3109eaeff1 9-17
+  s_b42059ab30fd6a::t_ea4f795c5db0bf 6-8
+  s_b42059ab30fd6a::t_c98cdc19ef2877 18-19
+  s_b42059ab30fd6a::t_5e5aedbc3a170d 1-5
+telecom/components/PayButton.tsx
+  s_b42059ab30fd6a::t_1f8609adac3455 1-37
+telecom/app/api/bills/[id]/route.ts
+  s_b42059ab30fd6a::t_dd8c89eb6e638d 1-22
+eslint.config.mjs
+  s_b42059ab30fd6a::t_645fc70a2f132f 18-19
+telecom/components/LineActions.tsx
+  s_b42059ab30fd6a::t_37ebe8dcd63db9 1-85
+telecom/app/support/page.tsx
+  s_b42059ab30fd6a::t_dccb80ab614b0e 1-58
+tsconfig.json
+  s_b42059ab30fd6a::t_d30453e8166d63 33
+telecom/lib/db/seed.ts
+  s_b42059ab30fd6a::t_8cf1cf2b58537b 1-237
+telecom/app/plans/page.tsx
+  s_b42059ab30fd6a::t_433f04cfdf94f4 1-43
+telecom/app/lines/[id]/page.tsx
+  s_b42059ab30fd6a::t_5483f90ccb89a0 1-75
+telecom/package.json
+  s_b42059ab30fd6a::t_811499dfdffbdd 2-8
+  s_b42059ab30fd6a::t_3bee64c2f4a6ee 1
+  s_b42059ab30fd6a::t_ee5bfcbddc667c 9-11
+  s_b42059ab30fd6a::t_a2bc87f3108802 12-42
+telecom/app/api/lines/route.ts
+  s_b42059ab30fd6a::t_402c3c7ea5f4f4 1-56
+telecom/lib/config.ts
+  s_b42059ab30fd6a::t_2b67447ea5f271 1-33
+telecom/lib/account.ts
+  s_b42059ab30fd6a::t_75250a6e1bda15 1-35
+telecom/app/layout.tsx
+  s_b42059ab30fd6a::t_a13f638c9dd7cc 1-31
+telecom/app/page.tsx
+  s_b42059ab30fd6a::t_3841ed55531b1a 1-115
+telecom/app/api/tickets/route.ts
+  s_b42059ab30fd6a::t_4fc68a3876a42f 1-43
+telecom/app/api/usage/route.ts
+  s_b42059ab30fd6a::t_48c67ea08d3be6 1-34
+telecom/app/api/plans/[id]/route.ts
+  s_b42059ab30fd6a::t_67de495aeeb0c4 1-17
+telecom/docker-compose.yml
+  s_b42059ab30fd6a::t_4adb3c221ac7ae 1-17
+telecom/app/api/lines/[id]/device/route.ts
+  s_b42059ab30fd6a::t_65c458efcbcc75 1-38
+telecom/lib/db/schema.ts
+  s_b42059ab30fd6a::t_cc3a996696ecad 1-205
+telecom/app/account/page.tsx
+  s_b42059ab30fd6a::t_e2a8784d84d33a 1-53
+telecom/drizzle/0000_naive_maximus.sql
+  s_b42059ab30fd6a::t_dfede5c5a14fac 1-110
+telecom/app/api/openapi/route.ts
+  s_b42059ab30fd6a::t_8fcccc9b0ef25d 1-91
+telecom/app/api/bills/route.ts
+  s_b42059ab30fd6a::t_9f0ff75c0dcd20 1-18
+telecom/app/api/bills/[id]/pay/route.ts
+  s_b42059ab30fd6a::t_1f28bae1e3ad56 1-38
+telecom/components/Header.tsx
+  s_b42059ab30fd6a::t_084ceb95f7fc5a 1-28
+telecom/app/bills/[id]/page.tsx
+  s_b42059ab30fd6a::t_cbcc6b8c9a5218 1-64
+telecom/app/globals.css
+  s_b42059ab30fd6a::t_f647ec36d9f844 1-40
+telecom/app/api/lines/[id]/plan/route.ts
+  s_b42059ab30fd6a::t_4348e884a86bd0 1-34
+telecom/app/api/lines/[id]/upgrade/route.ts
+  s_b42059ab30fd6a::t_d16a010e86201e 1-35
+telecom/lib/auth.ts
+  s_b42059ab30fd6a::t_8fa70986a2460b 6-13
+  s_7b355e4dbb1576::t_954bd1a9255927 1-5,14-38
+telecom/app/api/network/report/route.ts
+  s_b42059ab30fd6a::t_d3adc718741361 1-51
+telecom/README.md
+  s_b42059ab30fd6a::t_fc73f9b6eedb46 1-55
+telecom/app/api/me/route.ts
+  s_b42059ab30fd6a::t_caa4fc4e242c8b 1-33
+telecom/app/bills/page.tsx
+  s_b42059ab30fd6a::t_0c49b26ada994b 1-53
+telecom/app/api/devices/route.ts
+  s_b42059ab30fd6a::t_9f6559e8122a81 1-16
+telecom/components/NetworkCheck.tsx
+  s_b42059ab30fd6a::t_9f0b820548cf15 1-48
+telecom/app/api/plans/route.ts
+  s_b42059ab30fd6a::t_8e14ac2da5fdcf 1-16
+telecom/.gitignore
+  s_b42059ab30fd6a::t_282398e205787f 1-41
+telecom/AGENTS.md
+  s_b42059ab30fd6a::t_ecc25c5e575685 1-5
+telecom/CLAUDE.md
+  s_b42059ab30fd6a::t_e0cde81809567d 1
+telecom/drizzle.config.ts
+  s_b42059ab30fd6a::t_fc0e18bf5abcb2 1-13
+telecom/drizzle/meta/0000_snapshot.json
+  s_b42059ab30fd6a::t_b4369486dcd398 1-742
+telecom/drizzle/meta/_journal.json
+  s_b42059ab30fd6a::t_5287ec76520655 1-13
+telecom/eslint.config.mjs
+  s_b42059ab30fd6a::t_df9f5f6d339efc 1-18
+telecom/lib/api.ts
+  s_b42059ab30fd6a::t_8e8530e863e1cf 1-74
+telecom/lib/db/index.ts
+  s_b42059ab30fd6a::t_6071740e3f32ea 1-31
+telecom/lib/db/migrate.ts
+  s_b42059ab30fd6a::t_2c56cea5e1b020 1-17
+telecom/lib/load-env.ts
+  s_b42059ab30fd6a::t_f9f6187025b71c 1-10
+telecom/lib/stripe.ts
+  s_b42059ab30fd6a::t_c643df16cbc3ad 1-20
+telecom/next.config.ts
+  s_b42059ab30fd6a::t_428004180d4e58 1-20
+telecom/pnpm-lock.yaml
+  s_b42059ab30fd6a::t_e696c648a1f563 1-5147
+telecom/pnpm-workspace.yaml
+  s_b42059ab30fd6a::t_76b21260b2578c 1-3
+telecom/postcss.config.mjs
+  s_b42059ab30fd6a::t_07d4ab62d2dee2 1-7
+telecom/public/file.svg
+  s_b42059ab30fd6a::t_e618eca111cac4 1
+telecom/public/globe.svg
+  s_b42059ab30fd6a::t_4666601b191c2a 1
+telecom/public/next.svg
+  s_b42059ab30fd6a::t_0fc7011f6810fd 1
+telecom/public/vercel.svg
+  s_b42059ab30fd6a::t_185d8587f479dd 1
+telecom/public/window.svg
+  s_b42059ab30fd6a::t_e5c6922254dbe1 1
+telecom/tsconfig.json
+  s_b42059ab30fd6a::t_c3c736c1f9732e 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "2d3a98f721394f81690840d17a6cbb264f55abb0",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_7b355e4dbb1576": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cefe8b8a-f163-4271-b591-357681283b82",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
