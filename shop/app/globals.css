@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf8f3;
+  --surface: #ffffff;
+  --foreground: #1c1917;
+  --muted: #78716c;
+  --border: #e7e2d8;
+  --accent: #3f4a3c;
+  --accent-foreground: #faf8f3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Thin, quiet rules and tracking for the editorial look. */
+.tracking-label {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
