@@ -1,0 +1,26 @@
+app/components/ConditionalFooter.tsx
+  s_b42059ab30fd6a::t_56d5ab28635fed 7
+CLAUDE.md
+  s_b42059ab30fd6a::t_e9044bfc1bf3cc 3,5-8,10-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "e2a95c0f08fa1c532adae195cacd8a167774229b",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
