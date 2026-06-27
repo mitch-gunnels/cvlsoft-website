@@ -1,0 +1,17 @@
+# Local Postgres for the Beacon Mobile telecom demo. Port 5434 avoids clashing
+# with the shop DB (5433).  Start:  docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: cvlsoft-telecom-db
+    environment:
+      POSTGRES_USER: telecom
+      POSTGRES_PASSWORD: telecom
+      POSTGRES_DB: telecom
+    ports:
+      - "5434:5432"
+    volumes:
+      - telecom_pgdata:/var/lib/postgresql/data
+
+volumes:
+  telecom_pgdata:
