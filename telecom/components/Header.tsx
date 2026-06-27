@@ -13,9 +13,9 @@ export async function Header() {
           {BRAND.name}
         </Link>
         <nav className="hidden sm:flex items-center gap-6 text-sm text-muted">
-          <Link href="/" className="hover:text-foreground">Overview</Link>
-          <Link href="/phones" className="hover:text-foreground">Phones</Link>
+          <Link href="/" className="hover:text-foreground">Phones</Link>
           <Link href="/plans" className="hover:text-foreground">Plans</Link>
+          <Link href="/overview" className="hover:text-foreground">Overview</Link>
           <Link href="/bills" className="hover:text-foreground">Billing</Link>
           <Link href="/support" className="hover:text-foreground">Support</Link>
         </nav>

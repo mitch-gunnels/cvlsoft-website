@@ -1,119 +1,58 @@
 import Image from "next/image";
 import Link from "next/link";
-import { and, asc, eq } from "drizzle-orm";
-import { ArrowRight, CreditCard, Smartphone } from "lucide-react";
+import { asc, eq } from "drizzle-orm";
+import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
-import { bills, lines } from "@/lib/db/schema";
-import { customerFromCookie } from "@/lib/auth";
-import { formatPrice } from "@/lib/config";
-import { serializeLine } from "@/lib/serializers";
+import { devices } from "@/lib/db/schema";
+import { BRAND, formatPrice } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-function UsageBar({ pct, overage }: { pct: number | null; overage: boolean }) {
-  if (pct === null)
-    return <div className="mt-2 text-xs text-muted">Unlimited data</div>;
-  const color = overage ? "bg-bad" : pct >= 80 ? "bg-warn" : "bg-accent";
-  return (
-    <div className="mt-2">
-      <div className="h-2 w-full overflow-hidden rounded-full bg-border">
-        <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-}
-
-export default async function Dashboard() {
-  const customer = await customerFromCookie();
-
-  if (!customer) {
-    return (
-      <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <h1 className="text-2xl font-semibold">Welcome to Beacon Mobile</h1>
-        <p className="mt-3 text-muted">Pick a demo account to view its lines, usage, and bills.</p>
-        <Link href="/account" className="mt-6 inline-block rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
-          Choose an account
-        </Link>
-      </div>
-    );
-  }
-
-  const [custLines, dueBills] = await Promise.all([
-    db.query.lines.findMany({ where: eq(lines.customerId, customer.id), with: { plan: true, device: true }, orderBy: asc(lines.createdAt) }),
-    db.query.bills.findMany({ where: and(eq(bills.customerId, customer.id), eq(bills.status, "due")) }),
-  ]);
-  const balance = dueBills.reduce((s, b) => s + b.totalCents, 0);
-  const nextDue = dueBills.map((b) => b.dueDate).sort((a, b) => +new Date(a) - +new Date(b))[0];
+export default async function Home() {
+  const rows = await db.query.devices.findMany({
+    where: eq(devices.active, true),
+    orderBy: asc(devices.priceCents),
+  });
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="label text-muted">Account {customer.accountNumber}</p>
-          <h1 className="mt-1 text-2xl font-semibold">Hi, {customer.name.split(" ")[0]}</h1>
-        </div>
+      {/* Hero */}
+      <section className="rounded-3xl border border-border bg-surface px-8 py-12 text-center sm:py-16">
+        <p className="label text-accent">{BRAND.tagline}</p>
+        <h1 className="mx-auto mt-3 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
+          The latest phones on a network that just works.
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-muted">
+          Shop devices, pick a plan, and manage everything in one place — free shipping, no activation fees.
+        </p>
+        <Link href="/overview" className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
+          Go to my account <ArrowRight className="h-4 w-4" />
+        </Link>
+      </section>
+
+      {/* Phone storefront */}
+      <div className="mt-12 flex items-baseline justify-between">
+        <h2 className="text-2xl font-semibold">Shop phones</h2>
+        <Link href="/plans" className="text-sm text-accent hover:underline">Compare plans →</Link>
       </div>
 
-      {/* Balance card */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="sm:col-span-2 rounded-2xl border border-border bg-surface p-6">
-          <p className="label text-muted">Balance due</p>
-          <p className="mt-1 text-3xl font-semibold">{formatPrice(balance)}</p>
-          <p className="mt-1 text-sm text-muted">
-            {balance > 0 && nextDue ? `Due ${new Date(nextDue).toLocaleDateString()}` : "You're all paid up."}
-          </p>
-          {balance > 0 && (
-            <Link href="/bills" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground hover:opacity-90">
-              <CreditCard className="h-4 w-4" /> Pay bill
-            </Link>
-          )}
-        </div>
-        <div className="rounded-2xl border border-border bg-surface p-6">
-          <p className="label text-muted">Lines</p>
-          <p className="mt-1 text-3xl font-semibold">{custLines.length}</p>
-          <Link href="/plans" className="mt-4 inline-flex items-center gap-1 text-sm text-accent hover:underline">
-            Compare plans <ArrowRight className="h-3.5 w-3.5" />
+      <div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
+        {rows.map((d) => (
+          <Link key={d.id} href={`/phones/${d.slug}`} className="group rounded-2xl border border-border bg-surface p-4 hover:border-accent/40">
+            <div className="relative aspect-square overflow-hidden rounded-xl bg-background">
+              <Image src={d.imageUrl} alt={d.name} fill sizes="(max-width:640px) 50vw, 300px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <p className="label mt-3 text-muted">{d.brand}</p>
+            <div className="mt-0.5 flex items-baseline justify-between gap-2">
+              <h3 className="font-medium">{d.name}</h3>
+              <span className="text-sm text-muted">{d.storage}</span>
+            </div>
+            <p className="mt-1 text-sm">
+              <span className="font-medium">{formatPrice(d.monthlyCents)}/mo</span>
+              <span className="text-muted"> · {formatPrice(d.priceCents)}</span>
+            </p>
           </Link>
-        </div>
-      </div>
-
-      {/* Lines */}
-      <h2 className="mt-10 text-lg font-semibold">Your lines</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        {custLines.map((l) => {
-          const s = serializeLine(l);
-          return (
-            <Link key={l.id} href={`/lines/${l.id}`} className="rounded-2xl border border-border bg-surface p-5 hover:border-accent/40">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-medium">{l.nickname || "Line"}</p>
-                  <p className="text-sm text-muted">{l.phoneNumber}</p>
-                </div>
-                <span className={`rounded-full px-2 py-0.5 text-xs ${l.status === "active" ? "bg-ok/10 text-ok" : "bg-border text-muted"}`}>
-                  {l.status}
-                </span>
-              </div>
-              <div className="mt-4 flex items-center justify-between text-sm">
-                <span className="text-muted">{s.plan.name}</span>
-                <span className={s.usage.overage ? "text-bad font-medium" : "text-foreground"}>
-                  {s.usage.used} / {s.usage.limit}
-                </span>
-              </div>
-              <UsageBar pct={s.usage.percentUsed} overage={s.usage.overage} />
-              {s.usage.overage && (
-                <p className="mt-2 text-xs text-bad">Over by {Math.round(s.usage.overageMb / 1024 * 10) / 10} GB — consider Unlimited.</p>
-              )}
-              <div className="mt-3 flex items-center gap-2 text-xs text-muted">
-                {l.device ? (
-                  <Image src={l.device.imageUrl} alt={l.device.name} width={28} height={28} className="h-7 w-7 rounded-md border border-border object-cover" />
-                ) : (
-                  <Smartphone className="h-3.5 w-3.5" />
-                )}
-                {l.device ? l.device.name : "No device on file"}
-              </div>
-            </Link>
-          );
-        })}
+        ))}
       </div>
     </div>
   );
