@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { and, asc, eq } from "drizzle-orm";
 import { ArrowRight, CreditCard, Smartphone } from "lucide-react";
@@ -102,8 +103,12 @@ export default async function Dashboard() {
               {s.usage.overage && (
                 <p className="mt-2 text-xs text-bad">Over by {Math.round(s.usage.overageMb / 1024 * 10) / 10} GB — consider Unlimited.</p>
               )}
-              <div className="mt-3 flex items-center gap-1.5 text-xs text-muted">
-                <Smartphone className="h-3.5 w-3.5" />
+              <div className="mt-3 flex items-center gap-2 text-xs text-muted">
+                {l.device ? (
+                  <Image src={l.device.imageUrl} alt={l.device.name} width={28} height={28} className="h-7 w-7 rounded-md border border-border object-cover" />
+                ) : (
+                  <Smartphone className="h-3.5 w-3.5" />
+                )}
                 {l.device ? l.device.name : "No device on file"}
               </div>
             </Link>

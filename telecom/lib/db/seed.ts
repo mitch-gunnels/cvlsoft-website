@@ -12,8 +12,8 @@ import {
 } from "./schema";
 import { invoiceNumber, phoneNumber, ticketNumber } from "../ids";
 
-const img = (slug: string) =>
-  `https://picsum.photos/seed/beacon-${slug}/600/600`;
+const img = (id: string) =>
+  `https://images.unsplash.com/photo-${id}?w=800&q=80&auto=format&fit=crop`;
 
 const PLANS = [
   { slug: "essentials", name: "Essentials", priceCents: 3500, dataGb: 5, hotspotGb: 0, perks: ["5G access", "Unlimited talk & text"], description: "A simple plan for light data users." },
@@ -23,12 +23,12 @@ const PLANS = [
 ];
 
 const DEVICES = [
-  { slug: "aurora-x", name: "Aurora X", brand: "Aurora", priceCents: 99900, storage: "256 GB", colors: ["Midnight", "Silver", "Sky"], description: "Flagship 6.7\" OLED, triple camera, all-day battery." },
-  { slug: "aurora-x-pro", name: "Aurora X Pro", brand: "Aurora", priceCents: 119900, storage: "512 GB", colors: ["Graphite", "Gold"], description: "Pro-grade cameras and the fastest Aurora chip yet." },
-  { slug: "nova-5", name: "Nova 5", brand: "Nova", priceCents: 69900, storage: "128 GB", colors: ["Black", "Mint", "Coral"], description: "Balanced mid-range with a bright 120 Hz display." },
-  { slug: "nova-5-lite", name: "Nova 5 Lite", brand: "Nova", priceCents: 49900, storage: "128 GB", colors: ["Black", "Blue"], description: "Great everyday phone at a friendly price." },
-  { slug: "pulse-a", name: "Pulse A", brand: "Pulse", priceCents: 39900, storage: "64 GB", colors: ["Slate", "White"], description: "Reliable budget 5G for the essentials." },
-  { slug: "zenith-fold", name: "Zenith Fold", brand: "Zenith", priceCents: 159900, storage: "512 GB", colors: ["Obsidian"], description: "Foldable flagship with a tablet-sized inner screen." },
+  { slug: "aurora-x", name: "Aurora X", brand: "Aurora", imgId: "1592750475338-74b7b21085ab", priceCents: 99900, storage: "256 GB", colors: ["Midnight", "Silver", "Sky"], description: "Flagship 6.7\" OLED, triple camera, all-day battery." },
+  { slug: "aurora-x-pro", name: "Aurora X Pro", brand: "Aurora", imgId: "1574944985070-8f3ebc6b79d2", priceCents: 119900, storage: "512 GB", colors: ["Graphite", "Gold"], description: "Pro-grade cameras and the fastest Aurora chip yet." },
+  { slug: "nova-5", name: "Nova 5", brand: "Nova", imgId: "1580910051074-3eb694886505", priceCents: 69900, storage: "128 GB", colors: ["Black", "Mint", "Coral"], description: "Balanced mid-range with a bright 120 Hz display." },
+  { slug: "nova-5-lite", name: "Nova 5 Lite", brand: "Nova", imgId: "1605236453806-6ff36851218e", priceCents: 49900, storage: "128 GB", colors: ["Black", "Blue"], description: "Great everyday phone at a friendly price." },
+  { slug: "pulse-a", name: "Pulse A", brand: "Pulse", imgId: "1567581935884-3349723552ca", priceCents: 39900, storage: "64 GB", colors: ["Slate", "White"], description: "Reliable budget 5G for the essentials." },
+  { slug: "zenith-fold", name: "Zenith Fold", brand: "Zenith", imgId: "1610945265064-0e34e5519bbf", priceCents: 159900, storage: "512 GB", colors: ["Obsidian"], description: "Foldable flagship with a tablet-sized inner screen." },
 ];
 
 const CUSTOMERS = [
@@ -67,7 +67,7 @@ async function main() {
 
   const insDevices = await db
     .insert(devices)
-    .values(DEVICES.map((d) => ({ ...d, imageUrl: img(d.slug), monthlyCents: monthly(d.priceCents) })))
+    .values(DEVICES.map(({ imgId, ...d }) => ({ ...d, imageUrl: img(imgId), monthlyCents: monthly(d.priceCents) })))
     .returning();
   const devBy = new Map(insDevices.map((d) => [d.slug, d]));
 

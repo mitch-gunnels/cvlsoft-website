@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { and, asc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -55,9 +56,16 @@ export default async function LineDetail({ params }: { params: Promise<{ id: str
           <p className="text-sm text-muted">{formatPrice(line.plan.priceCents)}/mo · {planData(line.plan)}</p>
         </div>
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <p className="label text-muted">Device</p>
-          <p className="mt-1 text-xl font-semibold">{line.device ? line.device.name : "—"}</p>
-          <p className="text-sm text-muted">{line.upgradeEligible ? "Upgrade eligible" : "Not eligible yet"}</p>
+          <p className="label text-muted">Current phone</p>
+          <div className="mt-2 flex items-center gap-3">
+            {line.device && (
+              <Image src={line.device.imageUrl} alt={line.device.name} width={44} height={44} className="h-11 w-11 rounded-lg border border-border object-cover" />
+            )}
+            <div>
+              <p className="font-semibold">{line.device ? line.device.name : "—"}</p>
+              <p className="text-xs text-muted">{line.upgradeEligible ? "Upgrade eligible" : "Not eligible yet"}</p>
+            </div>
+          </div>
         </div>
       </div>
 
