@@ -5,9 +5,12 @@ import { Check, Loader2 } from "lucide-react";
 
 type Quote = { quoteNumber: string; monthly: string; coverageSummary: string[]; type: string } | null;
 
-export function GetQuote() {
-  const [type, setType] = useState("auto");
-  const [level, setLevel] = useState("standard");
+const TYPES = ["auto", "home", "renters", "life", "pet", "umbrella"];
+const LABEL: Record<string, string> = { auto: "Auto", home: "Home", renters: "Renters", life: "Life", pet: "Pet", umbrella: "Umbrella" };
+
+export function GetQuote({ initialType = "auto", initialLevel = "standard" }: { initialType?: string; initialLevel?: string }) {
+  const [type, setType] = useState(TYPES.includes(initialType) ? initialType : "auto");
+  const [level, setLevel] = useState(["basic", "standard", "premium"].includes(initialLevel) ? initialLevel : "standard");
   const [busy, setBusy] = useState(false);
   const [quote, setQuote] = useState<Quote>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,9 +34,9 @@ export function GetQuote() {
     <div className="grid gap-6 sm:grid-cols-2">
       <div className="rounded-2xl border border-border bg-surface p-6">
         <p className="label text-muted">What to insure</p>
-        <div className="mt-3 flex gap-2">
-          {["auto", "home", "renters"].map((t) => (
-            <button key={t} onClick={() => setType(t)} className={`rounded-full px-4 py-2 text-sm capitalize ${type === t ? "bg-accent text-accent-foreground" : "border border-border"}`}>{t}</button>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {TYPES.map((t) => (
+            <button key={t} onClick={() => setType(t)} className={`rounded-full px-4 py-2 text-sm ${type === t ? "bg-accent text-accent-foreground" : "border border-border"}`}>{LABEL[t]}</button>
           ))}
         </div>
         <p className="label mt-5 text-muted">Coverage level</p>

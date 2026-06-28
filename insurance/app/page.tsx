@@ -18,9 +18,14 @@ export default async function Dashboard() {
         <ShieldCheck className="mx-auto h-10 w-10 text-accent" />
         <h1 className="mt-4 text-2xl font-semibold">Welcome to Harbor Insurance</h1>
         <p className="mt-3 text-muted">Pick a demo policyholder to view policies, claims, and ID cards.</p>
-        <Link href="/account" className="mt-6 inline-block rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
-          Choose a policyholder
-        </Link>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/account" className="inline-block rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
+            Choose a policyholder
+          </Link>
+          <Link href="/shop" className="inline-block rounded-full border border-border px-6 py-3 text-sm font-medium hover:border-accent/40">
+            Browse coverage
+          </Link>
+        </div>
       </div>
     );
   }
@@ -59,7 +64,10 @@ export default async function Dashboard() {
         </Link>
       </div>
 
-      <h2 className="mt-10 text-lg font-semibold">Your policies</h2>
+      <div className="mt-10 flex items-baseline justify-between">
+        <h2 className="text-lg font-semibold">Your policies</h2>
+        <Link href="/shop" className="text-sm text-accent hover:underline">Shop coverage →</Link>
+      </div>
       <div className="mt-4 grid gap-5 sm:grid-cols-2">
         {pols.map((p) => (
           <Link key={p.id} href={`/policies/${p.policyNumber}`} className="group overflow-hidden rounded-2xl border border-border bg-surface hover:border-accent/40">

@@ -8,8 +8,10 @@ import { policies } from "@/lib/db/schema";
 import { customerFromCookie } from "@/lib/auth";
 import { BRAND, formatDollars, formatPrice } from "@/lib/config";
 import { insuredLabel, isUuid } from "@/lib/serializers";
+import { riderBySlug } from "@/lib/catalog";
 import { CoverageCheck } from "@/components/CoverageCheck";
 import { PayButton } from "@/components/PayButton";
+import { PolicyRiderList } from "@/components/PolicyRiderList";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export default async function PolicyDetail({ params }: { params: Promise<{ id: s
 
   const policy = await db.query.policies.findFirst({
     where: and(eq(policies.customerId, customer.id), isUuid(id) ? eq(policies.id, id) : eq(policies.policyNumber, id)),
-    with: { coverages: true },
+    with: { coverages: true, riders: true },
   });
   if (!policy) notFound();
   const i = policy.insured || {};
@@ -76,6 +78,16 @@ export default async function PolicyDetail({ params }: { params: Promise<{ id: s
               </dl>
             </div>
           )}
+
+          <PolicyRiderList
+            policyId={policy.id}
+            items={policy.riders.map((r) => ({
+              slug: r.riderSlug,
+              name: r.label,
+              price: formatPrice(r.priceCents),
+              icon: riderBySlug(r.riderSlug)?.icon ?? "Shield",
+            }))}
+          />
         </div>
       </div>
 

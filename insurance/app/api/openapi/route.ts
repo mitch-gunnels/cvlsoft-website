@@ -15,7 +15,7 @@ export function GET() {
       title: `${BRAND.name} Account API`,
       version: "1.0.0",
       description:
-        "Demo insurance API for a customer-facing AI agent: policies, coverages, ID cards, claims (FNOL), coverage Q&A, payments, and quotes. All endpoints require a customer bearer token.",
+        "Demo insurance API for a customer-facing AI agent: shop catalog, policies, coverages, ID cards, claims (FNOL), coverage Q&A, riders, payments, and quotes. The catalog (products/riders) is public; everything else needs a customer bearer token.",
     },
     servers: [{ url: siteUrl() }],
     components: {
@@ -26,10 +26,20 @@ export function GET() {
     security: [{ customerToken: [] }],
     paths: {
       "/api/me": { get: P("Account overview: policies, premium, amount due, open claims") },
+      "/api/products": { get: P("Browse the coverage catalog with tiers (auto, home, renters, life, pet, umbrella)", { security: [] }) },
+      "/api/products/{slug}": { get: P("Get one coverage product with its tiers", { security: [], parameters: [{ name: "slug", in: "path", required: true, schema: { type: "string" } }] }) },
+      "/api/riders": { get: P("Browse the add-on / rider catalog (roadside, water backup, jewelry…)", { security: [] }) },
       "/api/policies": { get: P("List policies with coverages") },
       "/api/policies/{id}": { get: P("Get a policy (UUID or policy number) with coverages", { parameters: idParam }) },
       "/api/policies/{id}/idcard": { get: P("Auto insurance ID card", { parameters: idParam }) },
       "/api/policies/{id}/pay": { post: P("Pay the premium due (demo: marks paid)", { parameters: idParam }) },
+      "/api/policies/{id}/riders": {
+        get: P("List riders on a policy", { parameters: idParam }),
+        post: P("Add a rider to a policy", { parameters: idParam, ...body({ type: "object", required: ["riderId"], properties: { riderId: { type: "string", description: "Rider slug, e.g. 'roadside'" } } }) }),
+      },
+      "/api/policies/{id}/riders/{riderSlug}": {
+        delete: P("Remove a rider from a policy", { parameters: [...idParam, { name: "riderSlug", in: "path", required: true, schema: { type: "string" } }] }),
+      },
       "/api/claims": {
         get: P("List claims"),
         post: P("File a claim (first notice of loss)", body({
@@ -58,7 +68,7 @@ export function GET() {
           type: "object",
           required: ["type"],
           properties: {
-            type: { type: "string", enum: ["auto", "home", "renters"] },
+            type: { type: "string", enum: ["auto", "home", "renters", "life", "pet", "umbrella"] },
             coverageLevel: { type: "string", enum: ["basic", "standard", "premium"] },
             details: { type: "object" },
           },

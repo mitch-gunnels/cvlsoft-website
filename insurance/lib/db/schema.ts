@@ -68,6 +68,20 @@ export const coverages = pgTable("coverages", {
   included: boolean("included").notNull().default(true),
 });
 
+/** Riders / endorsements added to a policy (catalog lives in lib/catalog.ts). */
+export const policyRiders = pgTable("policy_riders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  policyId: uuid("policy_id")
+    .notNull()
+    .references(() => policies.id, { onDelete: "cascade" }),
+  /** Slug from the rider catalog. */
+  riderSlug: text("rider_slug").notNull(),
+  label: text("label").notNull(),
+  /** Monthly price snapshot in cents. */
+  priceCents: integer("price_cents").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 /* -------------------------------------------------------------------------- */
 /*  Claims                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -123,10 +137,15 @@ export const policiesRelations = relations(policies, ({ one, many }) => ({
   customer: one(customers, { fields: [policies.customerId], references: [customers.id] }),
   coverages: many(coverages),
   claims: many(claims),
+  riders: many(policyRiders),
 }));
 
 export const coveragesRelations = relations(coverages, ({ one }) => ({
   policy: one(policies, { fields: [coverages.policyId], references: [policies.id] }),
+}));
+
+export const policyRidersRelations = relations(policyRiders, ({ one }) => ({
+  policy: one(policies, { fields: [policyRiders.policyId], references: [policies.id] }),
 }));
 
 export const claimsRelations = relations(claims, ({ one }) => ({
@@ -143,3 +162,4 @@ export type Policy = typeof policies.$inferSelect;
 export type Coverage = typeof coverages.$inferSelect;
 export type Claim = typeof claims.$inferSelect;
 export type Quote = typeof quotes.$inferSelect;
+export type PolicyRider = typeof policyRiders.$inferSelect;

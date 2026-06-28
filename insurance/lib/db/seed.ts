@@ -1,7 +1,8 @@
 import "../load-env";
 import { db } from "./index";
-import { claims, coverages, customers, policies, quotes } from "./schema";
+import { claims, coverages, customers, policies, policyRiders, quotes } from "./schema";
 import { claimNumber, policyNumber } from "../ids";
+import { riderBySlug } from "../catalog";
 
 const img = (id: string) =>
   `https://images.unsplash.com/photo-${id}?w=1000&q=80&auto=format&fit=crop`;
@@ -28,6 +29,7 @@ async function main() {
   console.log("⏳ Seeding Harbor Insurance demo…");
   await db.delete(claims);
   await db.delete(coverages);
+  await db.delete(policyRiders);
   await db.delete(quotes);
   await db.delete(policies);
   await db.delete(customers);
@@ -92,7 +94,7 @@ async function main() {
       { key: "roadside", label: "Roadside assistance", limitCents: 0 },
     ],
   );
-  await createPolicy(
+  const avaHome = await createPolicy(
     { customerId: ava.id, type: "home", premiumCents: 9800, deductibleCents: 100000, imageUrl: HOME.craftsman, insured: { address: "742 Evergreen Terrace, Portland, OR 97201", yearBuilt: 1998, sqft: 2150 } },
     [
       { key: "dwelling", label: "Dwelling", limitCents: 35000000 },
@@ -148,8 +150,21 @@ async function main() {
     ],
   );
 
+  // ── Riders / endorsements on existing policies ──
+  const addRiders = async (policyId: string, slugs: string[]) => {
+    await db.insert(policyRiders).values(
+      slugs.map((slug) => {
+        const r = riderBySlug(slug)!;
+        return { policyId, riderSlug: r.slug, label: r.name, priceCents: r.priceCents };
+      }),
+    );
+  };
+  await addRiders(avaAuto.id, ["roadside", "accident-forgiveness"]);
+  await addRiders(avaHome.id, ["water-backup", "scheduled-jewelry"]);
+  await addRiders(marcusAuto.id, ["rental-reimbursement"]);
+
   console.log("✅ Seed complete.\n");
-  console.log(`   Customers: ${insCustomers.length}  (Ava: auto+home w/ open claim; Marcus: auto w/ paid claim; Priya: auto)`);
+  console.log(`   Customers: ${insCustomers.length}  (Ava: auto+home w/ open claim + riders; Marcus: auto w/ paid claim; Priya: auto)`);
   console.log("   AI-agent bearer tokens (Authorization: Bearer <token>):");
   for (const c of insCustomers) console.log(`     • ${c.name.padEnd(12)} ${c.apiToken}  (acct ${c.accountNumber})`);
   console.log("");

@@ -33,6 +33,7 @@ export function GET() {
       "/api/plans/{id}": { get: P("Get a plan by UUID or slug", { security: [], parameters: idParam }) },
       "/api/devices": { get: P("List devices for upgrade", { security: [] }) },
       "/api/devices/{id}": { get: P("Get a device by UUID or slug", { security: [], parameters: idParam }) },
+      "/api/addons": { get: P("List plan add-ons / extras (protection, international, hotspot, streaming…)", { security: [] }) },
       "/api/lines": {
         get: P("List the account's lines"),
         post: P("Add a new line", {
@@ -60,6 +61,18 @@ export function GET() {
         post: P("Upgrade a line to a new device (24-mo installment)", {
           parameters: idParam,
           requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["deviceId"], properties: { deviceId: { type: "string" } } } } } },
+        }),
+      },
+      "/api/lines/{id}/addons": {
+        get: P("List add-ons currently on a line", { parameters: idParam }),
+        post: P("Add an add-on to a line", {
+          parameters: idParam,
+          requestBody: { required: true, content: { "application/json": { schema: { type: "object", required: ["addOnId"], properties: { addOnId: { type: "string", description: "Add-on UUID or slug, e.g. 'device-protection'" } } } } } },
+        }),
+      },
+      "/api/lines/{id}/addons/{addonId}": {
+        delete: P("Remove an add-on from a line", {
+          parameters: [...idParam, { name: "addonId", in: "path", required: true, schema: { type: "string" }, description: "Add-on UUID or slug" }],
         }),
       },
       "/api/usage": {

@@ -8,6 +8,7 @@ import { customerFromCookie } from "@/lib/auth";
 import { formatPrice } from "@/lib/config";
 import { planData, serializeLine } from "@/lib/serializers";
 import { LineActions } from "@/components/LineActions";
+import { LineAddOnList } from "@/components/LineAddOnList";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function LineDetail({ params }: { params: Promise<{ id: str
 
   const line = await db.query.lines.findFirst({
     where: and(eq(lines.customerId, customer.id), eq(lines.id, id)),
-    with: { plan: true, device: true },
+    with: { plan: true, device: true, addOns: { with: { addOn: true } } },
   });
   if (!line) notFound();
 
@@ -67,6 +68,18 @@ export default async function LineDetail({ params }: { params: Promise<{ id: str
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-4">
+        <LineAddOnList
+          lineId={line.id}
+          items={line.addOns.map((la) => ({
+            slug: la.addOn.slug,
+            name: la.addOn.name,
+            price: formatPrice(la.addOn.priceCents),
+            icon: la.addOn.icon,
+          }))}
+        />
       </div>
 
       <div className="mt-8">

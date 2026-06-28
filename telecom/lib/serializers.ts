@@ -1,5 +1,6 @@
 import { formatData, formatPrice } from "./config";
 import type {
+  AddOn,
   Bill,
   BillItem,
   Device,
@@ -7,6 +8,9 @@ import type {
   Plan,
   Ticket,
 } from "./db/schema";
+
+/** 24-month installment price for a full retail price, in cents. */
+export const monthlyForPrice = (priceCents: number) => Math.round(priceCents / 24);
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -44,8 +48,32 @@ export function serializeDevice(d: Device) {
     monthlyCents: d.monthlyCents,
     monthly: `${formatPrice(d.monthlyCents)}/mo`,
     storage: d.storage,
+    storageOptions: d.storageOptions.map((o) => ({
+      size: o.size,
+      priceCents: o.priceCents,
+      price: formatPrice(o.priceCents),
+      monthlyCents: monthlyForPrice(o.priceCents),
+      monthly: `${formatPrice(monthlyForPrice(o.priceCents))}/mo`,
+    })),
     colors: d.colors,
+    colorOptions: d.colorOptions,
+    specs: d.specs ?? null,
     description: d.description,
+  };
+}
+
+export function serializeAddOn(a: AddOn) {
+  return {
+    id: a.id,
+    slug: a.slug,
+    name: a.name,
+    category: a.category,
+    priceCents: a.priceCents,
+    price: formatPrice(a.priceCents),
+    monthly: `${formatPrice(a.priceCents)}/mo`,
+    description: a.description,
+    icon: a.icon,
+    perks: a.perks,
   };
 }
 

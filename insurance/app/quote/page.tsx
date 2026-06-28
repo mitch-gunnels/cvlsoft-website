@@ -5,7 +5,12 @@ import { GetQuote } from "@/components/GetQuote";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Get a quote" };
 
-export default async function QuotePage() {
+export default async function QuotePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string; level?: string }>;
+}) {
+  const { type, level } = await searchParams;
   const customer = await customerFromCookie();
   if (!customer) {
     return (
@@ -21,7 +26,7 @@ export default async function QuotePage() {
     <div className="mx-auto max-w-3xl px-6 py-10">
       <h1 className="text-2xl font-semibold">Get a quote</h1>
       <p className="mt-2 text-muted">Instant estimate — adjust the coverage level to see the price change.</p>
-      <div className="mt-6"><GetQuote /></div>
+      <div className="mt-6"><GetQuote initialType={type ?? "auto"} initialLevel={level ?? "standard"} /></div>
     </div>
   );
 }

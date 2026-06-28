@@ -18,28 +18,24 @@ export const GET = route(async (req) => {
   return json({ quotes: rows.map(serializeQuote) });
 });
 
-const BASE: Record<string, number> = { auto: 11000, home: 9000, renters: 2500 };
-const LEVEL: Record<string, number> = { basic: 0.8, standard: 1.0, premium: 1.35 };
-const COVERAGE: Record<string, Record<string, string[]>> = {
-  auto: {
-    basic: ["State-minimum liability", "Uninsured motorist"],
-    standard: ["$100k liability", "Collision ($500 ded)", "Comprehensive ($500 ded)", "Uninsured motorist"],
-    premium: ["$250k liability", "Collision ($250 ded)", "Comprehensive ($250 ded)", "Roadside", "Rental reimbursement"],
-  },
-  home: {
-    basic: ["Dwelling $200k", "Liability $100k"],
-    standard: ["Dwelling $350k", "Personal property $175k", "Liability $300k", "Loss of use"],
-    premium: ["Dwelling $500k", "Personal property $300k", "Liability $500k", "Water backup", "Replacement cost"],
-  },
-  renters: {
-    basic: ["Personal property $15k", "Liability $100k"],
-    standard: ["Personal property $30k", "Liability $300k", "Loss of use"],
-    premium: ["Personal property $50k", "Liability $500k", "Loss of use", "Replacement cost"],
-  },
-};
+import { PRODUCTS } from "@/lib/catalog";
+
+// Tier prices come straight from the shop catalog so /shop and /quote always agree.
+const TIER_PRICE: Record<string, Record<string, number>> = Object.fromEntries(
+  PRODUCTS.filter((p) => p.quoteType).map((p) => [
+    p.quoteType as string,
+    Object.fromEntries(p.tiers.map((t) => [t.key, t.priceCents])),
+  ]),
+);
+const COVERAGE: Record<string, Record<string, string[]>> = Object.fromEntries(
+  PRODUCTS.filter((p) => p.quoteType).map((p) => [
+    p.quoteType as string,
+    Object.fromEntries(p.tiers.map((t) => [t.key, t.coverages])),
+  ]),
+);
 
 const schema = z.object({
-  type: z.enum(["auto", "home", "renters"]),
+  type: z.enum(["auto", "home", "renters", "life", "pet", "umbrella"]),
   coverageLevel: z.enum(["basic", "standard", "premium"]).optional().default("standard"),
   details: z.record(z.string(), z.union([z.string(), z.number()])).optional().default({}),
 });
@@ -49,7 +45,7 @@ export const POST = route(async (req) => {
   const c = await requireCustomer(req);
   const { type, coverageLevel, details } = await parseBody(req, schema);
 
-  const monthlyCents = Math.round(BASE[type] * LEVEL[coverageLevel]);
+  const monthlyCents = TIER_PRICE[type][coverageLevel];
   const coverageSummary = COVERAGE[type][coverageLevel];
 
   const [q] = await db

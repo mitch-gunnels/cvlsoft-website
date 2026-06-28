@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { asc, eq } from "drizzle-orm";
-import { Check } from "lucide-react";
+import { Check, Scale } from "lucide-react";
 import { db } from "@/lib/db";
 import { plans } from "@/lib/db/schema";
 import { formatPrice } from "@/lib/config";
@@ -13,7 +14,12 @@ export default async function PlansPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      <h1 className="text-2xl font-semibold">Plans</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <h1 className="text-2xl font-semibold">Plans</h1>
+        <Link href="/plans/compare" className="inline-flex items-center gap-1.5 text-sm text-accent hover:underline">
+          <Scale className="h-4 w-4" /> Compare all features
+        </Link>
+      </div>
       <p className="mt-2 text-muted">Switch any line to a new plan from its line page (or just ask the assistant).</p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">

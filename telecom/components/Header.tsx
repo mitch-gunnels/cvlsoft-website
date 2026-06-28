@@ -12,9 +12,11 @@ export async function Header() {
           <Signal className="h-5 w-5 text-accent" />
           {BRAND.name}
         </Link>
-        <nav className="hidden sm:flex items-center gap-6 text-sm text-muted">
+        <nav className="hidden md:flex items-center gap-5 text-sm text-muted">
           <Link href="/" className="hover:text-foreground">Phones</Link>
+          <Link href="/compare" className="hover:text-foreground">Compare</Link>
           <Link href="/plans" className="hover:text-foreground">Plans</Link>
+          <Link href="/add-ons" className="hover:text-foreground">Add-ons</Link>
           <Link href="/overview" className="hover:text-foreground">Overview</Link>
           <Link href="/bills" className="hover:text-foreground">Billing</Link>
           <Link href="/support" className="hover:text-foreground">Support</Link>

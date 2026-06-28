@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { asc, eq } from "drizzle-orm";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Scale } from "lucide-react";
 import { db } from "@/lib/db";
 import { devices } from "@/lib/db/schema";
-import { BRAND, formatPrice } from "@/lib/config";
+import { BRAND } from "@/lib/config";
+import { PhoneStorefront, type StoreDevice } from "@/components/PhoneStorefront";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +13,19 @@ export default async function Home() {
     where: eq(devices.active, true),
     orderBy: asc(devices.priceCents),
   });
+
+  const storeDevices: StoreDevice[] = rows.map((d) => ({
+    id: d.id,
+    slug: d.slug,
+    name: d.name,
+    brand: d.brand,
+    image: d.imageUrl,
+    storage: d.storage,
+    storageCount: d.storageOptions.length,
+    colorHexes: d.colorOptions.map((c) => c.hex),
+    monthlyCents: d.monthlyCents,
+    priceCents: d.priceCents,
+  }));
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -25,9 +38,14 @@ export default async function Home() {
         <p className="mx-auto mt-4 max-w-md text-muted">
           Shop devices, pick a plan, and manage everything in one place — free shipping, no activation fees.
         </p>
-        <Link href="/overview" className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
-          Go to my account <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/overview" className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-foreground hover:opacity-90">
+            Go to my account <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/compare" className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium hover:border-accent/40">
+            <Scale className="h-4 w-4" /> Compare phones
+          </Link>
+        </div>
       </section>
 
       {/* Phone storefront */}
@@ -36,23 +54,8 @@ export default async function Home() {
         <Link href="/plans" className="text-sm text-accent hover:underline">Compare plans →</Link>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-3">
-        {rows.map((d) => (
-          <Link key={d.id} href={`/phones/${d.slug}`} className="group rounded-2xl border border-border bg-surface p-4 hover:border-accent/40">
-            <div className="relative aspect-square overflow-hidden rounded-xl bg-background">
-              <Image src={d.imageUrl} alt={d.name} fill sizes="(max-width:640px) 50vw, 300px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-            </div>
-            <p className="label mt-3 text-muted">{d.brand}</p>
-            <div className="mt-0.5 flex items-baseline justify-between gap-2">
-              <h3 className="font-medium">{d.name}</h3>
-              <span className="text-sm text-muted">{d.storage}</span>
-            </div>
-            <p className="mt-1 text-sm">
-              <span className="font-medium">{formatPrice(d.monthlyCents)}/mo</span>
-              <span className="text-muted"> · {formatPrice(d.priceCents)}</span>
-            </p>
-          </Link>
-        ))}
+      <div className="mt-6">
+        <PhoneStorefront devices={storeDevices} />
       </div>
     </div>
   );

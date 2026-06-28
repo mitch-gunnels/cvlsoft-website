@@ -1,6 +1,6 @@
 import { and, eq, ilike } from "drizzle-orm";
 import { db } from "./db";
-import { lines } from "./db/schema";
+import { addOns, lines } from "./db/schema";
 import { ApiError } from "./api";
 import { isUuid } from "./serializers";
 
@@ -32,4 +32,13 @@ export async function lineWithRelations(id: string) {
   });
   if (!line) throw new ApiError(404, "Line not found");
   return line;
+}
+
+/** Resolve an add-on by UUID or slug, or throw 404. */
+export async function resolveAddOn(ref: string) {
+  const addOn = await db.query.addOns.findFirst({
+    where: isUuid(ref) ? eq(addOns.id, ref) : eq(addOns.slug, ref),
+  });
+  if (!addOn) throw new ApiError(404, `Add-on '${ref}' not found`);
+  return addOn;
 }
