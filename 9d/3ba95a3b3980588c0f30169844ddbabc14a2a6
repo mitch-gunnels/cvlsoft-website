@@ -1,0 +1,34 @@
+insurance/app/overview/page.tsx
+  s_b42059ab30fd6a::t_84eccd69da5d03 1-101
+insurance/app/shop/page.tsx
+  s_b42059ab30fd6a::t_16726d4e907212 1,3-5
+insurance/app/page.tsx
+  s_b42059ab30fd6a::t_2fcc454a97dfa1 2-3,5,9-19,23-36,38,40-42,44-46
+insurance/app/account/actions.ts
+  s_b42059ab30fd6a::t_a7ed060ee76569 12
+insurance/app/policies/[id]/page.tsx
+  s_b42059ab30fd6a::t_75b7799d912000 32
+insurance/components/Header.tsx
+  s_b42059ab30fd6a::t_f09ea116bf0ebf 16,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "9d3ba95a3b3980588c0f30169844ddbabc14a2a6",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
