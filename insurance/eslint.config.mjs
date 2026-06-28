@@ -12,13 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // The shop is a self-contained sub-app (its own package.json / Vercel
-    // project at Root Directory "shop"); keep it out of the website's lint.
-    "shop/**",
-    // Same for the telecom demo (Root Directory "telecom").
-    "telecom/**",
-    // Same for the insurance demo (Root Directory "insurance").
-    "insurance/**",
   ]),
 ]);
 

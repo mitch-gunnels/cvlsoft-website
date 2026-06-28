@@ -1,0 +1,17 @@
+# Local Postgres for the Harbor Insurance demo. Port 5435 avoids clashing with
+# the shop (5433) and telecom (5434) DBs.  Start:  docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: cvlsoft-insurance-db
+    environment:
+      POSTGRES_USER: insurance
+      POSTGRES_PASSWORD: insurance
+      POSTGRES_DB: insurance
+    ports:
+      - "5435:5432"
+    volumes:
+      - insurance_pgdata:/var/lib/postgresql/data
+
+volumes:
+  insurance_pgdata:
