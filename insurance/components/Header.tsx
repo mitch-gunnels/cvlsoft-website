@@ -13,10 +13,10 @@ export async function Header() {
           {BRAND.name}
         </Link>
         <nav className="hidden md:flex items-center gap-5 text-sm text-muted">
-          <Link href="/" className="hover:text-foreground">Overview</Link>
-          <Link href="/shop" className="hover:text-foreground">Shop</Link>
+          <Link href="/" className="hover:text-foreground">Shop</Link>
           <Link href="/compare" className="hover:text-foreground">Compare</Link>
           <Link href="/riders" className="hover:text-foreground">Add-ons</Link>
+          <Link href="/overview" className="hover:text-foreground">Overview</Link>
           <Link href="/claims" className="hover:text-foreground">Claims</Link>
           <Link href="/quote" className="hover:text-foreground">Get a quote</Link>
         </nav>

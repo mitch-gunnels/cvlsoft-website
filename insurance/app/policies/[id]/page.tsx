@@ -29,7 +29,7 @@ export default async function PolicyDetail({ params }: { params: Promise<{ id: s
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
-      <Link href="/" className="text-sm text-muted hover:text-foreground">← Overview</Link>
+      <Link href="/overview" className="text-sm text-muted hover:text-foreground">← Overview</Link>
 
       <div className="mt-4 grid gap-6 md:grid-cols-[1.2fr_1fr]">
         <div className="overflow-hidden rounded-2xl border border-border bg-surface">

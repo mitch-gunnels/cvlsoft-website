@@ -9,7 +9,7 @@ export async function signInAs(formData: FormData) {
   if (!id) return;
   const store = await cookies();
   store.set(CUSTOMER_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 30 });
-  redirect("/");
+  redirect("/overview");
 }
 
 export async function signOut() {
