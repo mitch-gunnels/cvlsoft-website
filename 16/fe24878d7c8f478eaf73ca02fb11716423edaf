@@ -1,0 +1,170 @@
+insurance/app/shop/[slug]/page.tsx
+  s_b42059ab30fd6a::t_794313537fb809 1-5,7-114
+  s_b42059ab30fd6a::t_0a245bb1f40bd9 6
+insurance/app/api/policies/[id]/riders/route.ts
+  s_b42059ab30fd6a::t_db85b60ee4ce9c 1-57
+insurance/app/quote/page.tsx
+  s_b42059ab30fd6a::t_1690141aa40323 8-13
+  s_b42059ab30fd6a::t_75debe1dbb6528 29
+insurance/lib/catalog.ts
+  s_b42059ab30fd6a::t_e39a05044ad601 1-234
+insurance/components/ShopStorefront.tsx
+  s_b42059ab30fd6a::t_76e7b60d229ad4 1-87
+insurance/app/page.tsx
+  s_b42059ab30fd6a::t_8f31e6d85fcea7 21-28
+  s_b42059ab30fd6a::t_03711e861dfa1d 67-70
+telecom/components/LineAddOnList.tsx
+  s_b42059ab30fd6a::t_2bfd9927bdf8a4 1-59
+insurance/app/api/openapi/route.ts
+  s_b42059ab30fd6a::t_59a0d54e542d1c 71
+  s_b42059ab30fd6a::t_0f7e649d8f2209 18
+  s_b42059ab30fd6a::t_e399cb5e01e544 29-31,36-42
+insurance/components/PolicyRiderList.tsx
+  s_b42059ab30fd6a::t_92d46ae5951257 1-59
+telecom/app/add-ons/page.tsx
+  s_b42059ab30fd6a::t_a35882b2de1e88 1-92
+insurance/components/TierPicker.tsx
+  s_b42059ab30fd6a::t_0b58fff9acf6df 1-68
+telecom/lib/serializers.ts
+  s_b42059ab30fd6a::t_d23a79f64697da 51-57,59-60,65-76
+  s_b42059ab30fd6a::t_541507ce651f58 3,12-13
+  s_b42059ab30fd6a::t_b9a42b876f3544 14
+  s_b42059ab30fd6a::t_98d0ad0560b4a8 77-79
+insurance/app/api/products/[slug]/route.ts
+  s_b42059ab30fd6a::t_8b51fe51c5b6af 1-12
+telecom/components/PhoneStorefront.tsx
+  s_b42059ab30fd6a::t_bdaa0e57109e32 1-97
+insurance/lib/db/schema.ts
+  s_b42059ab30fd6a::t_c36060bda0e442 165
+  s_b42059ab30fd6a::t_9b831d2cc48af4 71-84
+  s_b42059ab30fd6a::t_7bce09fa60d24e 140,147-148
+  s_b42059ab30fd6a::t_e22c9d00ef431b 149-150
+insurance/drizzle/0001_warm_maddog.sql
+  s_b42059ab30fd6a::t_5f3766c260c9a8 1-10
+insurance/components/ShopIcon.tsx
+  s_b42059ab30fd6a::t_73d94e8bdae9d3 1-45
+telecom/app/plans/page.tsx
+  s_b42059ab30fd6a::t_561eb4306e59ad 1,3,17-22
+telecom/app/api/lines/[id]/addons/route.ts
+  s_b42059ab30fd6a::t_79f97fff1824c2 1-4,6-49
+  s_b42059ab30fd6a::t_eeed5adb85ff37 5
+telecom/app/api/lines/[id]/addons/[addonId]/route.ts
+  s_b42059ab30fd6a::t_505bbd681382e7 1-23
+telecom/app/api/openapi/route.ts
+  s_b42059ab30fd6a::t_d2a062ee3e0973 66-77
+  s_b42059ab30fd6a::t_02d4a8f5c35a34 36
+telecom/lib/db/seed.ts
+  s_b42059ab30fd6a::t_7f20823f9b3c6a 27-134
+  s_b42059ab30fd6a::t_2603138f858cda 160,163,175-189,193-194
+  s_b42059ab30fd6a::t_bf90226dada75f 235-236
+  s_b42059ab30fd6a::t_846af67c27fd1e 306-310,322-324
+  s_b42059ab30fd6a::t_c6145213221b26 4,9
+  s_b42059ab30fd6a::t_7b4e80f329c336 330
+  s_b42059ab30fd6a::t_71a424a6f8733f 215-220
+  s_b42059ab30fd6a::t_dec711b5e33afd 277-280,291-292
+  s_b42059ab30fd6a::t_37e8a46f6a82d3 195
+insurance/app/api/riders/route.ts
+  s_b42059ab30fd6a::t_be07a8c02aafe8 1-9
+insurance/components/ProductCompare.tsx
+  s_b42059ab30fd6a::t_e0260f2a7de205 1-127
+telecom/app/plans/compare/page.tsx
+  s_b42059ab30fd6a::t_8b07cd815a661f 1-85
+insurance/components/RiderActions.tsx
+  s_b42059ab30fd6a::t_c3107e9958d104 1-79
+insurance/components/GetQuote.tsx
+  s_b42059ab30fd6a::t_d7ae449401fc59 37-39
+  s_b42059ab30fd6a::t_a4f6a9f331394c 8-13
+insurance/app/shop/page.tsx
+  s_b42059ab30fd6a::t_63e692fa236cc4 1-51
+telecom/app/lines/[id]/page.tsx
+  s_b42059ab30fd6a::t_d3ba4398b0a2db 11,22
+  s_b42059ab30fd6a::t_df5249da938376 73-84
+insurance/app/api/quotes/route.ts
+  s_b42059ab30fd6a::t_67e7ca2659d75c 21-35,38,48
+telecom/app/page.tsx
+  s_b42059ab30fd6a::t_c4b603c25a790b 3,6-7,17-29,41-48,57-58
+telecom/components/Header.tsx
+  s_b42059ab30fd6a::t_2bebf44a6542b7 15,17,19
+insurance/lib/db/seed.ts
+  s_b42059ab30fd6a::t_859539623b8c33 153-165,167
+  s_b42059ab30fd6a::t_205a6e19065113 32
+  s_b42059ab30fd6a::t_432322c79151a7 97
+  s_b42059ab30fd6a::t_2118b9f90db704 3,5
+telecom/components/AddOnIcon.tsx
+  s_b42059ab30fd6a::t_b695f7e4e80a1d 1-38
+insurance/app/policies/[id]/page.tsx
+  s_b42059ab30fd6a::t_6ff77880d22b5e 11,14,25
+  s_b42059ab30fd6a::t_88265bd3254289 81-90
+public/sdk/aios.js
+  s_dda9d9bb6378b2::t_ef60935023d924 122
+  s_dda9d9bb6378b2::t_2c34fd20029c9d 1-121,123-234
+telecom/app/phones/[slug]/page.tsx
+  s_b42059ab30fd6a::t_171ca875c644f5 6,11,21-30,43-48,58,61-64,78-92
+telecom/components/PhoneBuyBox.tsx
+  s_b42059ab30fd6a::t_fe9e6b90f4e919 1-103
+insurance/app/api/policies/[id]/riders/[riderSlug]/route.ts
+  s_b42059ab30fd6a::t_682e4fd7fff515 1-22
+insurance/components/Header.tsx
+  s_b42059ab30fd6a::t_0b55addf9190bf 15,17-19
+telecom/app/compare/page.tsx
+  s_b42059ab30fd6a::t_5db41a3ce9b58d 1-44
+insurance/app/riders/page.tsx
+  s_b42059ab30fd6a::t_88407691ca529b 1-93
+telecom/components/AddOnActions.tsx
+  s_b42059ab30fd6a::t_c1ef2a96440e3a 1-79
+insurance/app/api/products/route.ts
+  s_b42059ab30fd6a::t_f08e22ed6b794b 1-9
+telecom/lib/db/schema.ts
+  s_b42059ab30fd6a::t_37f3bbd37cb9b9 47-61,68,70,72,74-76,78-97,99-101,105-115
+  s_b42059ab30fd6a::t_2f1f3ccaea3b49 228,232-241
+  s_b42059ab30fd6a::t_71dc2a80d02ec2 270-271
+  s_b42059ab30fd6a::t_83f27d22755383 116
+telecom/app/api/addons/route.ts
+  s_b42059ab30fd6a::t_9537ab5a114468 1-16
+telecom/components/PhoneCompare.tsx
+  s_b42059ab30fd6a::t_9842ffb957dd16 1-123
+insurance/app/compare/page.tsx
+  s_b42059ab30fd6a::t_0f5b5e3edd3122 1-37
+telecom/lib/account.ts
+  s_b42059ab30fd6a::t_8515dc52fdfe81 3
+  s_b42059ab30fd6a::t_94801220d43faa 36-44
+telecom/drizzle/0001_cuddly_inertia.sql
+  s_b42059ab30fd6a::t_f326ff59e649b2 1-25
+insurance/drizzle/meta/0001_snapshot.json
+  s_b42059ab30fd6a::t_ff9123ba5e5d4c 1-613
+insurance/drizzle/meta/_journal.json
+  s_b42059ab30fd6a::t_3008c5214348a4 11-17
+telecom/drizzle/meta/0001_snapshot.json
+  s_b42059ab30fd6a::t_1063bf9051848d 1-909
+telecom/drizzle/meta/_journal.json
+  s_b42059ab30fd6a::t_9f3b86a630176b 11-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "16fe24878d7c8f478eaf73ca02fb11716423edaf",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b42059ab30fd6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c694e6ff-93f7-4a53-8746-44fed174b6fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_dda9d9bb6378b2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f04a2-af18-75e1-87a5-00192b9ce737",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
