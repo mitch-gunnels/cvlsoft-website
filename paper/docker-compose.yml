@@ -1,0 +1,17 @@
+# Local Postgres for the demo paper store. Port 5436 avoids clashing with the
+# other demo apps (shop 5433, telecom 5434, insurance 5435). Start: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: cvlsoft-paper-db
+    environment:
+      POSTGRES_USER: paper
+      POSTGRES_PASSWORD: paper
+      POSTGRES_DB: paper
+    ports:
+      - "5436:5432"
+    volumes:
+      - paper_pgdata:/var/lib/postgresql/data
+
+volumes:
+  paper_pgdata:
