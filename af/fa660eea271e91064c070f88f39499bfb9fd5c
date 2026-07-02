@@ -1,0 +1,326 @@
+paper/public/products/envelope-10.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/public/products/spiral-notebook.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/lib/ids.ts
+  s_fe5d31d2185068::t_c2c0f4db73a553 9-13
+  s_fe5d31d2185068::t_c8333788a438a9 6-8
+  s_fe5d31d2185068::t_561c13f5218893 14-15
+  s_fe5d31d2185068::t_eb01d9150833e0 1-5
+paper/lib/api.ts
+  s_fe5d31d2185068::t_9f6863bf7ce401 44
+  s_fe5d31d2185068::t_4cf99b64a9b200 41-43
+  s_fe5d31d2185068::t_b21851fa9939cf 45-47
+  s_fe5d31d2185068::t_d57ebb2e5f9e58 1-40,48-74
+paper/public/products/schrute-kraft.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/public/products/resume-linen.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/scripts/gen-product-images.ts
+  s_fe5d31d2185068::t_0a9288601ef69c 126
+  s_fe5d31d2185068::t_4f00c3af0d06f4 1-125,127-152
+paper/public/products/heavyweight-laser-32.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/lib/db/seed.ts
+  s_fe5d31d2185068::t_e837bc9cc297f9 15-143
+  s_fe5d31d2185068::t_a148f27ca30a7a 12-14
+  s_fe5d31d2185068::t_b2f7d1ccbb14fe 144-146
+  s_fe5d31d2185068::t_cea61113d7f489 1-11,147-153
+paper/app/cart/page.tsx
+  s_fe5d31d2185068::t_bc945b68128354 139
+  s_fe5d31d2185068::t_2666a4d28ff81b 196
+  s_fe5d31d2185068::t_ee11f6cbc69e43 62,70-72
+  s_fe5d31d2185068::t_7d68ebd775c888 59-61
+  s_fe5d31d2185068::t_a932381440d193 63-65,67-69
+  s_fe5d31d2185068::t_4f95042a434790 73-75,136-138
+  s_fe5d31d2185068::t_c76ab46e32638b 140-142,193-195
+  s_fe5d31d2185068::t_66913b3865bdb1 197-199
+  s_fe5d31d2185068::t_4e2901d68199e5 1-58,66,76-135,143-192,200-204
+paper/lib/orders.ts
+  s_fe5d31d2185068::t_3294c1a9b842d4 10-70
+  s_fe5d31d2185068::t_34f9dea6893046 7-9
+  s_fe5d31d2185068::t_8edac6df179427 71
+  s_fe5d31d2185068::t_fd168a718ff9b3 1-6
+paper/next.config.ts
+  s_fe5d31d2185068::t_57af15d0204ce9 6-15
+  s_fe5d31d2185068::t_444ee1dba97687 3-5
+  s_fe5d31d2185068::t_b6b1f963241f40 16-18
+  s_fe5d31d2185068::t_6c2a0afc8a347d 1-2,19
+paper/public/products/astro-solar.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/public/products/heavy-cardstock-110.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/public/products/pastel-assorted.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/app/api/orders/[id]/route.ts
+  s_fe5d31d2185068::t_0a4af97206304b 9
+  s_ead054086c3907::t_08175659db67c9 1-8,10-24
+paper/public/products/cardstock-65.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/public/products/sticky-notes.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/lib/db/schema.ts
+  s_fe5d31d2185068::t_6673dfd75c93d6 38-50
+  s_fe5d31d2185068::t_f77bfa902ace20 35-37
+  s_fe5d31d2185068::t_860385e0a57daa 51-53
+  s_fe5d31d2185068::t_c6231007d15799 1-34,54-264
+paper/public/products/steno-notebooks.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/app/globals.css
+  s_fe5d31d2185068::t_b6301606e7f726 4-32
+  s_fe5d31d2185068::t_6b15bf3eb04dc0 1-3
+  s_fe5d31d2185068::t_ef33ee3856e23b 33-35
+  s_fe5d31d2185068::t_2a67cde97714b8 36
+paper/lib/config.ts
+  s_fe5d31d2185068::t_4480a11651c6c6 22
+  s_fe5d31d2185068::t_a146a3ef7ca88d 6-15,26
+  s_fe5d31d2185068::t_21e49b0aaca7d5 3-5
+  s_fe5d31d2185068::t_a8dcb3fdeb3e97 16-21
+  s_fe5d31d2185068::t_032d2b2526632e 23-25
+  s_fe5d31d2185068::t_09bb4db2860bd4 27-28
+  s_fe5d31d2185068::t_5d1626d3be772b 1-2
+CLAUDE.md
+  s_fe5d31d2185068::t_2b159a36391af5 13,15-19,21-28,30-31,33-35
+paper/public/products/quabity-bond-24.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/components/Header.tsx
+  s_fe5d31d2185068::t_d79febd23f880b 6-42,73-74
+  s_fe5d31d2185068::t_4d763813b7e62f 3-5
+  s_fe5d31d2185068::t_e6f2583b74dd6e 43-45,70-72
+  s_fe5d31d2185068::t_8c5ed74c75fc42 1-2,46-69
+paper/lib/catalog.ts
+  s_fe5d31d2185068::t_3786f7c36d4ccc 1-84
+paper/public/products/enviro-recycled.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/public/products/window-envelope-10.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+eslint.config.mjs
+  s_fe5d31d2185068::t_f79daffd84ae45 22-23
+paper/public/products/glossy-photo.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/app/api/openapi/route.ts
+  s_fe5d31d2185068::t_2e81dc6904a869 17
+  s_fe5d31d2185068::t_8c7b4798f1d19f 114
+  s_fe5d31d2185068::t_df92c2b5b80770 105-106
+  s_fe5d31d2185068::t_d7afe311bd2eab 26
+  s_fe5d31d2185068::t_c7552aed9aee41 77
+  s_fe5d31d2185068::t_dac9b3605b04b7 14-16
+  s_fe5d31d2185068::t_c241f4d408aad3 18-20,23-25
+  s_fe5d31d2185068::t_bf714fe33ae7a4 27-29,74-76
+  s_fe5d31d2185068::t_dd952b85a9d6db 78-80,102-104
+  s_fe5d31d2185068::t_73c87a07013fb0 107-109,111-113
+  s_fe5d31d2185068::t_4616f7e18ba65e 115-117
+  s_fe5d31d2185068::t_defdb91c003b01 1-13,21-22,30-73,81-101,110,118-159
+paper/public/products/legal-pads.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/app/account/page.tsx
+  s_fe5d31d2185068::t_f4c8b8318af514 19-22
+  s_fe5d31d2185068::t_cb3a394fcd724d 63
+  s_fe5d31d2185068::t_acf701a1b24e6c 16-18
+  s_fe5d31d2185068::t_4b3c6de7660d1b 23-25,60-62
+  s_fe5d31d2185068::t_af58aea2d85561 64-66
+  s_fe5d31d2185068::t_7db69d4e6e140e 1-15,26-59,67-72
+paper/drizzle/0001_cynical_network.sql
+  s_fe5d31d2185068::t_f8d9b8c7031c6b 1-3
+paper/public/products/manila-clasp.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/components/BuyBox.tsx
+  s_fe5d31d2185068::t_2390c76132d86f 60-75
+  s_fe5d31d2185068::t_da6f9ead10b47d 57-59
+  s_fe5d31d2185068::t_bb24578217523c 76-78
+  s_fe5d31d2185068::t_45afc1b16c376b 1-56,79-110
+paper/app/layout.tsx
+  s_fe5d31d2185068::t_c9f45da8398911 39
+  s_fe5d31d2185068::t_f0d3cb01a6ebe7 33
+  s_fe5d31d2185068::t_6ff05894277207 30-32
+  s_fe5d31d2185068::t_83b13444e78812 34-38
+  s_fe5d31d2185068::t_24e8dc9a45bda5 40-42
+  s_fe5d31d2185068::t_456ce70f701214 1-29,43-46
+paper/public/products/premium-multipurpose.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/app/checkout/success/page.tsx
+  s_fe5d31d2185068::t_09960b56f641ed 2-55
+  s_fe5d31d2185068::t_dafb6cd0120209 1
+  s_fe5d31d2185068::t_e7001c27afd3bc 56-58
+paper/README.md
+  s_fe5d31d2185068::t_b79d2137d452b9 15-18,35,40-41,60,85,99,102
+  s_fe5d31d2185068::t_24400ca28e596f 1-13,24-34,36-37,48-59,61-72,87-98,100-101,103-105
+  s_fe5d31d2185068::t_0d5c2df0f9b721 14
+  s_fe5d31d2185068::t_067b2defa91b0f 19-23
+  s_fe5d31d2185068::t_643e5c8fd1c157 38-39
+  s_fe5d31d2185068::t_5841174b7a0b28 42-47
+  s_fe5d31d2185068::t_5d75df1d4ddb2a 73-75,82-84
+  s_fe5d31d2185068::t_7372966ac67036 86
+  s_fe5d31d2185068::t_c39105e8c491bf 106
+  s_fe5d31d2185068::t_ea10746ef15806 76-81
+paper/app/api/checkout/route.ts
+  s_fe5d31d2185068::t_f85ae721863552 1-23
+  s_fe5d31d2185068::t_cdb1b4f29c988a 24
+tsconfig.json
+  s_fe5d31d2185068::t_6ca8324ced27dc 33
+paper/app/products/[slug]/page.tsx
+  s_fe5d31d2185068::t_98ceba30115a40 36
+  s_fe5d31d2185068::t_b9ef0b6f7a830e 72,81-86
+  s_fe5d31d2185068::t_5d30e485e3fa1c 104
+  s_fe5d31d2185068::t_9eccdc69016c20 33-35
+  s_fe5d31d2185068::t_f5821dac3e84e8 37-39,69-71
+  s_fe5d31d2185068::t_c3f9917862cc29 73-75,78-80
+  s_fe5d31d2185068::t_3453b92eaab098 87-89,101-103
+  s_fe5d31d2185068::t_c749a31d56c6bc 105-107
+  s_fe5d31d2185068::t_0deb631a3c9e9c 1-32,40-68,76-77,90-100,108-126
+paper/docker-compose.yml
+  s_fe5d31d2185068::t_949e8a107880a2 1-17
+paper/app/page.tsx
+  s_fe5d31d2185068::t_eeff1bb6099449 21-54
+  s_fe5d31d2185068::t_1e566d6c6d515e 18-20
+  s_fe5d31d2185068::t_a300f05df52738 55-57
+  s_fe5d31d2185068::t_ede2e3d2646e0e 1-17,58-67
+paper/public/products/parchment-specialty.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/public/products/astro-cardstock.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/public/products/matte-photo.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/package.json
+  s_fe5d31d2185068::t_0c938266f2856d 2-10
+  s_fe5d31d2185068::t_f6d8ebad424ed9 1
+  s_fe5d31d2185068::t_0439ba1236edb0 11-13
+  s_fe5d31d2185068::t_f428643ee760ce 14-42
+paper/public/products/everyday-copy.svg
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+paper/public/products/astro-cosmic.svg
+  s_fe5d31d2185068::t_85fc39835ba7e1 1-25,27-40
+  s_fe5d31d2185068::t_2dd3d050cc160b 26
+paper/app/api/returns/route.ts
+  s_fe5d31d2185068::t_0ccea343b52a60 23
+  s_ead054086c3907::t_dbea8b50b8b6d2 1-22,24-127
+paper/.gitignore
+  s_fe5d31d2185068::t_bf93beceb0b213 1-41
+paper/AGENTS.md
+  s_fe5d31d2185068::t_ea7d10a52b682d 1-5
+paper/CLAUDE.md
+  s_fe5d31d2185068::t_fa5f88513d365f 1
+paper/app/account/actions.ts
+  s_fe5d31d2185068::t_428935ad792eed 1-24
+paper/app/api/cart/items/[id]/route.ts
+  s_fe5d31d2185068::t_db99cf1de3b15a 1-56
+paper/app/api/cart/items/route.ts
+  s_fe5d31d2185068::t_2b55d226106c05 1-67
+paper/app/api/cart/route.ts
+  s_fe5d31d2185068::t_a0e5f184febca4 1-22
+paper/app/api/categories/route.ts
+  s_fe5d31d2185068::t_2ff26b8116da2f 1-20
+paper/app/api/me/route.ts
+  s_fe5d31d2185068::t_37fe111ff86451 1-11
+paper/app/api/orders/route.ts
+  s_fe5d31d2185068::t_970abade1e81ed 1-18
+paper/app/api/products/[id]/route.ts
+  s_fe5d31d2185068::t_1bb0640a569ebb 1-21
+paper/app/api/products/route.ts
+  s_fe5d31d2185068::t_30b55421607855 1-58
+paper/app/orders/[id]/page.tsx
+  s_fe5d31d2185068::t_96850fecfbe16e 1-105
+paper/app/orders/page.tsx
+  s_fe5d31d2185068::t_dc00a12f04ce24 1-80
+paper/app/products/page.tsx
+  s_fe5d31d2185068::t_00032165c4ac48 1-62
+paper/components/ProductCard.tsx
+  s_fe5d31d2185068::t_54b2a277af3b73 1-36
+paper/components/RequestReturn.tsx
+  s_fe5d31d2185068::t_71ebf85f0eb854 1-43
+paper/drizzle.config.ts
+  s_fe5d31d2185068::t_55320ed45bf6ac 1-13
+paper/drizzle/0000_careless_christian_walker.sql
+  s_fe5d31d2185068::t_b3d49e43a8278b 1-121
+paper/drizzle/meta/0000_snapshot.json
+  s_fe5d31d2185068::t_57eb341306ab2a 1-843
+paper/drizzle/meta/0001_snapshot.json
+  s_fe5d31d2185068::t_d43cb13654634b 1-831
+paper/drizzle/meta/_journal.json
+  s_fe5d31d2185068::t_a92fa241d64f83 1-20
+paper/eslint.config.mjs
+  s_fe5d31d2185068::t_2e71e949f68dcc 1-18
+paper/lib/auth.ts
+  s_fe5d31d2185068::t_4715d778a4f8ee 1-38
+paper/lib/cart.ts
+  s_fe5d31d2185068::t_83485ee3539c97 1-67
+paper/lib/db/index.ts
+  s_fe5d31d2185068::t_05f4c5710ce4a3 1-31
+paper/lib/db/migrate.ts
+  s_fe5d31d2185068::t_2594144f20e902 1-17
+paper/lib/load-env.ts
+  s_fe5d31d2185068::t_22d6f7aa7b043d 1-10
+paper/lib/serializers.ts
+  s_fe5d31d2185068::t_3a629a87d76d3a 1-92
+paper/lib/storefront.ts
+  s_fe5d31d2185068::t_b7a7b2624e4f77 1-56
+paper/pnpm-lock.yaml
+  s_fe5d31d2185068::t_a8b9c7fa3e8195 1-5132
+paper/pnpm-workspace.yaml
+  s_fe5d31d2185068::t_e3a50dec91a346 1-3
+paper/postcss.config.mjs
+  s_fe5d31d2185068::t_2c519d8cb18095 1-7
+paper/public/file.svg
+  s_fe5d31d2185068::t_af5e450b43b311 1
+paper/public/globe.svg
+  s_fe5d31d2185068::t_c69c27f2ff5551 1
+paper/public/next.svg
+  s_fe5d31d2185068::t_27499a803d2736 1
+paper/public/vercel.svg
+  s_fe5d31d2185068::t_0bbdf3554928a6 1
+paper/public/window.svg
+  s_fe5d31d2185068::t_c554d296204459 1
+paper/tsconfig.json
+  s_fe5d31d2185068::t_5f9e1809b81c82 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "affa660eea271e91064c070f88f39499bfb9fd5c",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_ead054086c3907": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "712d42f5-a5a0-4564-b4f4-af96d81f9fa3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
