@@ -1,0 +1,48 @@
+app/terms/page.tsx
+  s_fe5d31d2185068::t_439a5e485e7a35 311-331,333
+  s_fe5d31d2185068::t_3b4d48b9a3d585 14
+insurance/app/layout.tsx
+  h_8127955b097824 17-19
+app/privacy/page.tsx
+  s_fe5d31d2185068::t_6df805d14323d2 287
+  s_fe5d31d2185068::t_68bdf4414377fd 244-276
+  s_fe5d31d2185068::t_22c0cc2449f254 14
+  s_fe5d31d2185068::t_426a1e0ec74587 69
+  s_fe5d31d2185068::t_ed69e7891d0892 303
+app/page.tsx
+  s_fe5d31d2185068::t_56d283179730d6 327
+  s_fe5d31d2185068::t_16a47f8a621893 449
+  s_fe5d31d2185068::t_45f2c66caceda3 1242-1250,1256-1259
+  s_fe5d31d2185068::t_fe2c8d0ca28aeb 1251-1255
+  s_fe5d31d2185068::t_4e2314bc81491a 470
+app/api/demo-request/route.ts
+  s_fe5d31d2185068::t_64962e76530825 77-79
+  s_fe5d31d2185068::t_d9589b3503ad91 16,25-26
+app/components/DemoModal.tsx
+  s_fe5d31d2185068::t_4684643be5194f 243-247
+  s_fe5d31d2185068::t_da313507d21b85 123
+  s_fe5d31d2185068::t_094b357c0dcb62 144
+  s_fe5d31d2185068::t_81a0f8785c6219 38
+  s_fe5d31d2185068::t_866a338e1a804f 234-242,248-251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "92b9622dc1b26ca9197c3c7d9335c90917be4b76",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
