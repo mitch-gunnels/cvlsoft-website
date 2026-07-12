@@ -1,0 +1,28 @@
+app/components/DemoModal.tsx
+  s_fe5d31d2185068::t_11739a74b7b97e 102
+  s_fe5d31d2185068::t_0d865cca130155 232
+app/page.tsx
+  s_fe5d31d2185068::t_40a5b784a9c85c 1240
+  s_fe5d31d2185068::t_42f181f1b852ab 428
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "87ece7e0cfdf5f7faf604b4c083f993aa3914e46",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
