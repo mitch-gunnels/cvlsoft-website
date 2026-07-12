@@ -13,6 +13,7 @@ export async function POST(request: Request) {
       email?: string;
       phone?: string;
       company?: string;
+      smsConsent?: boolean;
       source?: string;
     };
 
@@ -21,6 +22,8 @@ export async function POST(request: Request) {
     const email = body.email?.trim() ?? "";
     const phone = body.phone?.trim() ?? "";
     const company = body.company?.trim() ?? "";
+    // SMS consent is optional and never required to submit the request.
+    const smsConsent = body.smsConsent === true;
 
     if (!firstName) {
       return NextResponse.json(
@@ -71,6 +74,9 @@ export async function POST(request: Request) {
       email,
       phone,
       company,
+      smsConsent,
+      // Consent record for SMS/A2P compliance: timestamp of when opt-in was given.
+      smsConsentAt: smsConsent ? new Date() : null,
       source: body.source ?? "website_v1",
       createdAt: new Date(),
     });

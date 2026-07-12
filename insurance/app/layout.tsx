@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+      <head>
+      <script async src="http://localhost:5173/sdk/aios.js" data-aios-agent-id="a52e3eb2-94ad-4a06-9101-b521841e3449" data-aios-api-base="http://localhost:3000"></script>
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-1">{children}</main>

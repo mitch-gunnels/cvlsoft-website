@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
         <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
         <h1 className="text-4xl font-light tracking-[-0.03em] text-white">Privacy Policy</h1>
-        <p className="mt-2 text-sm text-slate-500">Last updated: June 18, 2026</p>
+        <p className="mt-2 text-sm text-slate-500">Last updated: July 12, 2026</p>
 
         <div className="mt-12 space-y-10 text-sm leading-relaxed text-slate-400">
           <section>
@@ -66,7 +66,7 @@ export default function PrivacyPolicy() {
               We do not sell, rent, or trade your personal information. We may share information in the following circumstances:
             </p>
             <ul className="mt-3 list-inside list-disc space-y-2">
-              <li><strong className="text-slate-300">Service Providers:</strong> We share information with trusted third-party service providers who assist in operating our platform (cloud infrastructure, analytics, email delivery, payment processing) under strict confidentiality and data processing agreements.</li>
+              <li><strong className="text-slate-300">Service Providers:</strong> We share information with trusted third-party service providers that assist us in operating and delivering the Services, including cloud infrastructure, analytics, email and SMS delivery, telecommunications, customer support, and payment processing providers. These providers may use personal information only to perform services on our behalf and are bound by appropriate confidentiality and data-protection obligations.</li>
               <li><strong className="text-slate-300">Legal Requirements:</strong> We may disclose information if required to do so by law, regulation, legal process, or governmental request, or if we believe disclosure is necessary to protect our rights, your safety, or the safety of others.</li>
               <li><strong className="text-slate-300">Business Transfers:</strong> In connection with a merger, acquisition, reorganization, or sale of assets, your information may be transferred as part of that transaction. We will notify you of any such change in ownership or control.</li>
               <li><strong className="text-slate-300">With Your Consent:</strong> We may share your information with third parties when you have given us explicit consent to do so.</li>
@@ -241,7 +241,39 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">17. Changes to This Policy</h2>
+            <h2 className="text-lg font-medium text-white">17. SMS and Text Message Communications</h2>
+            <p className="mt-3">
+              When you voluntarily provide your mobile phone number and expressly opt in to receive text messages
+              from cvlSoft, we may send you SMS or MMS communications related to our products and services. These
+              communications may include customer-support responses, account and service notifications, appointment
+              or scheduling updates, transaction-related alerts, product updates, and occasional promotional offers.
+            </p>
+            <p className="mt-3">
+              Consent to receive promotional text messages is not a condition of purchasing or using any cvlSoft
+              product or service. Message frequency varies depending on your interactions with cvlSoft and your
+              communication preferences. Message and data rates may apply.
+            </p>
+            <p className="mt-3">
+              You may opt out of receiving text messages at any time by replying STOP to any message. After
+              submitting an opt-out request, you may receive one final message confirming that you have been
+              unsubscribed. For assistance, reply HELP or contact <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>.
+            </p>
+            <p className="mt-3">
+              Mobile phone numbers, SMS consent records, and mobile opt-in information will not be sold, rented, or
+              shared with third parties or affiliates for their own marketing or promotional purposes. We may share
+              this information with service providers that help us deliver text messages, such as telecommunications
+              carriers and messaging-platform providers, solely as necessary to provide the messaging service. These
+              providers are contractually required to protect the information and may not use it for their own
+              marketing purposes.
+            </p>
+            <p className="mt-3">
+              You may withdraw your SMS consent at any time without affecting other services or communications you
+              receive from cvlSoft.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-medium text-white">18. Changes to This Policy</h2>
             <p className="mt-3">
               We may update this Privacy Policy from time to time to reflect changes in our practices, technology,
               legal requirements, or other factors. We will notify you of material changes by posting the updated
@@ -252,7 +284,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">18. AIOS as an MCP Connector (External AI Agents)</h2>
+            <h2 className="text-lg font-medium text-white">19. AIOS as an MCP Connector (External AI Agents)</h2>
             <p className="mt-3">
               The AIOS platform can be connected to external AI agents (such as Anthropic Claude or OpenAI
               ChatGPT) as a remote <strong className="text-slate-300">Model Context Protocol (MCP)</strong> connector,
@@ -268,7 +300,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">19. Contact Us</h2>
+            <h2 className="text-lg font-medium text-white">20. Contact Us</h2>
             <p className="mt-3">
               If you have questions about this Privacy Policy, wish to exercise your privacy rights, or have concerns
               about our data practices, contact us at:

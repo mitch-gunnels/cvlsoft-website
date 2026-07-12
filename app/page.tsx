@@ -324,6 +324,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
+  const [smsConsent, setSmsConsent] = useState(false);
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -445,6 +446,7 @@ export default function Home() {
           email,
           phone,
           company,
+          smsConsent,
           source: "website_v2",
         }),
       });
@@ -465,6 +467,7 @@ export default function Home() {
       setEmail("");
       setPhone("");
       setCompany("");
+      setSmsConsent(false);
     } catch {
       setFormStatus("error");
       setFormMessage("Network error. Please try again.");
@@ -1236,6 +1239,24 @@ export default function Home() {
                 className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                 placeholder="Work phone"
               />
+              <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
+                <input
+                  name="smsConsent"
+                  type="checkbox"
+                  checked={smsConsent}
+                  onChange={(e) => setSmsConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-cyan-400"
+                />
+                <span>
+                  I agree to receive recurring automated text messages from cvlSoft &mdash; including account and
+                  service notifications, appointment and scheduling updates, transaction alerts, product updates, and
+                  promotional offers &mdash; at the mobile number provided. Message frequency varies. Message and data
+                  rates may apply. Consent is not a condition of purchase or of requesting a demo. Reply STOP to
+                  unsubscribe or HELP for assistance. View our{" "}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>{" "}and{" "}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>.
+                </span>
+              </label>
               <input
                 id="company"
                 name="company"

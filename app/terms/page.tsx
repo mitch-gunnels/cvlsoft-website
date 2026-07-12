@@ -11,7 +11,7 @@ export default function TermsOfService() {
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
         <a href="/" className="mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
         <h1 className="text-4xl font-light tracking-[-0.03em] text-white">Terms of Service</h1>
-        <p className="mt-2 text-sm text-slate-500">Last updated: March 28, 2026</p>
+        <p className="mt-2 text-sm text-slate-500">Last updated: July 12, 2026</p>
 
         <div className="mt-12 space-y-10 text-sm leading-relaxed text-slate-400">
           <section>
@@ -308,8 +308,29 @@ export default function TermsOfService() {
             </p>
           </section>
 
+          <section id="sms-terms">
+            <h2 className="text-lg font-medium text-white">22. Text Messaging (SMS) Program Terms</h2>
+            <p className="mt-3">
+              These Text Messaging Program Terms govern cvlSoft&rsquo;s SMS/MMS messaging program and supplement the
+              &ldquo;SMS and Text Message Communications&rdquo; section of our
+              <a href="/privacy" className="text-cyan-400 underline hover:text-cyan-300"> Privacy Policy</a>.
+              By providing your mobile number and checking the SMS consent box on a cvlSoft web form, you agree to
+              these terms.
+            </p>
+            <ul className="mt-3 list-inside list-disc space-y-2">
+              <li><strong className="text-slate-300">Program description:</strong> You will receive recurring automated text messages (SMS/MMS) from cvlSoft, LLC, which may include customer-support responses, account and service notifications, appointment and scheduling updates, transaction-related alerts, product updates, and occasional promotional offers.</li>
+              <li><strong className="text-slate-300">Consent:</strong> Opt-in is express and is collected through an unchecked checkbox at the point where your mobile number is provided. Consent to receive marketing text messages is not a condition of purchasing any product or service or of requesting a demo. You represent that you are the subscriber or account holder for the mobile number provided, or that you are authorized to opt in that number.</li>
+              <li><strong className="text-slate-300">Message frequency:</strong> Message frequency varies depending on your interactions with cvlSoft and your communication preferences.</li>
+              <li><strong className="text-slate-300">Cost:</strong> Message and data rates may apply according to your mobile carrier plan. cvlSoft does not impose a separate charge for the messages, but your carrier&rsquo;s standard rates apply.</li>
+              <li><strong className="text-slate-300">Opt-out:</strong> You may cancel at any time by replying <strong className="text-slate-300">STOP</strong> to any message. After you send STOP, you may receive one final message confirming that you have been unsubscribed. For help, reply <strong className="text-slate-300">HELP</strong> or contact <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>.</li>
+              <li><strong className="text-slate-300">Delivery &amp; carriers:</strong> Wireless carriers are not liable for delayed or undelivered messages. Message delivery is subject to effective transmission by your carrier and is not guaranteed. Supported carriers may change without notice.</li>
+              <li><strong className="text-slate-300">Privacy:</strong> Mobile phone numbers, SMS consent records, and mobile opt-in information will not be sold, rented, or shared with third parties or affiliates for their own marketing or promotional purposes. Information is shared only with the service providers that help us deliver messages (such as telecommunications carriers and messaging-platform providers), solely as necessary to provide the messaging service. See our <a href="/privacy" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>.</li>
+              <li><strong className="text-slate-300">Eligibility:</strong> The messaging program is available to recipients in the United States. You must be at least the age of majority in your jurisdiction to opt in.</li>
+            </ul>
+          </section>
+
           <section>
-            <h2 className="text-lg font-medium text-white">22. Contact</h2>
+            <h2 className="text-lg font-medium text-white">23. Contact</h2>
             <p className="mt-3">
               Questions about these Terms? Contact us at:<br />
               <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>
