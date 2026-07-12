@@ -425,7 +425,7 @@ export default function Home() {
     }
     if (!phone.trim()) {
       setFormStatus("error");
-      setFormMessage("Please enter your work phone number.");
+      setFormMessage("Please enter your work mobile phone number.");
       return;
     }
     if (!company.trim()) {
@@ -1237,7 +1237,7 @@ export default function Home() {
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Work phone"
+                placeholder="Work mobile phone"
               />
               <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
                 <input
