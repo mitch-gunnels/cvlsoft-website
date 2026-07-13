@@ -1,0 +1,29 @@
+app/privacy/page.tsx
+  s_fe5d31d2185068::t_1ced2404f2d264 244,246-249,252-255
+app/components/LeadFields.tsx
+  s_fe5d31d2185068::t_7e5dd6748f22d2 69-72
+app/terms/page.tsx
+  s_fe5d31d2185068::t_802ca016c227a9 312,314-315,317-318
+  s_fe5d31d2185068::t_8ed04938a049fe 321-322
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "b9729f74f96c66f1f348cb2f65e699671c38c7ed",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
