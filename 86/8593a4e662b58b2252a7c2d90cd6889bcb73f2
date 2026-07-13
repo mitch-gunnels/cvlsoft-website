@@ -1,0 +1,37 @@
+app/components/DemoModal.tsx
+  s_fe5d31d2185068::t_574a34d22ff2ca 35
+  s_fe5d31d2185068::t_7b6c0b7d09d89f 158
+  s_fe5d31d2185068::t_9c98a3f80fa5c0 75-77,79-82,92,106
+  s_fe5d31d2185068::t_30d62124ca53a8 13-14
+app/page.tsx
+  s_fe5d31d2185068::t_b4ea4d8f3280cd 5-6
+  s_fe5d31d2185068::t_711333645b2624 401-403,405-408,418,432
+  s_fe5d31d2185068::t_ed413a4baf088f 1162
+  s_fe5d31d2185068::t_1a9a4aa1229577 1161
+  s_fe5d31d2185068::t_002cfa2d5dd9e8 324
+app/lib/useLeadForm.ts
+  s_fe5d31d2185068::t_a59bfdb5f438f9 1-129
+app/components/LeadFields.tsx
+  s_fe5d31d2185068::t_9a437687213073 1-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "868593a4e662b58b2252a7c2d90cd6889bcb73f2",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_fe5d31d2185068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "43c29b60-3cd7-496b-ab08-7069e412cf95",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
