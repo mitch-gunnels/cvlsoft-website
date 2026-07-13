@@ -66,11 +66,10 @@ export function LeadFields({ form }: { form: LeadFormApi }) {
           className="mt-0.5 h-4 w-4 shrink-0 accent-cyan-400"
         />
         <span>
-          I agree to receive recurring automated text messages from cvlSoft &mdash; including account and
-          service notifications, appointment and scheduling updates, transaction alerts, product updates, and
-          promotional offers &mdash; at the mobile number provided. Message frequency varies. Message and data
-          rates may apply. Consent is not a condition of purchase or of requesting a demo. Reply STOP to
-          unsubscribe or HELP for assistance. View our{" "}
+          I agree to receive recurring automated marketing text messages (promotions, product news, and special
+          offers) from cvlSoft at the mobile number provided. Consent is not a condition of purchase or of
+          requesting a demo. Message frequency varies. Message and data rates may apply. Reply STOP to unsubscribe
+          or HELP for assistance. View our{" "}
           <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>{" "}and{" "}
           <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>.
         </span>

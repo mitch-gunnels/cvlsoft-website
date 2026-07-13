@@ -241,17 +241,18 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-medium text-white">17. SMS and Text Message Communications</h2>
+            <h2 className="text-lg font-medium text-white">17. SMS Marketing Communications</h2>
             <p className="mt-3">
-              When you voluntarily provide your mobile phone number and expressly opt in to receive text messages
-              from cvlSoft, we may send you SMS or MMS communications related to our products and services. These
-              communications may include customer-support responses, account and service notifications, appointment
-              or scheduling updates, transaction-related alerts, product updates, and occasional promotional offers.
+              When you voluntarily provide your mobile phone number and expressly opt in, cvlSoft may send you
+              recurring automated marketing text messages (SMS or MMS) about our products and services &mdash; such
+              as promotions, product news and updates, special offers, and event invitations. This is a marketing
+              program; your consent applies only to these marketing messages and to cvlSoft as the sender.
             </p>
             <p className="mt-3">
-              Consent to receive promotional text messages is not a condition of purchasing or using any cvlSoft
-              product or service. Message frequency varies depending on your interactions with cvlSoft and your
-              communication preferences. Message and data rates may apply.
+              Consent to receive marketing text messages is not a condition of purchasing or using any cvlSoft
+              product or service. Any transactional or service messages we may send (for example, a direct reply to a
+              request you initiate) are handled separately and are not part of this marketing consent. Message
+              frequency varies. Message and data rates may apply.
             </p>
             <p className="mt-3">
               You may opt out of receiving text messages at any time by replying STOP to any message. After

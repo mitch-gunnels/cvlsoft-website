@@ -309,17 +309,17 @@ export default function TermsOfService() {
           </section>
 
           <section id="sms-terms">
-            <h2 className="text-lg font-medium text-white">22. Text Messaging (SMS) Program Terms</h2>
+            <h2 className="text-lg font-medium text-white">22. SMS Marketing Program Terms</h2>
             <p className="mt-3">
-              These Text Messaging Program Terms govern cvlSoft&rsquo;s SMS/MMS messaging program and supplement the
-              &ldquo;SMS and Text Message Communications&rdquo; section of our
+              These Text Messaging Program Terms govern cvlSoft&rsquo;s SMS/MMS marketing program and supplement the
+              &ldquo;SMS Marketing Communications&rdquo; section of our
               <a href="/privacy" className="text-cyan-400 underline hover:text-cyan-300"> Privacy Policy</a>.
-              By providing your mobile number and checking the SMS consent box on a cvlSoft web form, you agree to
-              these terms.
+              By providing your mobile number and checking the marketing SMS consent box on a cvlSoft web form, you
+              agree to these terms.
             </p>
             <ul className="mt-3 list-inside list-disc space-y-2">
-              <li><strong className="text-slate-300">Program description:</strong> You will receive recurring automated text messages (SMS/MMS) from cvlSoft, LLC, which may include customer-support responses, account and service notifications, appointment and scheduling updates, transaction-related alerts, product updates, and occasional promotional offers.</li>
-              <li><strong className="text-slate-300">Consent:</strong> Opt-in is express and is collected through an unchecked checkbox at the point where your mobile number is provided. Consent to receive marketing text messages is not a condition of purchasing any product or service or of requesting a demo. You represent that you are the subscriber or account holder for the mobile number provided, or that you are authorized to opt in that number.</li>
+              <li><strong className="text-slate-300">Program description:</strong> This is a marketing program. You will receive recurring automated marketing text messages (SMS/MMS) from cvlSoft, LLC &mdash; such as promotions, product news and updates, special offers, and event invitations.</li>
+              <li><strong className="text-slate-300">Consent:</strong> Opt-in is express and is collected through a dedicated, unchecked checkbox &mdash; separate from any other agreement &mdash; at the point where your mobile number is provided. This consent is for marketing messages only, applies solely to this cvlSoft marketing program and sender, and is separate from any transactional or service messages. Consent to receive marketing text messages is not a condition of purchasing any product or service or of requesting a demo. You represent that you are the subscriber or account holder for the mobile number provided, or that you are authorized to opt in that number.</li>
               <li><strong className="text-slate-300">Message frequency:</strong> Message frequency varies depending on your interactions with cvlSoft and your communication preferences.</li>
               <li><strong className="text-slate-300">Cost:</strong> Message and data rates may apply according to your mobile carrier plan. cvlSoft does not impose a separate charge for the messages, but your carrier&rsquo;s standard rates apply.</li>
               <li><strong className="text-slate-300">Opt-out:</strong> You may cancel at any time by replying <strong className="text-slate-300">STOP</strong> to any message. After you send STOP, you may receive one final message confirming that you have been unsubscribed. For help, reply <strong className="text-slate-300">HELP</strong> or contact <a href="mailto:support@cvlsoft.net" className="text-cyan-400 underline hover:text-cyan-300">support@cvlsoft.net</a>.</li>
