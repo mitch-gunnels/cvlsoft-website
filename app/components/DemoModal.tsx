@@ -76,7 +76,6 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
     const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
     if (firstInvalid) {
       setFormStatus("error");
-      setFormMessage("Please fix the highlighted fields.");
       event.currentTarget
         .querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
         ?.focus();

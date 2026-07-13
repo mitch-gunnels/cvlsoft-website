@@ -402,7 +402,6 @@ export default function Home() {
     const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
     if (firstInvalid) {
       setFormStatus("error");
-      setFormMessage("Please fix the highlighted fields.");
       event.currentTarget
         .querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
         ?.focus();
@@ -1158,7 +1157,7 @@ export default function Home() {
               See it now.
             </p>
 
-            <form noValidate className="relative mx-auto mt-8 grid max-w-2xl gap-3" onSubmit={handleSubmit}>
+            <form noValidate className="relative mx-auto mt-8 grid max-w-xl gap-3" onSubmit={handleSubmit}>
               <LeadFields form={form} />
               <div className="mt-2 flex gap-3">
                 <button
