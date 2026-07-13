@@ -2,6 +2,8 @@
 
 import { FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
+import { useLeadForm, REQUIRED_FIELDS } from "@/app/lib/useLeadForm";
+import { LeadFields } from "@/app/components/LeadFields";
 
 // ── Remotion animation players — commented out while Why AIOS uses static architecture diagrams ──
 // import dynamic from "next/dynamic";
@@ -319,13 +321,7 @@ const DIFFERENTIATORS: { title: string; subtitle: string; description: string; i
 /* ── Page ── */
 
 export default function Home() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [company, setCompany] = useState("");
-  const [smsConsent, setSmsConsent] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const form = useLeadForm();
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -400,44 +396,16 @@ export default function Home() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setFormStatus("idle");
     setFormMessage("");
 
-    if (!firstName.trim()) {
+    const errs = form.validateAll();
+    const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
+    if (firstInvalid) {
       setFormStatus("error");
-      setFormMessage("Please enter your first name.");
-      return;
-    }
-    if (!lastName.trim()) {
-      setFormStatus("error");
-      setFormMessage("Please enter your last name.");
-      return;
-    }
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setFormStatus("error");
-      setFormMessage("Please enter a valid email address.");
-      return;
-    }
-    const domain = email.split("@")[1]?.toLowerCase();
-    if (["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com"].includes(domain)) {
-      setFormStatus("error");
-      setFormMessage("Please use a company email so we can route your request correctly.");
-      return;
-    }
-    const phoneDigits = phone.replace(/\D/g, "");
-    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
-      setFormStatus("error");
-      setFormMessage("Please enter a valid work mobile phone number (at least 10 digits).");
-      return;
-    }
-    if (!company.trim()) {
-      setFormStatus("error");
-      setFormMessage("Please enter your company name.");
-      return;
-    }
-    if (!termsAccepted) {
-      setFormStatus("error");
-      setFormMessage("Please accept the Terms of Service and Privacy Policy to continue.");
+      setFormMessage("Please fix the highlighted fields.");
+      event.currentTarget
+        .querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
+        ?.focus();
       return;
     }
 
@@ -447,16 +415,7 @@ export default function Home() {
       const response = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          company,
-          smsConsent,
-          termsAccepted,
-          source: "website_v2",
-        }),
+        body: JSON.stringify({ ...form.values, source: "website_v2" }),
       });
 
       const data = (await response.json()) as { ok?: boolean; message?: string };
@@ -470,13 +429,7 @@ export default function Home() {
 
       setFormStatus("success");
       setFormMessage(data.message ?? "Thanks. We will follow up to schedule your demo.");
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setCompany("");
-      setSmsConsent(false);
-      setTermsAccepted(false);
+      form.reset();
     } catch {
       setFormStatus("error");
       setFormMessage("Network error. Please try again.");
@@ -1205,91 +1158,8 @@ export default function Home() {
               See it now.
             </p>
 
-            <form noValidate className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-3">
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                  className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                  placeholder="First name"
-                />
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                  className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                  placeholder="Last name"
-                />
-              </div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Work email"
-              />
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Work mobile phone"
-              />
-              <input
-                id="company"
-                name="company"
-                type="text"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                required
-                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Company"
-              />
-              <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
-                <input
-                  name="smsConsent"
-                  type="checkbox"
-                  checked={smsConsent}
-                  onChange={(e) => setSmsConsent(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-cyan-400"
-                />
-                <span>
-                  I agree to receive recurring automated text messages from cvlSoft &mdash; including account and
-                  service notifications, appointment and scheduling updates, transaction alerts, product updates, and
-                  promotional offers &mdash; at the mobile number provided. Message frequency varies. Message and data
-                  rates may apply. Consent is not a condition of purchase or of requesting a demo. Reply STOP to
-                  unsubscribe or HELP for assistance. View our{" "}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>{" "}and{" "}
-                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>.
-                </span>
-              </label>
-              <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
-                <input
-                  name="termsAccepted"
-                  type="checkbox"
-                  checked={termsAccepted}
-                  onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-cyan-400"
-                />
-                <span>
-                  I have read and agree to the{" "}
-                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>{" "}and{" "}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>.
-                </span>
-              </label>
+            <form noValidate className="relative mx-auto mt-8 grid max-w-2xl gap-3" onSubmit={handleSubmit}>
+              <LeadFields form={form} />
               <div className="mt-2 flex gap-3">
                 <button
                   type="submit"
