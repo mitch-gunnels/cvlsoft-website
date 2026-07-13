@@ -325,6 +325,7 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [smsConsent, setSmsConsent] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const [scrolled, setScrolled] = useState(false);
@@ -423,14 +424,20 @@ export default function Home() {
       setFormMessage("Please use a company email so we can route your request correctly.");
       return;
     }
-    if (!phone.trim()) {
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
       setFormStatus("error");
-      setFormMessage("Please enter your work mobile phone number.");
+      setFormMessage("Please enter a valid work mobile phone number (at least 10 digits).");
       return;
     }
     if (!company.trim()) {
       setFormStatus("error");
       setFormMessage("Please enter your company name.");
+      return;
+    }
+    if (!termsAccepted) {
+      setFormStatus("error");
+      setFormMessage("Please accept the Terms of Service and Privacy Policy to continue.");
       return;
     }
 
@@ -447,6 +454,7 @@ export default function Home() {
           phone,
           company,
           smsConsent,
+          termsAccepted,
           source: "website_v2",
         }),
       });
@@ -468,6 +476,7 @@ export default function Home() {
       setPhone("");
       setCompany("");
       setSmsConsent(false);
+      setTermsAccepted(false);
     } catch {
       setFormStatus("error");
       setFormMessage("Network error. Please try again.");
@@ -1196,7 +1205,7 @@ export default function Home() {
               See it now.
             </p>
 
-            <form className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
+            <form noValidate className="relative mx-auto mt-8 grid max-w-md gap-3" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-3">
                 <input
                   id="firstName"
@@ -1239,6 +1248,16 @@ export default function Home() {
                 className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
                 placeholder="Work mobile phone"
               />
+              <input
+                id="company"
+                name="company"
+                type="text"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                required
+                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
+                placeholder="Company"
+              />
               <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
                 <input
                   name="smsConsent"
@@ -1257,16 +1276,20 @@ export default function Home() {
                   <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>.
                 </span>
               </label>
-              <input
-                id="company"
-                name="company"
-                type="text"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                required
-                className="rounded-md border border-white/10 bg-white/[0.05] px-5 py-3.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/40"
-                placeholder="Company"
-              />
+              <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
+                <input
+                  name="termsAccepted"
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-cyan-400"
+                />
+                <span>
+                  I have read and agree to the{" "}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Terms of Service</a>{" "}and{" "}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline hover:text-cyan-300">Privacy Policy</a>.
+                </span>
+              </label>
               <div className="mt-2 flex gap-3">
                 <button
                   type="submit"

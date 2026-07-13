@@ -14,6 +14,7 @@ export async function POST(request: Request) {
       phone?: string;
       company?: string;
       smsConsent?: boolean;
+      termsAccepted?: boolean;
       source?: string;
     };
 
@@ -24,6 +25,8 @@ export async function POST(request: Request) {
     const company = body.company?.trim() ?? "";
     // SMS consent is optional and never required to submit the request.
     const smsConsent = body.smsConsent === true;
+    // Terms/Privacy acceptance IS required to submit.
+    const termsAccepted = body.termsAccepted === true;
 
     if (!firstName) {
       return NextResponse.json(
@@ -64,6 +67,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      return NextResponse.json(
+        { ok: false, message: "Please enter a valid work mobile phone number." },
+        { status: 400 },
+      );
+    }
+
+    if (!termsAccepted) {
+      return NextResponse.json(
+        { ok: false, message: "You must accept the Terms of Service and Privacy Policy." },
+        { status: 400 },
+      );
+    }
+
     const client = await clientPromise;
     const db = client.db("cvlsoft-website");
     const contacts = db.collection("contacts");
@@ -77,6 +95,8 @@ export async function POST(request: Request) {
       smsConsent,
       // Consent record for SMS/A2P compliance: timestamp of when opt-in was given.
       smsConsentAt: smsConsent ? new Date() : null,
+      termsAccepted,
+      termsAcceptedAt: termsAccepted ? new Date() : null,
       source: body.source ?? "website_v1",
       createdAt: new Date(),
     });
