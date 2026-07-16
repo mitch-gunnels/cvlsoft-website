@@ -1,0 +1,49 @@
+app/page.tsx
+  s_ab87d14f7124a8::t_8b9546fa7dd553 692
+  s_7dd84354b86cbd::t_b14dcedb4f8eeb 380
+  s_ab87d14f7124a8::t_8d92ccadf4784c 695
+  s_7dd84354b86cbd::t_cd0c0cc525b484 399-402,406-407,409,412-414,417-418,420-432
+  s_ab87d14f7124a8::t_af97f1222c604e 710,716
+  s_ab87d14f7124a8::t_93a63e87f30476 717
+  s_7dd84354b86cbd::t_a334b717b7139d 352-365
+  s_7dd84354b86cbd::t_1f0e5c261d3e14 386-398
+  s_ab87d14f7124a8::t_6ff0becf36156a 693-694,696-709,711-715
+  s_7dd84354b86cbd::t_5025c4e32370c8 733-789
+  s_ab87d14f7124a8::t_33e2528c0664d0 320-345,378-379,403-405,408,410-411,415-416,419
+  s_7dd84354b86cbd::t_6d5bf262b52d98 347-351
+  s_7dd84354b86cbd::t_5d4840c67f7527 433
+  s_7dd84354b86cbd::t_e8e85719f2830f 346
+app/globals.css
+  s_ab87d14f7124a8::t_8b9546fa7dd553 225-237,270-275
+  s_7dd84354b86cbd::t_745d01edaa65f5 246-261
+  s_7dd84354b86cbd::t_5d36806695c1a8 276-281
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "71a0763decafd33cd805eb7a583d3170b394484e",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_7dd84354b86cbd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a573d110-bf10-4537-83e3-c624d71160a9",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    },
+    "s_ab87d14f7124a8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f6380-c5b9-7dd3-b158-3333ce858527",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
