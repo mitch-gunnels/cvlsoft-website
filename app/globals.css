@@ -222,11 +222,40 @@ h6 {
   will-change: opacity, transform, filter;
 }
 
+.hero-message-copy {
+  opacity: 0;
+  transform: translateY(-12px);
+  filter: blur(8px);
+  transition: opacity 500ms ease, transform 500ms ease, filter 500ms ease;
+}
+
+.hero-message-copy--visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
 @keyframes hero-fade-up {
   to {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+  }
+}
+
+/* Hero rotation countdown ring — sweeps from empty to full over the
+   message hold time (HERO_ROTATE_MS in app/page.tsx). Remounted each
+   cycle via a React key so the sweep restarts in sync with the copy. */
+.hero-timer-progress {
+  stroke-dasharray: 56.549;
+  stroke-dashoffset: 56.549;
+  animation: hero-timer-sweep 11000ms linear forwards;
+  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5));
+}
+
+@keyframes hero-timer-sweep {
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
@@ -237,6 +266,18 @@ h6 {
     opacity: 1;
     transform: none;
     filter: none;
+  }
+
+  .hero-message-copy {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .hero-timer-progress {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
 

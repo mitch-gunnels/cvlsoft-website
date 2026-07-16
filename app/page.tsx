@@ -317,6 +317,52 @@ const DIFFERENTIATORS: { title: string; subtitle: string; description: string; i
   },
 ];
 
+const HERO_MESSAGES = [
+  {
+    headline: ["The Operating System", "for Autonomous", "Intelligence."],
+    description:
+      "AIOS transforms your organization’s knowledge and processes into governed autonomous execution—helping work move faster, operate continuously, and",
+    accent: "deliver measurable outcomes.",
+  },
+  {
+    headline: ["The Enterprise Agentic Harness", "That Puts Intelligence", "to Work."],
+    description:
+      "AIOS connects models, agents, tools, and enterprise knowledge through one governed system—turning fragmented AI capabilities into",
+    accent: "secure, coordinated execution.",
+  },
+  {
+    headline: ["Autonomous Agentic Solutions", "Delivering Measurable", "Outcomes in Weeks."],
+    description:
+      "We ship autonomous agentic solutions, not AI pilots. Our engineers embed with your team, automate the work that matters most, and",
+    accent: "only get paid when it saves you money.",
+  },
+  {
+    headline: ["Protect Your Intellectual Property.", "Preserve Your AI", "Sovereignty."],
+    description:
+      "Deploy autonomous intelligence while keeping your proprietary knowledge, workflows, and competitive advantage protected, governed, and",
+    accent: "firmly under your control.",
+  },
+];
+
+/* How long each hero message holds before it rotates, and the cross-fade
+   window between messages. The countdown ring sweeps over HERO_ROTATE_MS. */
+const HERO_ROTATE_MS = 11000;
+const HERO_FADE_MS = 500;
+
+/* Persists the starting hero message across visits so each return trip opens on
+   a different one (see the mount effect in <Home>). One year, so a repeat
+   visitor keeps cycling; SameSite=Lax since it's a first-party preference. */
+const HERO_START_COOKIE = "aios_hero_start";
+
+function readHeroStartCookie(): number | null {
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${HERO_START_COOKIE}=([^;]*)`),
+  );
+  if (!match) return null;
+  const value = Number.parseInt(decodeURIComponent(match[1]), 10);
+  return Number.isNaN(value) ? null : value;
+}
+
 
 /* ── Page ── */
 
@@ -329,10 +375,61 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [activeHeroMessage, setActiveHeroMessage] = useState(0);
+  const [heroMessageVisible, setHeroMessageVisible] = useState(true);
+  const [heroCycle, setHeroCycle] = useState(0);
   const featureObserverRef = useRef<IntersectionObserver | null>(null);
 
   /* Reveal animations are handled globally by <ScrollReveal /> in
      app/layout.tsx — every page on the site inherits the same behavior. */
+
+  /* Open on a different hero message each visit. SSR/first paint always render
+     index 0 (so hydration matches and the page stays statically cacheable);
+     this effect then advances to the message after the last visit's and writes
+     the new index back to the cookie. The swap lands while the copy is still
+     blurred/faded in, so there's no visible flash of message 0. */
+  useEffect(() => {
+    const previous = readHeroStartCookie();
+    const start =
+      previous === null ? 0 : (previous + 1) % HERO_MESSAGES.length;
+    setActiveHeroMessage(start);
+    document.cookie = `${HERO_START_COOKIE}=${start}; path=/; max-age=31536000; samesite=lax`;
+  }, []);
+
+  /* Self-scheduling rotation: each advance bumps `heroCycle`, which re-runs
+     this effect and arms a fresh timer. That keeps every message on screen for
+     exactly HERO_ROTATE_MS and lets the countdown ring (keyed on heroCycle)
+     restart in lockstep — including after a manual jump. */
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+    const advanceTimer = window.setTimeout(() => {
+      setHeroMessageVisible(false);
+      fadeTimer = setTimeout(() => {
+        setActiveHeroMessage((current) => (current + 1) % HERO_MESSAGES.length);
+        setHeroMessageVisible(true);
+        setHeroCycle((n) => n + 1);
+      }, HERO_FADE_MS);
+    }, HERO_ROTATE_MS);
+
+    return () => {
+      window.clearTimeout(advanceTimer);
+      if (fadeTimer) clearTimeout(fadeTimer);
+    };
+  }, [heroCycle]);
+
+  /* Jump straight to a message when its timer dot is clicked; bumping
+     heroCycle re-arms the rotation so the countdown restarts from full. */
+  const selectHeroMessage = (index: number) => {
+    if (index === activeHeroMessage) return;
+    setHeroMessageVisible(false);
+    window.setTimeout(() => {
+      setActiveHeroMessage(index);
+      setHeroMessageVisible(true);
+      setHeroCycle((n) => n + 1);
+    }, HERO_FADE_MS);
+  };
 
   /* Navbar scroll shadow + dynamic tone — flip header palette as the section
      under it transitions between cream and dark surfaces. Sections opt in via
@@ -592,21 +689,32 @@ export default function Home() {
               its own animation-delay, producing a staggered cascade. */}
           <div className="relative z-10 flex w-full flex-1 items-start pt-24 px-6 sm:px-10 md:items-center md:pt-0 lg:px-[120px]">
             <div className="max-w-6xl">
-              <h1 className="hero-fade-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                Autonomous Agentic Solutions<br />
-                Delivering Measurable<br />
-                Outcomes in{" "}
-                <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(34,211,238,0.45))]">
-                  Weeks.
-                </span>
-              </h1>
+              <div
+                className={`hero-message-copy ${heroMessageVisible ? "hero-message-copy--visible" : ""}`}
+                aria-live="off"
+              >
+                <h1 className="hero-fade-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
+                  {HERO_MESSAGES[activeHeroMessage].headline.map((line, index, lines) => (
+                    <span key={line}>
+                      {index === lines.length - 1 ? (
+                        <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(34,211,238,0.45))]">
+                          {line}
+                        </span>
+                      ) : (
+                        line
+                      )}
+                      {index < lines.length - 1 && <br />}
+                    </span>
+                  ))}
+                </h1>
 
-              <p className="hero-fade-up mt-6 max-w-[720px] text-xl font-normal text-slate-400 [animation-delay:280ms]">
-                We ship autonomous agentic solutions, not AI pilots. Our engineers embed with your team, automate the work that matters most, and{" "}
-                <span className="text-cyan-400">only get paid when it saves you money.</span>
-              </p>
+                <p className="hero-fade-up mt-6 max-w-[720px] text-xl font-normal text-slate-400 [animation-delay:280ms]">
+                  {HERO_MESSAGES[activeHeroMessage].description}{" "}
+                  <span className="text-cyan-400">{HERO_MESSAGES[activeHeroMessage].accent}</span>
+                </p>
+              </div>
 
-              <div className="hero-fade-up mt-10 flex flex-wrap gap-3 [animation-delay:520ms]">
+              <div className="hero-fade-up mt-8 flex flex-wrap items-center gap-3 [animation-delay:520ms]">
                 <a
                   href="#demo"
                   onClick={() => handleCtaClick("hero_primary")}
@@ -621,6 +729,63 @@ export default function Home() {
                 >
                   Why We&rsquo;re Different
                 </a>
+              </div>
+
+              {/* Rotation indicators — one circular countdown ring per hero
+                  message. The active ring sweeps over HERO_ROTATE_MS so the
+                  viewer can see when the copy is about to change; each dot is
+                  clickable to jump straight to that message. */}
+              <div
+                className="hero-fade-up mt-9 flex items-center gap-3.5 [animation-delay:640ms]"
+                role="tablist"
+                aria-label="Hero message"
+              >
+                {HERO_MESSAGES.map((message, index) => {
+                  const isActive = index === activeHeroMessage;
+                  return (
+                    <button
+                      key={message.accent}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Message ${index + 1} of ${HERO_MESSAGES.length}`}
+                      onClick={() => selectHeroMessage(index)}
+                      className="hero-timer group relative grid h-6 w-6 place-items-center"
+                    >
+                      <svg viewBox="0 0 24 24" className="absolute inset-0 h-6 w-6 -rotate-90">
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="9"
+                          fill="none"
+                          strokeWidth="1.75"
+                          className={
+                            isActive
+                              ? "stroke-slate-600"
+                              : "stroke-slate-700 transition-colors group-hover:stroke-slate-500"
+                          }
+                        />
+                        {isActive && (
+                          <circle
+                            key={heroCycle}
+                            cx="12"
+                            cy="12"
+                            r="9"
+                            fill="none"
+                            strokeWidth="1.75"
+                            strokeLinecap="round"
+                            className="hero-timer-progress stroke-cyan-400"
+                          />
+                        )}
+                      </svg>
+                      <span
+                        className={`h-1 w-1 rounded-full transition-colors ${
+                          isActive ? "bg-cyan-300" : "bg-slate-600 group-hover:bg-slate-400"
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
