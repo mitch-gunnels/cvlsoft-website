@@ -259,6 +259,450 @@ h6 {
   }
 }
 
+/* ──────────────────────────────────────────────────────────
+   Hero story feed — a conversation-style conveyor over the hero
+   media, playing the AIOS loop: observe the work, draft the
+   workflow, run it.
+
+   A card enters at the bottom, holds, then steps up one slot as
+   the next arrives, dissolving at the top. All three run the SAME
+   keyframes, offset by a third of the cycle via animation-delay,
+   which produces a continuous feed with only three declarations.
+
+   Cards are a fixed height so the slot offsets are simple
+   constants; content is written to fit. The top-edge dissolve is
+   a mask on the container, not per-card opacity, so cards fade
+   against the video rather than dimming.
+
+   Slot offsets: 0 / -168px / -336px  (156px card + 12px gap).
+   These MUST match the card height set in BEAT_PANEL (page.tsx).
+   ────────────────────────────────────────────────────────── */
+
+.aios-feed {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.22) 20%, #000 46%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.22) 20%, #000 46%);
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hero graph (HeroGraph.tsx) — the self-building workflow.
+
+   The component owns layout and timing; CSS owns only the
+   per-node entrance, the connector draw, and the live pulse.
+   The top-edge fade is deliberately shallow: nodes should only
+   dissolve once the camera has panned them off, not while the
+   column is still short enough to sit at the top of frame.
+   ────────────────────────────────────────────────────────── */
+
+/* A short feather, not a deep fade: the session never outgrows the frame
+   today, so a long gradient would just dim the oldest captured action and
+   make it read as expiring. This only softens the cut if it ever does. */
+.hg-viewport {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 3%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 3%);
+}
+
+/* Each node animates once, on mount. Node ids are namespaced per act,
+   so an act change remounts the column and every node re-enters. */
+.hg-enter {
+  animation: hg-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* The connector draws downward out of the node above. */
+.hg-line {
+  transform-origin: top center;
+  animation: hg-line 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-line {
+  from {
+    transform: translateX(-50%) scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Horizontal counterpart, for the blueprint's branch and merge rails. */
+.hg-line-h {
+  transform-origin: left center;
+  animation: hg-line-h 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-line-h {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* The very first component of the loop, arriving from below after the
+   blank beat on load. Only used once — every act after it slides in
+   from the right instead, because by then the flow has a direction. */
+.hg-rise {
+  animation: hg-rise 780ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-rise {
+  from {
+    opacity: 0;
+    transform: translateY(44px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* An act taking the frame: enters from the right and settles. Pairs
+   with hg-exit, which leaves to the left — so the whole loop reads as
+   one line of travel, right to left, rather than as a set of swaps. */
+.hg-slide-in {
+  animation: hg-slide-in 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+/* The captured session leaving the frame once the Blueprint is asked
+   for. Each line carries its own delay, so they go in series rather
+   than as one block. */
+.hg-exit {
+  animation: hg-exit 520ms cubic-bezier(0.55, 0, 0.55, 0.2) both;
+}
+
+@keyframes hg-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-70px);
+    filter: blur(4px);
+  }
+}
+
+/* Cursor flying in from off-frame to the CTA. It ends parked on the
+   button, so the animation fills forwards. */
+.hg-cursor {
+  animation: hg-cursor 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-cursor {
+  from {
+    opacity: 0;
+    transform: translate(120px, 92px);
+  }
+  25% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+/* The click itself — one ring off the cursor tip. */
+.hg-click {
+  border: 1px solid rgba(34, 211, 238, 0.9);
+  animation: hg-click 480ms ease-out both;
+}
+
+@keyframes hg-click {
+  from {
+    opacity: 0.9;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* A label whose text has changed. Keyed on its own content in the
+   component, so React remounts it and this replays — a status that
+   switches mid-act should dissolve into the next one, not snap. */
+.hg-fade {
+  animation: hg-fade 460ms ease-out both;
+}
+
+@keyframes hg-fade {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* The act's mark, while that part is mid-task. A slow breath on the
+   whole tile rather than a blinking dot beside it — one element, and it
+   is the one that identifies the part. */
+.hg-mark-pulse {
+  animation: hg-mark-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes hg-mark-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.28);
+    border-color: rgba(34, 211, 238, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(34, 211, 238, 0);
+    border-color: rgba(34, 211, 238, 0.62);
+  }
+}
+
+/* Anything currently live — the running step, the eyebrow node, the
+   attached channels. */
+.hg-pulse {
+  animation: hg-pulse 2s ease-in-out infinite;
+}
+
+@keyframes hg-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(34, 211, 238, 0);
+  }
+}
+
+.hg-pulse-text {
+  animation: hg-pulse-text 2s ease-in-out infinite;
+}
+
+@keyframes hg-pulse-text {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* An unanswered call: a ring expanding off the handset, twice a
+   second-and-a-bit, the way a phone actually rings. */
+.hg-ring {
+  animation: hg-ring 1.6s ease-out infinite;
+}
+
+@keyframes hg-ring {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(1.75);
+  }
+}
+
+/* AIOS working: a dashed ring orbiting the mark, and the mark itself
+   breathing. Rotation is on the ring only — the mark is a wordmark and
+   spinning it would read as a loading spinner rather than as thinking. */
+.hg-orbit {
+  animation: hg-orbit 3.6s linear infinite;
+}
+
+/* Same ring, at idle. An agent waiting for work should not turn at the
+   speed of an agent doing it. */
+.hg-orbit-slow {
+  animation: hg-orbit 9s linear infinite;
+}
+
+@keyframes hg-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hg-glow {
+  animation: hg-glow 2s ease-in-out infinite;
+}
+
+@keyframes hg-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(34, 211, 238, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 9px rgba(34, 211, 238, 0.75));
+  }
+}
+
+/* The step detail changing under the mark. Keyed on its own text, so
+   each new step remounts the line and replays this. */
+/* The two halves of a line change: the old one leaves upward as the
+   new one arrives from below, over the same 460ms, so the slot is
+   never empty. Keyed on the text, both replay on every swap.
+
+   The old single-sided version faded in from nothing after the
+   previous line had already been unmounted — a blink, then a rise —
+   and carried a 3px blur that read as a smear at 14px. */
+.hg-swap {
+  animation: hg-swap 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-swap {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hg-swap-out {
+  animation: hg-swap-out 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hg-swap-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The timeline is already frozen in JS; kill the entrance motion so
+     the first beat renders flat rather than animating in. */
+  .hg-enter,
+  .hg-rise,
+  .hg-line,
+  .hg-line-h,
+  .hg-exit,
+  .hg-cursor,
+  .hg-click,
+  .hg-mark-pulse,
+  .hg-fade,
+  .hg-pulse,
+  .hg-pulse-text,
+  .hg-orbit,
+  .hg-orbit-slow,
+  .hg-glow,
+  .hg-swap,
+  .hg-swap-out,
+  .hg-ring {
+    animation: none;
+  }
+
+  .hg-line-h {
+    transform: scaleX(1);
+  }
+
+  .hg-line {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+.aios-feed-card {
+  opacity: 0;
+  animation: aios-feed 15s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* Staggered by a third of the cycle, so a new card lands every 5s
+   in order and the feed never bunches up. */
+.aios-feed-card:nth-child(2) {
+  animation-delay: 5s;
+}
+.aios-feed-card:nth-child(3) {
+  animation-delay: 10s;
+}
+
+@keyframes aios-feed {
+  0% { transform: translateY(50px); opacity: 0; }
+  4% { transform: translateY(0); opacity: 1; }
+  32% { transform: translateY(0); opacity: 1; }
+  36% { transform: translateY(-168px); opacity: 1; }
+  64% { transform: translateY(-168px); opacity: 1; }
+  68% { transform: translateY(-336px); opacity: 1; }
+  90% { transform: translateY(-336px); opacity: 1; }
+  /* Fully clear before the cycle wraps, so the jump back to the
+     bottom slot happens while the card is invisible. */
+  97%, 100% { transform: translateY(-400px); opacity: 0; }
+}
+
+/* The node on the newest card pulses. */
+.aios-feed-node {
+  animation: aios-node-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes aios-node-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55); }
+  50% { box-shadow: 0 0 0 5px rgba(34, 211, 238, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Hold the finished conversation: each card parked in its slot. */
+  .aios-feed-card {
+    animation: none;
+    opacity: 1;
+  }
+
+  .aios-feed-card:nth-child(1) {
+    transform: translateY(-336px);
+  }
+  .aios-feed-card:nth-child(2) {
+    transform: translateY(-168px);
+  }
+  .aios-feed-card:nth-child(3) {
+    transform: translateY(0);
+  }
+
+  .aios-feed-node {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-fade-up,
   .hero-stagger {

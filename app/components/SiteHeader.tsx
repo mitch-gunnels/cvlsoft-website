@@ -2,16 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDemoModal } from "./DemoModal";
 
 const NAV_ITEMS: [string, string][] = [
-  ["/#problem", "The Industry Problem"],
-  ["/#why-aios", "Why AIOS"],
-  ["/#pricing", "Pricing"],
-  ["/rollout", "Rollout"],
   ["/platform", "Platform"],
+  ["/solutions", "Solutions"],
   ["/team", "Team"],
+  ["/pricing", "Pricing"],
 ];
+
+/* Past this scroll depth the bar slides up out of view; above it, back down. */
+const HIDE_AFTER_Y = 75;
 
 const DARK_ROUTES = new Set(["/rollout", "/platform", "/team"]);
 
@@ -21,15 +21,16 @@ function isDarkPath(pathname: string): boolean {
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
   const defaultTone: "dark" | "light" = isDarkPath(pathname) ? "dark" : "light";
   const [tone, setTone] = useState<"dark" | "light">(defaultTone);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { open: openDemoModal } = useDemoModal();
 
   useEffect(() => {
     const HEADER_PROBE_Y = 64;
     const onScroll = () => {
+      setHidden(window.scrollY > HIDE_AFTER_Y);
+
       const sections = document.querySelectorAll<HTMLElement>("[data-tone]");
       let active: "dark" | "light" | null = null;
       sections.forEach((section) => {
@@ -58,64 +59,50 @@ export default function SiteHeader() {
   const isDark = tone === "dark";
 
   return (
+    // Fully transparent — no fill, no blur, no rule. The nav floats over
+    // whatever section is beneath it; `tone` keeps the text legible. Past
+    // HIDE_AFTER_Y it slides up and fades out; it returns near the top.
     <header
-      className={`fixed left-0 right-0 top-0 z-30 backdrop-blur-xl ${
-        isDark
-          ? "border-b border-white/[0.06] bg-[#050a14]/80"
-          : "border-b border-slate-950/10 bg-[var(--bg-page)]/80"
+      // Tailwind v4 emits `translate-y-*` as the `translate` property (not
+      // `transform`), so the transition must name `translate` or the slide
+      // snaps and only the fade animates.
+      className={`fixed left-0 right-0 top-0 z-30 bg-transparent transition-[translate,opacity] duration-300 ease-out ${
+        hidden && !mobileOpen ? "pointer-events-none -translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
-      <nav className="flex items-center justify-between px-6 py-4.5 sm:px-20 lg:px-[112px]">
-        <a href="/" className="flex items-center gap-3">
-          <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-7 w-7" />
-          <span className={`text-sm font-medium tracking-tight ${isDark ? "text-white" : "text-slate-950"}`}>
-            AIOS <span className="font-normal text-slate-500">by cvlSoft</span>
+      {/* skan.ai groups the links immediately after the wordmark and pushes
+          only the CTA to the far right — hence gap-10 + ml-auto, not
+          justify-between. */}
+      <nav className="mx-auto flex w-full max-w-[1320px] items-center gap-10 px-6 py-4.5 sm:px-10 lg:px-[60px]">
+        <a href="/" className="flex min-w-0 shrink-0 items-center gap-3">
+          <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-13 w-13 shrink-0" />
+          <span className={`truncate text-[19px] font-medium tracking-tight ${isDark ? "text-white" : "text-slate-950"}`}>
+            {/* "by cvlSoft" is dropped on the narrowest screens so the brand
+                never runs under the Request Demo button. */}
+            AIOS <span className="hidden font-normal text-slate-500 min-[420px]:inline">by cvlSoft</span>
           </span>
         </a>
-        <div className="flex items-center gap-3 md:gap-8">
+
+        <div className="hidden items-center gap-8 md:flex">
           {NAV_ITEMS.map(([href, label]) => {
             const isActive = !href.includes("#") && pathname === href;
-            const activeClass = isDark
-              ? "font-medium text-cyan-400 underline decoration-2 underline-offset-[6px]"
-              : "font-medium text-cyan-700 underline decoration-2 underline-offset-[6px]";
+            const activeClass = isDark ? "text-cyan-400" : "text-cyan-700";
             const inactiveClass = isDark
-              ? "text-slate-400 hover:text-white"
-              : "text-slate-600 hover:text-slate-950";
+              ? "text-white/85 hover:text-white"
+              : "text-slate-800 hover:text-slate-950";
             return (
               <a
                 key={href}
                 href={href}
-                className={`hidden text-sm transition-colors md:block ${isActive ? activeClass : inactiveClass}`}
+                className={`whitespace-nowrap text-[15px] transition-colors ${isActive ? activeClass : inactiveClass}`}
               >
                 {label}
               </a>
             );
           })}
-          {isHome ? (
-            <a
-              href="/#demo"
-              className={
-                isDark
-                  ? "rounded-md bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition-colors hover:bg-cyan-300"
-                  : "rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-white transition-colors hover:bg-cyan-800"
-              }
-            >
-              REQUEST DEMO
-            </a>
-          ) : (
-            <button
-              type="button"
-              onClick={openDemoModal}
-              className={
-                isDark
-                  ? "rounded-md bg-cyan-400 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-slate-950 transition-colors hover:bg-cyan-300"
-                  : "rounded-md border border-cyan-700 bg-cyan-700 px-5 py-2 text-[13px] font-semibold tracking-[0.08em] text-white transition-colors hover:bg-cyan-800"
-              }
-            >
-              REQUEST DEMO
-            </button>
-          )}
+        </div>
 
+        <div className="ml-auto flex shrink-0 items-center gap-3">
           {/* Mobile hamburger toggle */}
           <button
             type="button"

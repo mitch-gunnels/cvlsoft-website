@@ -21,9 +21,10 @@ export default function SiteFooter() {
           <div>
             <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
             <ul className="mt-4 space-y-2.5">
-              <li><a href="/#problem" className="text-sm text-slate-500 transition hover:text-white">The Industry Problem</a></li>
-              <li><a href="/#why-aios" className="text-sm text-slate-500 transition hover:text-white">Why AIOS</a></li>
-              <li><a href="/#pricing" className="text-sm text-slate-500 transition hover:text-white">Pricing</a></li>
+              <li><a href="/#problem" className="text-sm text-slate-500 transition hover:text-white">The Problem</a></li>
+              <li><a href="/#platform" className="text-sm text-slate-500 transition hover:text-white">Five Parts</a></li>
+              <li><a href="/#how-it-works" className="text-sm text-slate-500 transition hover:text-white">How It Works</a></li>
+              <li><a href="/#security" className="text-sm text-slate-500 transition hover:text-white">Trust &amp; Security</a></li>
               <li><a href="/rollout" className="text-sm text-slate-500 transition hover:text-white">Rollout</a></li>
               <li><a href="/platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
               <li><a href="/team" className="text-sm text-slate-500 transition hover:text-white">Team</a></li>
@@ -44,7 +45,7 @@ export default function SiteFooter() {
           <div>
             <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">RESOURCES</p>
             <ul className="mt-4 space-y-2.5">
-              <li><a href="/#problem" className="text-sm text-slate-500 transition hover:text-white">Industry Problem</a></li>
+              <li><a href="/#proof" className="text-sm text-slate-500 transition hover:text-white">Customer Stories</a></li>
             </ul>
           </div>
 

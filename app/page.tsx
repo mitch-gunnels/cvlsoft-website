@@ -1,482 +1,463 @@
 "use client";
 
-import { FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
+/**
+ * Home — a structural recreation of skan.ai's homepage.
+ *
+ * Layout and section order are taken from skan.ai:
+ *   • flat, square-cornered cards on a tinted surface — no rounding, no shadow
+ *   • full-bleed accent band for the results stats
+ *   • dark section with a sticky three-step tab bar
+ *   • carousels with prev/next arrows
+ *
+ * The ornament is NOT theirs. Where skan.ai frames things in corner brackets,
+ * this uses AIOS's own node-on-a-rail — see the Primitives block below.
+ *
+ * Differences from the source, per request: copy is lorem ipsum, the accent is
+ * cyan instead of purple, and every image is a <Ph> placeholder. The five
+ * pillar names (Observer / Blueprint / Executor / Communicator / Controller)
+ * are kept as card labels so the real product structure is still legible.
+ */
+
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
 import { useLeadForm, REQUIRED_FIELDS } from "@/app/lib/useLeadForm";
 import { LeadFields } from "@/app/components/LeadFields";
-
-// ── Remotion animation players — commented out while Why AIOS uses static architecture diagrams ──
-// import dynamic from "next/dynamic";
-// const LearningLoopPlayer = dynamic(() => import("@/app/components/remotion/LearningLoopPlayer"), { ssr: false });
-// const CognitiveCorePlayer = dynamic(() => import("@/app/components/remotion/CognitiveCorePlayer"), { ssr: false });
-// const TacitKnowledgePlayer = dynamic(() => import("@/app/components/remotion/TacitKnowledgePlayer"), { ssr: false });
-// const SecurityPosturePlayer = dynamic(() => import("@/app/components/remotion/SecurityPosturePlayer"), { ssr: false });
-// const ConnectorFabricPlayer = dynamic(() => import("@/app/components/remotion/ConnectorFabricPlayer"), { ssr: false });
+import SiteHeader from "@/app/components/SiteHeader";
+import HeroGraph, { type HeroAct } from "@/app/components/HeroGraph";
+import PillarIcon from "@/app/components/PillarIcon";
+import { BTN_DARK, BTN_LIGHT, BTN_SOLID } from "@/app/lib/buttons";
 
 type DemoStatus = "idle" | "loading" | "success" | "error";
 
-/* ── Icon components ── */
+/* ────────────────────────────────────────────────────────────
+   Primitives
+   ──────────────────────────────────────────────────────────── */
 
-function IconEye({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M2.5 12C4.5 7 8 4.5 12 4.5S19.5 7 21.5 12c-2 5-5.5 7.5-9.5 7.5S4.5 17 2.5 12Z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}
+/* ── The AIOS mark: node on a rail ──────────────────────────
+   Replaces skan.ai's corner brackets. Taken from what the site already
+   owned — the old SectionScrollLine (a glowing cyan node riding a vertical
+   hairline) and the hero spiral's pulse dots traveling along flow paths.
+   A node marks the point of interest; a rail carries it. Reads as signal
+   and telemetry rather than camera viewfinder.
+   ──────────────────────────────────────────────────────────── */
 
-function IconCpu({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <rect x="9" y="9" width="6" height="6" />
-      <path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2" />
-    </svg>
-  );
-}
-
-function IconGrid({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect x="3" y="3" width="7" height="7" rx="1" />
-      <rect x="14" y="3" width="7" height="7" rx="1" />
-      <rect x="3" y="14" width="7" height="7" rx="1" />
-      <rect x="14" y="14" width="7" height="7" rx="1" />
-    </svg>
-  );
-}
-
-function IconRocket({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-    </svg>
-  );
-}
-
-function IconShield({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
-      <path d="m9 12 2 2 4-4" />
-    </svg>
-  );
-}
-
-function IconUsers({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-
-function IconLink({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </svg>
-  );
-}
-
-function IconBolt({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
-    </svg>
-  );
-}
-
-/* ── Section scroll indicator (sticky dot + line) ──
-   Single accent (cvlSoft cyan). `tone` lets each section pick the
-   surface its rule renders against — `light` for cream sections,
-   `dark` for hero/CTA/footer. */
-
-function SectionScrollLine({ tone = "light" }: { tone?: "light" | "dark" } = {}) {
-  const dotClass =
+/** The node itself — a glowing cyan dot. Heads every rail. */
+function Node({ tone = "light", className = "" }: { tone?: "light" | "dark" | "accent"; className?: string }) {
+  const fill =
     tone === "dark"
-      ? "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]"
-      : "bg-cyan-700 shadow-[0_0_10px_rgba(14,116,144,0.35)]";
-  const railClass = tone === "dark" ? "bg-white/[0.10]" : "bg-slate-300/60";
+      ? "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.7)]"
+      : tone === "accent"
+        ? "bg-[#0f1419]"
+        : "bg-cyan-600 shadow-[0_0_8px_rgba(8,145,178,0.45)]";
+  return <span className={`inline-block h-[7px] w-[7px] shrink-0 rounded-full ${fill} ${className}`} />;
+}
+
+const RAIL_LINE = {
+  light: "bg-slate-300",
+  dark: "bg-white/20",
+  accent: "bg-[#0f1419]/30",
+} as const;
+
+/** Horizontal rail: node at the left end, hairline running right. */
+function RailH({ tone = "light", className = "" }: { tone?: "light" | "dark" | "accent"; className?: string }) {
   return (
-    <div className="pointer-events-none absolute left-[175px] top-0 bottom-0 z-20 hidden lg:block">
-      <div className={`absolute left-[4px] top-0 bottom-0 w-px ${railClass}`} />
-      <div className="absolute left-0 top-[142px] bottom-[2px] overflow-visible">
-        <div className="sticky top-[142px] h-0">
-          <div className={`h-[10px] w-[10px] -translate-y-1/2 rounded-full ${dotClass}`} />
-        </div>
+    <span className={`flex items-center ${className}`}>
+      <Node tone={tone} />
+      <span className={`h-px flex-1 ${RAIL_LINE[tone]}`} />
+    </span>
+  );
+}
+
+/**
+ * Vertical rail pinned to the left of a `relative` parent, with the node
+ * sitting near the top. Used to flag headings and framed media.
+ */
+function RailV({ tone = "light", nodeTop = 8 }: { tone?: "light" | "dark" | "accent"; nodeTop?: number }) {
+  return (
+    <>
+      <span className={`pointer-events-none absolute bottom-0 left-0 top-0 w-px ${RAIL_LINE[tone]}`} />
+      <span className="pointer-events-none absolute left-0 -translate-x-1/2" style={{ top: nodeTop }}>
+        <Node tone={tone} />
+      </span>
+    </>
+  );
+}
+
+/**
+ * Act marker for the end-to-end flow section — a numbered rule that separates
+ * the four beats without turning each into its own <section>.
+ */
+function FlowAct({ num, label }: { num: string; label: string }) {
+  return (
+    <div className="reveal-up mb-10 mt-20 flex items-center gap-5 border-t border-slate-200 pt-8 md:mt-24">
+      <span className="font-mono text-[13px] text-cyan-700">{num}</span>
+      <span className="text-[13px] font-medium uppercase tracking-[0.14em] text-[#0f1419]">{label}</span>
+      <span className="h-px flex-1 bg-slate-200" />
+    </div>
+  );
+}
+
+/** Uppercase eyebrow: node + wide-tracked label. */
+function Eyebrow({ children, tone = "light" }: { children: React.ReactNode; tone?: "light" | "dark" }) {
+  return (
+    <p className="flex items-center gap-4">
+      <Node tone={tone} />
+      <span
+        className={`text-[13px] font-medium uppercase tracking-[0.06em] ${
+          tone === "dark" ? "text-slate-300" : "text-slate-900"
+        }`}
+      >
+        {children}
+      </span>
+    </p>
+  );
+}
+
+/**
+ * Image placeholder. Square corners, hatched fill, centered label — pass `src`
+ * once real art exists and the same slot renders the image at the same size.
+ */
+function Ph({
+  label,
+  ratio = "16 / 10",
+  tone = "light",
+  src,
+  className = "",
+  quiet = false,
+}: {
+  label: string;
+  ratio?: string;
+  tone?: "light" | "dark" | "accent";
+  src?: string;
+  className?: string;
+  /** Corner-anchored label instead of a centered one — for full-bleed backdrops
+      where a centered caption would collide with the copy sitting on top. */
+  quiet?: boolean;
+}) {
+  if (src) {
+    return (
+      <div className={`overflow-hidden ${className}`} style={{ aspectRatio: ratio }}>
+        <img src={src} alt={label} className="h-full w-full object-cover" />
       </div>
-    </div>
-  );
-}
-
-/* ── Hero spiral — inline SVG with animated stroke pulses ── */
-
-function HeroSpiral() {
-  const rightPaths = [
-    "M515 315.071C823.527 315.071 853.487 619.089 1056.54 619.089C1230.97 619.089 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 610.748 1056.54 610.748C1230.97 610.748 1321.64 315.071 1572.07 315.071",
-    "M515 315.07C823.527 315.07 853.487 598.698 1056.54 598.698C1230.97 598.698 1321.64 315.07 1572.07 315.07",
-    "M515 315.07C823.527 315.07 853.487 584.794 1056.54 584.794C1230.97 584.794 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 565.33 1056.54 565.33C1230.97 565.33 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 540.304 1056.54 540.304C1230.97 540.304 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 506.936 1056.54 506.936C1230.97 506.936 1321.64 315.07 1572.07 315.07",
-    "M515 315.07C823.527 315.07 853.487 468.934 1056.54 468.934C1230.97 468.934 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 424.443 1056.54 424.443C1230.97 424.443 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 371.611 1056.54 371.611C1230.97 371.611 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 315.071 1056.54 315.071C1230.97 315.071 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 258.53 1056.54 258.53C1230.97 258.53 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 204.771 1056.54 204.771C1230.97 204.771 1321.64 315.071 1572.07 315.071",
-    "M515 315.07C823.527 315.07 853.487 160.28 1056.54 160.28C1230.97 160.28 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 122.278 1056.54 122.278C1230.97 122.278 1321.64 315.071 1572.07 315.071",
-    "M515 315.07C823.527 315.07 853.487 89.8369 1056.54 89.8369C1230.97 89.8369 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 64.811 1056.54 64.811C1230.97 64.811 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 45.3467 1056.54 45.3466C1230.97 45.3466 1321.64 315.071 1572.07 315.071",
-    "M515 315.071C823.527 315.071 853.487 31.4433 1056.54 31.4433C1230.97 31.4433 1321.64 315.071 1572.07 315.071",
-    "M515 315.07C823.527 315.07 853.487 19.3935 1056.54 19.3935C1230.97 19.3935 1321.64 315.07 1572.07 315.07",
-    "M515 315.071C823.527 315.071 853.487 11.0517 1056.54 11.0517C1230.97 11.0517 1321.64 315.071 1572.07 315.071",
-  ];
-
-  const leftPaths = [
-    "M0.427716 314.859C159.246 314.859 174.668 455.394 279.193 455.394C368.982 455.394 415.656 314.859 544.571 314.859",
-    "M0.427716 314.859C159.246 314.859 174.668 451.538 279.193 451.538C368.982 451.538 415.656 314.859 544.571 314.859",
-    "M0.427717 314.859C159.246 314.859 174.668 445.968 279.193 445.968C368.982 445.968 415.656 314.859 544.571 314.859",
-    "M0.427718 314.859C159.246 314.859 174.668 439.541 279.193 439.541C368.982 439.541 415.656 314.859 544.571 314.859",
-    "M0.427719 314.86C159.246 314.86 174.668 430.543 279.193 430.543C368.982 430.543 415.656 314.86 544.571 314.859",
-    "M0.427721 314.86C159.246 314.86 174.668 418.975 279.193 418.975C368.982 418.975 415.656 314.86 544.571 314.86",
-    "M0.427723 314.859C159.246 314.859 174.668 403.55 279.193 403.55C368.982 403.55 415.656 314.859 544.571 314.859",
-    "M0.427725 314.859C159.246 314.859 174.668 385.983 279.193 385.983C368.982 385.983 415.656 314.859 544.571 314.859",
-    "M0.427728 314.859C159.246 314.859 174.668 365.417 279.193 365.417C368.982 365.417 415.656 314.859 544.571 314.859",
-    "M0.427731 314.859C159.246 314.859 174.668 340.995 279.193 340.995C368.982 340.995 415.656 314.859 544.571 314.859",
-    "M0.427734 314.859C159.246 314.859 174.668 314.859 279.193 314.859C368.982 314.859 415.656 314.859 544.571 314.859",
-    "M0.427738 314.859C159.246 314.859 174.668 288.723 279.193 288.723C368.982 288.723 415.656 314.859 544.571 314.859",
-    "M0.427741 314.859C159.246 314.859 174.668 263.873 279.193 263.873C368.982 263.873 415.656 314.859 544.571 314.859",
-    "M0.427744 314.859C159.246 314.859 174.668 243.307 279.193 243.307C368.982 243.307 415.656 314.859 544.571 314.859",
-    "M0.427746 314.859C159.246 314.859 174.668 225.74 279.193 225.74C368.982 225.74 415.656 314.859 544.571 314.859",
-    "M0.427748 314.859C159.246 314.859 174.668 210.744 279.193 210.744C368.982 210.744 415.656 314.859 544.571 314.859",
-    "M0.42775 314.859C159.246 314.859 174.668 199.175 279.193 199.175C368.982 199.175 415.656 314.859 544.571 314.859",
-    "M0.427751 314.859C159.246 314.859 174.668 190.178 279.193 190.178C368.982 190.178 415.656 314.859 544.571 314.859",
-    "M0.427752 314.859C159.246 314.859 174.668 183.751 279.193 183.751C368.982 183.751 415.656 314.859 544.571 314.859",
-    "M0.427752 314.859C159.246 314.859 174.668 178.181 279.193 178.181C368.982 178.181 415.656 314.859 544.571 314.859",
-    "M0.427753 314.859C159.246 314.859 174.668 174.325 279.193 174.325C368.982 174.325 415.656 314.859 544.571 314.859",
-  ];
-
-  /* Select a few paths for traveling dot pulses */
-  const pulsePaths = [1, 5, 10, 15, 19];
-
-  return (
-    <svg viewBox="0 0 1573 630" fill="none" className="h-full w-full" aria-hidden="true">
-      <defs>
-        <clipPath id="clip0_6057_8963">
-          <rect width="629.356" height="1179" fill="white" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 1573 629.356)" />
-        </clipPath>
-        <clipPath id="clip1_6057_8963">
-          <rect width="290.924" height="545" fill="white" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 545 460.14)" />
-        </clipPath>
-      </defs>
-
-      {/* Right group — base strokes */}
-      <g clipPath="url(#clip0_6057_8963)">
-        {rightPaths.map((d, i) => (
-          <path key={`r${i}`} d={d} stroke="#22d3ee" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" fill="none" />
-        ))}
-      </g>
-
-      {/* Left group — base strokes */}
-      <g clipPath="url(#clip1_6057_8963)">
-        {leftPaths.map((d, i) => (
-          <path key={`l${i}`} d={d} stroke="#22d3ee" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" fill="none" />
-        ))}
-      </g>
-
-      {/* Animated pulse dots traveling along select right paths */}
-      {pulsePaths.map((idx) => (
-        <g key={`pulse-r-${idx}`}>
-          <path id={`spiralR${idx}`} d={rightPaths[idx]} fill="none" />
-          <circle r="4" fill="#22d3ee" opacity="0">
-            <animateMotion dur={`${4 + (idx % 4) * 1.5}s`} begin={`${idx * 0.7}s`} repeatCount="indefinite">
-              <mpath href={`#spiralR${idx}`} />
-            </animateMotion>
-            <animate attributeName="opacity" values="0;0.6;0.6;0" dur={`${4 + (idx % 4) * 1.5}s`} begin={`${idx * 0.7}s`} repeatCount="indefinite" />
-          </circle>
-        </g>
-      ))}
-
-      {/* Animated pulse dots traveling along select left paths */}
-      {pulsePaths.map((idx) => (
-        <g key={`pulse-l-${idx}`}>
-          <path id={`spiralL${idx}`} d={leftPaths[idx]} fill="none" />
-          <circle r="3" fill="#22d3ee" opacity="0">
-            <animateMotion dur={`${3 + (idx % 3) * 1.2}s`} begin={`${idx * 0.5 + 2}s`} repeatCount="indefinite">
-              <mpath href={`#spiralL${idx}`} />
-            </animateMotion>
-            <animate attributeName="opacity" values="0;0.5;0.5;0" dur={`${3 + (idx % 3) * 1.2}s`} begin={`${idx * 0.5 + 2}s`} repeatCount="indefinite" />
-          </circle>
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-/* ── Floating particles ── */
-
-function Particles() {
-  const [particles, setParticles] = useState<
-    { id: number; left: string; top: string; size: number; delay: string; duration: string; opacity: number }[]
-  >([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 24 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        size: 1.5 + Math.random() * 3,
-        delay: `${Math.random() * 6}s`,
-        duration: `${5 + Math.random() * 6}s`,
-        opacity: 0.15 + Math.random() * 0.35,
-      })),
     );
-  }, []);
+  }
 
-  if (particles.length === 0) return null;
+  const surface =
+    tone === "dark"
+      ? "bg-[#1a1e22] text-slate-500"
+      : tone === "accent"
+        ? "bg-cyan-100 text-cyan-800"
+        : "bg-[#e9edea] text-slate-500";
+  const hatch =
+    tone === "dark" ? "rgba(255,255,255,0.045)" : tone === "accent" ? "rgba(8,145,178,0.10)" : "rgba(15,23,42,0.045)";
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="float-slow absolute rounded-full bg-cyan-400"
-          style={{
-            left: p.left,
-            top: p.top,
-            width: p.size,
-            height: p.size,
-            opacity: p.opacity,
-            animationDelay: p.delay,
-            animationDuration: p.duration,
-          }}
-        />
+    <div
+      className={`relative overflow-hidden ${surface} ${className}`}
+      style={{ aspectRatio: ratio }}
+      role="img"
+      aria-label={`Image placeholder: ${label}`}
+    >
+      <div
+        className="absolute inset-0"
+        style={{ backgroundImage: `repeating-linear-gradient(45deg, ${hatch} 0 1px, transparent 1px 12px)` }}
+      />
+      {quiet ? (
+        <p className="absolute bottom-5 right-6 text-[11px] uppercase tracking-[0.16em] opacity-70">{label}</p>
+      ) : (
+        <div className="absolute inset-0 grid place-items-center px-6 text-center">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" className="mx-auto h-8 w-8 opacity-60">
+              <rect x="3" y="4" width="18" height="16" />
+              <circle cx="8.5" cy="9.5" r="1.5" />
+              <path d="m21 16-4.5-5L9 20" />
+            </svg>
+            <p className="mt-3 text-[11px] uppercase tracking-[0.16em]">{label}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Prev/next arrows ringed by the ○ from the AIOS mark. */
+function ArrowPair({
+  onPrev,
+  onNext,
+  tone = "light",
+}: {
+  onPrev: () => void;
+  onNext: () => void;
+  tone?: "light" | "dark";
+}) {
+  const stroke = tone === "dark" ? "text-slate-300" : "text-slate-900";
+  const ring = tone === "dark" ? "border-white/25 hover:border-cyan-400" : "border-slate-300 hover:border-cyan-600";
+  return (
+    <div className="flex items-center gap-4">
+      {[
+        { dir: "prev" as const, onClick: onPrev, d: "M19 12H5M11 6l-6 6 6 6", label: "Previous" },
+        { dir: "next" as const, onClick: onNext, d: "M5 12h14M13 6l6 6-6 6", label: "Next" },
+      ].map((btn) => (
+        <button
+          key={btn.dir}
+          type="button"
+          onClick={btn.onClick}
+          aria-label={btn.label}
+          className={`grid h-14 w-14 place-items-center rounded-full border transition-colors ${ring}`}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className={`h-5 w-5 ${stroke}`}>
+            <path d={btn.d} />
+          </svg>
+        </button>
       ))}
     </div>
   );
 }
 
-/* ── Data ── */
 
-const FUNNEL_STAGES = [
-  { label: "Experimenting with AI", pct: 88 },
-  { label: "Scaling agentic AI", pct: 23 },
-  { label: "Beyond proof-of-concept", pct: 22 },
-  { label: "Creating substantial value", pct: 4 },
+/* ────────────────────────────────────────────────────────────
+   Content — lorem ipsum stand-in copy
+   ──────────────────────────────────────────────────────────── */
+
+/* Hero background media. The video plays on a loop; the image is its poster —
+   shown while the video buffers, and served instead of it to anyone who has
+   asked for reduced motion. Set HERO_VIDEO to null to use the still alone.
+   Both encodes carry a 1s crossfade into their own opening frame, so the loop
+   has no visible seam (see the ffmpeg recipe in README/commit notes). */
+const HERO_VIDEO: { webm: string; mp4: string } | null = {
+  webm: "/videos/hero.webm",
+  mp4: "/videos/hero.mp4",
+};
+const HERO_IMAGE: string | null = "/header_image.png";
+
+/* Second background, for the call act of the hero animation: the customer
+   on the phone rather than the expert at her desk. HeroGraph reports which
+   act is on screen (see its `onAct` prop) and the two crossfade.
+
+   Encoded from the supplied `customer_call.mp4` the same way as the first
+   plate — 1600×900, 24fps, with the last second crossfaded into the opening
+   frame so the loop has no seam. Set to null to hold the first plate for
+   the whole animation. Brief: docs/hero-call-video-brief.md. */
+const HERO_VIDEO_CALL: { webm: string; mp4: string } | null = {
+  webm: "/videos/hero-call.webm",
+  mp4: "/videos/hero-call.mp4",
+};
+
+/* Risk reversal, not social proof. `kind` states the question the buyer is
+   actually asking; the stat answers it. */
+const TRUST_STATS = [
+  { kind: "If it fails", stat: "$0", label: "You never pay for failed agentic workflow executions" },
+  { kind: "Time to production", stat: "4 weeks", label: "From first observation to production deployment" },
+  { kind: "What you maintain", stat: "1 core", label: "One cognitive core — not a hundred brittle bots" },
 ];
 
-const DIFFERENTIATORS: { title: string; subtitle: string; description: string; icon: ReactNode }[] = [
+/* ── Section 03: one claim, end to end ──────────────────────
+   An illustrative walkthrough, not a case study — roles only, no names, and
+   the panel is labelled as such. The point of the before/after is that the
+   physical inspection still takes two days: only the human and system time
+   collapses. Claiming end-to-end minutes would be the kind of lie a claims
+   buyer spots on sight.
+   ──────────────────────────────────────────────────────────── */
+
+const FLOW_BEFORE = [
+  { t: "DAY 1", text: "Claim filed, lands in the intake queue" },
+  { t: "DAY 1", text: "Adjuster pulls the policy and checks coverage", meta: "12 min · 3 systems" },
+  { t: "DAY 2", text: "Inspection ordered — then waiting" },
+  { t: "DAY 4", text: "Estimate returns; adjuster keys it in and compares to the schedule" },
+  { t: "DAY 4", text: "Over threshold — emailed to the manager, then waiting" },
+  { t: "DAY 5", text: "Manager approves, buried in an email thread" },
+  { t: "DAY 6", text: "Payment posted, file noted, customer emailed" },
+];
+
+const FLOW_AFTER = [
+  { t: "00:00", text: "Policy pulled, coverage checked, duplicate check run" },
+  { t: "00:02", text: "Inspection ordered automatically" },
+  { t: "", text: "2 days — the inspection is physical. That part doesn't change.", pause: true },
+  { t: "00:03", text: "Estimate ingested and compared; over threshold, routed to the manager" },
+  { t: "00:03", text: "Manager approves in one click", gate: true },
+  { t: "00:04", text: "Payment posted · file documented · customer notified, unprompted" },
+];
+
+const FLOW_DELTAS = [
+  { label: "Handoffs", before: "11", after: "1" },
+  { label: "Adjuster time on this claim", before: "47 min", after: "0" },
+  { label: "Customer calls chasing status", before: "2", after: "0" },
+  { label: "Manager touch", before: "1 day", after: "90 sec" },
+];
+
+const FLOW_CHAT = [
+  { who: "Policyholder", text: "Any update on claim 88-4471? It's been a week.", agent: false },
   {
-    title: "Time to Earnings",
-    subtitle: "No multi-year pilots. You only pay when it actually saves you money.",
-    description: "We generate measurable earnings impact in weeks, not years, with our pricing tied to a 100% production success bar. Outcome-based by design: every workflow that ships has to pay for itself, or it doesn't ship.",
-    icon: <IconBolt className="h-5 w-5" />,
-  },
-  {
-    title: "Self-evolving autonomous agents",
-    subtitle: "Gets better every run. No retraining, no consultants.",
-    description: "Every execution makes the system smarter. A three-role memory engine (Generator, Reflector, Curator) captures outcomes, surfaces patterns, and persists validated insights as reusable knowledge. No manual retraining. No prompt tuning. Continuous autonomous improvement.",
-    icon: <IconGrid className="h-5 w-5" />,
-  },
-  {
-    title: "Security-first posture.",
-    subtitle: "Can’t take an action your policy doesn’t allow.",
-    description: "Every action is blocked unless an explicit policy allows it. A deterministic policy engine with allow/deny controls, global and per-execution kill switches that halt instantly, and human-in-the-loop approval gates with compliance-grade audit logging.",
-    icon: <IconShield className="h-5 w-5" />,
-  },
-  {
-    title: "Expert Knowledge Extraction",
-    subtitle: "Capture their know-how before they walk out the door.",
-    description: "AIOS AI conducts voice interviews just like a human, using seven science-backed elicitation techniques to understand how your experts complete complex tasks. While they talk, AIOS AI captures their screen, detects decision signals, and automatically builds certified, executable agentic workflows from what it learns.",
-    icon: <IconEye className="h-5 w-5" />,
-  },
-  {
-    title: "Agnostic Cognitive Core",
-    subtitle: "Less to maintain. No tech debt compounds. Reduced attack surface, keeping you safe!",
-    description: "Traditional platforms build a separate agent for every task, leaving you with hundreds of brittle bots to maintain. AIOS operates like a single brilliant employee: one cognitive core that reasons about intent, selects the right tools, and adapts to any workflow. Add a new capability and every process gets smarter immediately.",
-    icon: <IconCpu className="h-5 w-5" />,
-  },
-  {
-    title: "Universal connector fabric",
-    subtitle: "Plugs into the stack you already run.",
-    description: "Hundreds of connectors (REST, Slack, Jira, Google Workspace, databases, terminal, and a growing marketplace), unified under one execution contract. Add a connector and every cognitive core uses it immediately.",
-    icon: <IconLink className="h-5 w-5" />,
+    who: "AIOS",
+    text: "Your inspection cleared Tuesday. The repair estimate came in at $12,400 — above the auto-approve limit, so it routed to a manager for review. That was approved this morning. Payment is scheduled for Friday, and I've just texted you the confirmation.",
+    agent: true,
   },
 ];
 
-const HERO_MESSAGES = [
+/* The line under the transcript that makes the whole section land: the answer
+   the customer just got is traceable to a specific person and a specific gate. */
+const FLOW_PROVENANCE = [
+  { k: "Judgment", v: "Captured from a senior adjuster" },
+  { k: "Gate", v: "Claims ops manager · policy #4" },
+  { k: "Run", v: "2.4s · $0.31 · logged" },
+];
+
+const FLOW_ALSO = ["AP invoice exceptions", "Vendor onboarding", "Order status", "Tier-1 support"];
+
+
+
+const PILLARS = [
   {
-    headline: ["The Operating System", "for Autonomous", "Intelligence."],
-    description:
-      "AIOS transforms your organization’s knowledge and processes into governed autonomous execution—helping work move faster, operate continuously, and",
-    accent: "deliver measurable outcomes.",
+    label: "OBSERVER",
+    title: "Lorem ipsum dolor sit",
+    body: "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.",
   },
   {
-    headline: ["The Enterprise Agentic Harness", "That Puts Intelligence", "to Work."],
-    description:
-      "AIOS connects models, agents, tools, and enterprise knowledge through one governed system—turning fragmented AI capabilities into",
-    accent: "secure, coordinated execution.",
+    label: "BLUEPRINT",
+    title: "Ut enim ad minim veniam",
+    body: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor.",
   },
   {
-    headline: ["Autonomous Agentic Solutions", "Delivering Measurable", "Outcomes in Weeks."],
-    description:
-      "We ship autonomous agentic solutions, not AI pilots. Our engineers embed with your team, automate the work that matters most, and",
-    accent: "only get paid when it saves you money.",
+    label: "EXECUTOR",
+    title: "Duis aute irure dolor in reprehenderit",
+    body: "In voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident.",
   },
   {
-    headline: ["Protect Your Intellectual Property.", "Preserve Your AI", "Sovereignty."],
-    description:
-      "Deploy autonomous intelligence while keeping your proprietary knowledge, workflows, and competitive advantage protected, governed, and",
-    accent: "firmly under your control.",
+    label: "COMMUNICATOR",
+    title: "Excepteur sint occaecat",
+    body: "Cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis.",
+  },
+  {
+    label: "CONTROLLER",
+    title: "Sed ut perspiciatis unde omnis iste natus error",
+    body: "Sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
   },
 ];
 
-/* How long each hero message holds before it rotates, and the cross-fade
-   window between messages. The countdown ring sweeps over HERO_ROTATE_MS. */
-const HERO_ROTATE_MS = 11000;
-const HERO_FADE_MS = 500;
+const BAND_STATS = [
+  { stat: "30%+", label: "Lorem ipsum dolor sit" },
+  { stat: "$500M", label: "Consectetur adipiscing" },
+  { stat: "6 weeks or less", label: "Sed do eiusmod tempor" },
+];
 
-/* Persists the starting hero message across visits so each return trip opens on
-   a different one (see the mount effect in <Home>). One year, so a repeat
-   visitor keeps cycling; SameSite=Lax since it's a first-party preference. */
-const HERO_START_COOKIE = "aios_hero_start";
+const STEPS = [
+  {
+    key: "lorem",
+    tab: "Lorem.",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed",
+    caption: "Tempor incididunt ut labore et dolore",
+    body: "Magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute.",
+    image: "Step one product view",
+  },
+  {
+    key: "ipsum",
+    tab: "Ipsum.",
+    title: "Irure dolor in reprehenderit in voluptate velit esse cillum",
+    caption: "Dolore eu fugiat nulla pariatur excepteur",
+    body: "Sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis unde omnis.",
+    image: "Step two product view",
+  },
+  {
+    key: "dolor",
+    tab: "Dolor.",
+    title: "Iste natus error sit voluptatem accusantium doloremque",
+    caption: "Laudantium totam rem aperiam eaque ipsa",
+    body: "Quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo nemo enim ipsam voluptatem quia voluptas.",
+    image: "Step three product view",
+  },
+];
 
-function readHeroStartCookie(): number | null {
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${HERO_START_COOKIE}=([^;]*)`),
-  );
-  if (!match) return null;
-  const value = Number.parseInt(decodeURIComponent(match[1]), 10);
-  return Number.isNaN(value) ? null : value;
-}
+const STORIES = [
+  {
+    stat: "14,000+",
+    statLabel: "lorem ipsum dolor sit amet",
+    quote:
+      "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
+    name: "LOREM IPSUM",
+    title: "DOLOR SIT AMET",
+  },
+  {
+    stat: "3.2x",
+    statLabel: "consectetur adipiscing elit sed",
+    quote:
+      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure.",
+    name: "CONSECTETUR ADIPISCING",
+    title: "ELIT SED DO",
+  },
+  {
+    stat: "$4.1M",
+    statLabel: "tempor incididunt ut labore",
+    quote:
+      "Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum perspiciatis.",
+    name: "EIUSMOD TEMPOR",
+    title: "INCIDIDUNT UT",
+  },
+];
+
+const SECURITY_BADGES = ["Lorem", "Ipsum", "Dolor", "Sit amet", "Consectetur", "Adipiscing"];
+
+const SECURITY_POINTS = [
+  { title: "Lorem ipsum dolor", body: "Sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore." },
+  { title: "Et dolore magna aliqua", body: "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi." },
+  { title: "Ut aliquip ex ea commodo", body: "Consequat duis aute irure dolor in reprehenderit in voluptate velit." },
+  { title: "Esse cillum dolore eu", body: "Fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt." },
+];
+
+const DISCOVER = [
+  { label: "OBSERVER", caption: "Lorem ipsum dolor sit amet. Consectetur, adipiscing and elit.", image: "Product view one" },
+  { label: "BLUEPRINT", caption: "Sed do eiusmod tempor. Incididunt, labore and dolore.", image: "Product view two" },
+  { label: "EXECUTOR", caption: "Magna aliqua ut enim. Minim, veniam and quis.", image: "Product view three" },
+  { label: "COMMUNICATOR", caption: "Nostrud exercitation ullamco. Laboris, nisi and aliquip.", image: "Product view four" },
+];
+
+const POSTS = [
+  { kind: "BLOG POST", date: "JUL 10, 2026", read: "9 MINS", title: "Lorem ipsum dolor sit amet consectetur adipiscing elit" },
+  { kind: "BLOG POST", date: "JUL 10, 2026", read: "5 MINS", title: "Sed do eiusmod tempor incididunt ut labore et dolore" },
+  { kind: "BLOG POST", date: "JUL 10, 2026", read: "7 MINS", title: "Magna aliqua ut enim ad minim veniam quis nostrud" },
+];
+
+/* Shared content container — a centered 1320px measure, matching skan.ai's
+   (~60px gutters at a 1440 viewport). Section backgrounds stay full-bleed;
+   only the content inside them is constrained. */
+const GUTTER = "mx-auto w-full max-w-[1320px] px-6 sm:px-10 lg:px-[60px]";
 
 
-/* ── Page ── */
+/* ────────────────────────────────────────────────────────────
+   Page
+   ──────────────────────────────────────────────────────────── */
 
 export default function Home() {
   const form = useLeadForm();
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
-  const [scrolled, setScrolled] = useState(false);
-  const [headerTone, setHeaderTone] = useState<"dark" | "light">("dark");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [activeHeroMessage, setActiveHeroMessage] = useState(0);
-  const [heroMessageVisible, setHeroMessageVisible] = useState(true);
-  const [heroCycle, setHeroCycle] = useState(0);
-  const featureObserverRef = useRef<IntersectionObserver | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [story, setStory] = useState(0);
+  const [discover, setDiscover] = useState(0);
+  const [post, setPost] = useState(0);
+  /* Which act of the hero animation is on screen, so the background can
+     change with it. HeroGraph reports it; see HERO_VIDEO_CALL. */
+  const [heroAct, setHeroAct] = useState<HeroAct>("build");
+  const callVideoRef = useRef<HTMLVideoElement>(null);
 
-  /* Reveal animations are handled globally by <ScrollReveal /> in
-     app/layout.tsx — every page on the site inherits the same behavior. */
+  /* The call plate has to start at its first frame every time the story
+     reaches the call — otherwise it dissolves in at whatever point its
+     own loop happens to be at, and the man is mid-sentence before the
+     phone has rung.
 
-  /* Open on a different hero message each visit. SSR/first paint always render
-     index 0 (so hydration matches and the page stays statically cacheable);
-     this effect then advances to the message after the last visit's and writes
-     the new index back to the cookie. The swap lands while the copy is still
-     blurred/faded in, so there's no visible flash of message 0. */
+     It keeps playing the whole time rather than being paused while
+     hidden: a paused video can stall on the seek, and a stalled video
+     paints nothing, so the dissolve would come up from black instead of
+     between two live frames. Seeking a video that is already playing and
+     fully buffered is instant, and the first ~150ms of the dissolve is
+     under 10% opacity anyway, which covers any hitch. */
   useEffect(() => {
-    const previous = readHeroStartCookie();
-    const start =
-      previous === null ? 0 : (previous + 1) % HERO_MESSAGES.length;
-    setActiveHeroMessage(start);
-    document.cookie = `${HERO_START_COOKIE}=${start}; path=/; max-age=31536000; samesite=lax`;
-  }, []);
-
-  /* Self-scheduling rotation: each advance bumps `heroCycle`, which re-runs
-     this effect and arms a fresh timer. That keeps every message on screen for
-     exactly HERO_ROTATE_MS and lets the countdown ring (keyed on heroCycle)
-     restart in lockstep — including after a manual jump. */
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let fadeTimer: ReturnType<typeof setTimeout> | undefined;
-    const advanceTimer = window.setTimeout(() => {
-      setHeroMessageVisible(false);
-      fadeTimer = setTimeout(() => {
-        setActiveHeroMessage((current) => (current + 1) % HERO_MESSAGES.length);
-        setHeroMessageVisible(true);
-        setHeroCycle((n) => n + 1);
-      }, HERO_FADE_MS);
-    }, HERO_ROTATE_MS);
-
-    return () => {
-      window.clearTimeout(advanceTimer);
-      if (fadeTimer) clearTimeout(fadeTimer);
-    };
-  }, [heroCycle]);
-
-  /* Jump straight to a message when its timer dot is clicked; bumping
-     heroCycle re-arms the rotation so the countdown restarts from full. */
-  const selectHeroMessage = (index: number) => {
-    if (index === activeHeroMessage) return;
-    setHeroMessageVisible(false);
-    window.setTimeout(() => {
-      setActiveHeroMessage(index);
-      setHeroMessageVisible(true);
-      setHeroCycle((n) => n + 1);
-    }, HERO_FADE_MS);
-  };
-
-  /* Navbar scroll shadow + dynamic tone — flip header palette as the section
-     under it transitions between cream and dark surfaces. Sections opt in via
-     `data-tone="light" | "dark"`. */
-  useEffect(() => {
-    const HEADER_PROBE_Y = 100; // header height + a small offset
-    const onScroll = () => {
-      setScrolled(window.scrollY > 10);
-      const sections = document.querySelectorAll<HTMLElement>("[data-tone]");
-      let activeTone: "dark" | "light" = "dark";
-      let activeId: string | null = null;
-      for (const sec of sections) {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top <= HEADER_PROBE_Y && rect.bottom > HEADER_PROBE_Y) {
-          activeTone = (sec.dataset.tone as "dark" | "light") ?? "dark";
-          activeId = sec.id || null;
-          break;
-        }
-      }
-      setHeaderTone(activeTone);
-      setActiveSection(activeId);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    featureObserverRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.getAttribute("data-feature-index"));
-            if (!isNaN(idx)) setActiveFeature(idx);
-          }
-        });
-      },
-      { threshold: 0.5, rootMargin: "-20% 0px -20% 0px" },
-    );
-    document.querySelectorAll("[data-feature-index]").forEach((el) => featureObserverRef.current?.observe(el));
-    return () => featureObserverRef.current?.disconnect();
-  }, []);
-
+    if (heroAct !== "call") return;
+    const video = callVideoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    void video.play();
+  }, [heroAct]);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     if (formStatus !== "success") return;
@@ -486,6 +467,24 @@ export default function Home() {
     }, 5000);
     return () => clearTimeout(timer);
   }, [formStatus]);
+
+  /* Sticky tab bar tracks whichever step block is under it, the way skan's
+     Scan/Distill/Deploy bar does as you scroll the dark section. */
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute("data-step-index"));
+            if (!Number.isNaN(idx)) setActiveStep(idx);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    stepRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   function handleCtaClick(location: string) {
     trackEvent("bold_claim_cta_click", { location });
@@ -499,9 +498,7 @@ export default function Home() {
     const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
     if (firstInvalid) {
       setFormStatus("error");
-      event.currentTarget
-        .querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
-        ?.focus();
+      event.currentTarget.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
       return;
     }
 
@@ -511,7 +508,7 @@ export default function Home() {
       const response = await fetch("/api/demo-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form.values, source: "website_v2" }),
+        body: JSON.stringify({ ...form.values, source: "website_v3" }),
       });
 
       const data = (await response.json()) as { ok?: boolean; message?: string };
@@ -533,824 +530,706 @@ export default function Home() {
     }
   }
 
+  const wrap = (n: number, len: number) => ((n % len) + len) % len;
+
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-[var(--bg-deep)] text-slate-300">
-      {/* Hero ambient glow — cyan only, sits behind the dark hero */}
-      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[800px] w-[1200px] -translate-x-1/2 rounded-full bg-cyan-500/[0.06] blur-[140px]" />
-
-
-      {/* ── HEADER — fixed at top. At scroll=0 the brand mark sits naked over
-          the hero (no nav, no background); once scrolling starts, the brand
-          mark fades out and the full menu (nav + CTA + tinted bg) fades in. */}
-      <header className="fixed left-0 right-0 top-0 z-30 px-0 pt-0">
-        <nav className={`flex items-center justify-between px-6 py-4.5 backdrop-blur-xl transition-colors duration-300 sm:px-20 lg:px-[112px] ${
-          scrolled
-            ? headerTone === "dark"
-              ? "border-b border-white/10 bg-[#050a14]/50"
-              : "border-b border-slate-950/10 bg-[var(--bg-page)]/50"
-            : "border-b border-transparent bg-transparent"
-        }`}>
-          <a href="#top" className="flex items-center gap-3">
-            <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-7 w-7" />
-            <span className={`text-sm font-medium tracking-tight transition-colors ${headerTone === "dark" ? "text-white" : "text-slate-950"}`}>
-              AIOS <span className="font-normal text-slate-500">by cvlSoft</span>
-            </span>
-          </a>
-          <div
-            className={`flex items-center gap-3 md:gap-8 transition-opacity duration-300 ${
-              scrolled ? "opacity-100" : "pointer-events-none opacity-0"
-            }`}
-          >
-            {[
-              ["/#problem", "The Industry Problem"],
-              ["/#why-aios", "Why AIOS"],
-              ["/#pricing", "Pricing"],
-              ["/rollout", "Rollout"],
-              ["/platform", "Platform"],
-              ["/team", "Team"],
-            ].map(([href, label]) => {
-              // Active when href points to the in-view section. Hash links
-              // (e.g. "/#problem") map to that section's id; non-hash routes
-              // (e.g. "/team") match the section sharing that id on the home
-              // page, so highlighting tracks the scroll position.
-              const targetId = href.includes("#")
-                ? href.split("#").pop() ?? null
-                : href.replace(/^\//, "");
-              const isActive = activeSection === targetId;
-              const inactiveColor = headerTone === "dark"
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-slate-950";
-              const activeColor = headerTone === "dark" ? "text-cyan-400" : "text-cyan-700";
-              return (
-                <a
-                  key={href}
-                  href={href}
-                  className={`hidden text-sm transition-colors md:block ${
-                    isActive
-                      ? `${activeColor} font-medium underline decoration-2 underline-offset-[6px]`
-                      : inactiveColor
-                  }`}
-                >
-                  {label}
-                </a>
-              );
-            })}
-            <a
-              href="#demo"
-              onClick={() => handleCtaClick("header")}
-              className={`rounded-md px-5 py-2 text-[13px] font-semibold tracking-[0.08em] transition-colors ${
-                headerTone === "dark"
-                  ? "border border-white/[0.10] bg-cyan-400 text-slate-950 hover:bg-cyan-300"
-                  : "border border-cyan-700 bg-cyan-700 text-white hover:bg-cyan-800"
-              }`}
-            >
-              REQUEST DEMO
-            </a>
-
-            {/* Mobile hamburger toggle */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-              className={`md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
-                headerTone === "dark" ? "text-white hover:bg-white/[0.06]" : "text-slate-950 hover:bg-slate-950/[0.06]"
-              }`}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile menu panel */}
-        {mobileMenuOpen && scrolled && (
-          <div
-            className={`md:hidden border-t ${
-              headerTone === "dark"
-                ? "border-white/[0.08] bg-[#050a14]"
-                : "border-slate-950/10 bg-[var(--bg-page)]"
-            }`}
-          >
-            <nav className="flex flex-col px-6 py-4">
-              {[
-                ["/#problem", "The Industry Problem"],
-                ["/#why-aios", "Why AIOS"],
-                ["/#pricing", "Pricing"],
-                ["/rollout", "Rollout"],
-                ["/platform", "Platform"],
-                ["/team", "Team"],
-              ].map(([href, label]) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`py-3 text-[15px] transition-colors ${
-                    headerTone === "dark"
-                      ? "text-slate-300 hover:text-white"
-                      : "text-slate-700 hover:text-slate-950"
-                  }`}
-                >
-                  {label}
-                </a>
-              ))}
-            </nav>
-          </div>
-        )}
-      </header>
+    <div className="relative min-h-screen overflow-x-clip bg-white text-[#0f1419]">
+      <SiteHeader />
 
       <main id="top">
-        {/* ── HERO ── */}
-        <section data-tone="dark" className="relative flex h-screen min-h-[640px] flex-col overflow-hidden">
-
-          {/* Spiral background */}
-          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-            {/* Subtle glow behind spiral */}
-            <div className="absolute right-[5%] top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-cyan-500/[0.06] blur-[120px]" />
-            {/* Spiral with left fade — hidden on mobile, shown md+ */}
-            <div
-              className="hero-spiral-frame absolute right-0 top-1/2 hidden h-[153.3%] w-[93.7%] md:block"
-              style={{
-                maskImage: "linear-gradient(to right, transparent 0%, black 35%)",
-                WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 35%)",
-              }}
-            >
-              <HeroSpiral />
-            </div>
+        {/* ══ 01 · HERO ══
+            Full-bleed media behind left-aligned copy, two-tone headline, HUD
+            annotations floating over the right half. */}
+        <section data-tone="dark" className="relative flex min-h-[810px] items-center overflow-hidden bg-[#15181b]">
+          <div className="absolute inset-0">
+            {/* object-right keeps the subject in frame when the section is taller
+                than the media's 2:1 — the left of the shot is empty anyway, so
+                that's the side that should get cropped. */}
+            {HERO_VIDEO ? (
+              <video
+                className={`absolute inset-0 h-full w-full object-cover object-right transition-opacity duration-[1500ms] ease-in-out motion-reduce:hidden ${
+                  heroAct === "call" && HERO_VIDEO_CALL ? "opacity-0" : "opacity-100"
+                }`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster={HERO_IMAGE ?? undefined}
+                aria-hidden="true"
+              >
+                {/* WebM first — browsers pick the first type they support. */}
+                <source src={HERO_VIDEO.webm} type="video/webm" />
+                <source src={HERO_VIDEO.mp4} type="video/mp4" />
+              </video>
+            ) : null}
+            {/* Call act: the customer on the phone. Stacked over the first
+                background and crossfaded in when HeroGraph reaches the call.
+                It plays throughout — starting it on the cut would show a
+                black frame while it buffers. */}
+            {HERO_VIDEO_CALL ? (
+              <video
+                ref={callVideoRef}
+                className={`absolute inset-0 h-full w-full object-cover object-right transition-opacity duration-[1500ms] ease-in-out motion-reduce:hidden ${
+                  heroAct === "call" ? "opacity-100" : "opacity-0"
+                }`}
+                // Plays from load and never pauses — see the effect above for
+                // why. It is only ever seeked back to zero, never started.
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                aria-hidden="true"
+              >
+                <source src={HERO_VIDEO_CALL.webm} type="video/webm" />
+                <source src={HERO_VIDEO_CALL.mp4} type="video/mp4" />
+              </video>
+            ) : null}
+            {/* Still fallback: the only media when there's no video, and the
+                motion-reduce substitute when there is. */}
+            {HERO_IMAGE ? (
+              <img
+                src={HERO_IMAGE}
+                alt=""
+                aria-hidden="true"
+                className={`h-full w-full object-cover object-right ${
+                  HERO_VIDEO ? "hidden motion-reduce:block" : ""
+                }`}
+              />
+            ) : !HERO_VIDEO ? (
+              <Ph label="Hero background image / video — 2400×1200" ratio="2 / 1" tone="dark" quiet className="h-full w-full" />
+            ) : null}
+            {/* The shot already falls to black on the left, so this scrim only
+                needs to hold text contrast — not build the darkness. */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#15181b] via-[#15181b]/60 to-transparent" />
+            {/* Narrow screens crop past the empty left side and put the subject
+                directly behind the headline, so push her back there only. */}
+            <div className="absolute inset-0 bg-[#15181b]/55 md:hidden" />
           </div>
 
-          {/* Content — vertically centered, takes the available space above
-              the BUILT ON row. Each block animates in with `hero-fade-up` and
-              its own animation-delay, producing a staggered cascade. */}
-          <div className="relative z-10 flex w-full flex-1 items-start pt-24 px-6 sm:px-10 md:items-center md:pt-0 lg:px-[120px]">
-            <div className="max-w-6xl">
-              <div
-                className={`hero-message-copy ${heroMessageVisible ? "hero-message-copy--visible" : ""}`}
-                aria-live="off"
+          {/* ── The story, over the media ──
+              The Observer watches an expert and captures not just what she
+              did but why → that becomes a blueprint → the blueprint is
+              launched, armed, and run by an inbound event → then a customer
+              phones about the same case and the same workflow answers them.
+              See HeroGraph.tsx for the timeline. Sits over the subject's
+              torso — the darkest, quietest part of the frame. Desktop only:
+              on narrow screens it buries the copy. */}
+          <HeroGraph
+            onAct={setHeroAct}
+            className="absolute bottom-[calc(8%-40px)] right-[3%] hidden w-[380px] lg:block xl:right-[5%] xl:w-[400px]"
+          />
+
+          <div className={`relative z-10 w-full ${GUTTER} py-24`}>
+            {/* Two-tone: muted clause sets up the contrast, white clause is the
+                claim. Keep both halves short — this renders at up to 4.5rem. */}
+            {/* Each clause is its own block so the tone change always falls on a
+                line break — inline, the two halves collide mid-line and the last
+                word orphans. Measure and size are tuned to keep the muted clause
+                at two lines and the payoff on one. */}
+            <h1 className="hero-fade-up max-w-[24ch] text-[clamp(2.25rem,4.4vw,3.5rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              <span className="block text-white/45">Your experts know how the work actually gets done.</span>
+              <span className="mt-1 block text-white">Now your agents do.</span>
+            </h1>
+
+            <p className="hero-fade-up mt-8 max-w-[46ch] text-[17px] leading-[1.6] text-white/70 [animation-delay:160ms]">
+              AIOS learns how your experts actually work, turns it into workflows that run
+              themselves, and interacts with your customers via voice, SMS, and inside ChatGPT —
+              where they&rsquo;re already asking about you, with or without you.
+            </p>
+
+            <div className="hero-fade-up mt-10 flex flex-wrap items-center gap-4 [animation-delay:300ms]">
+              <a
+                href="#demo"
+                onClick={() => handleCtaClick("hero_primary")}
+                className={BTN_DARK}
               >
-                <h1 className="hero-fade-up text-[clamp(2.8rem,6vw,5rem)] font-light leading-[1.08] tracking-[-0.03em] text-white">
-                  {HERO_MESSAGES[activeHeroMessage].headline.map((line, index, lines) => (
-                    <span key={line}>
-                      {index === lines.length - 1 ? (
-                        <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent [filter:drop-shadow(0_0_22px_rgba(34,211,238,0.45))]">
-                          {line}
-                        </span>
-                      ) : (
-                        line
-                      )}
-                      {index < lines.length - 1 && <br />}
-                    </span>
-                  ))}
-                </h1>
-
-                <p className="hero-fade-up mt-6 max-w-[720px] text-xl font-normal text-slate-400 [animation-delay:280ms]">
-                  {HERO_MESSAGES[activeHeroMessage].description}{" "}
-                  <span className="text-cyan-400">{HERO_MESSAGES[activeHeroMessage].accent}</span>
-                </p>
-              </div>
-
-              <div className="hero-fade-up mt-8 flex flex-wrap items-center gap-3 [animation-delay:520ms]">
-                <a
-                  href="#demo"
-                  onClick={() => handleCtaClick("hero_primary")}
-                  className="rounded-md bg-cyan-400 px-7 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20"
-                >
-                  Request Demo
-                </a>
-                <a
-                  href="#why-aios"
-                  onClick={() => handleCtaClick("hero_secondary")}
-                  className="rounded-md border border-slate-600 px-7 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
-                >
-                  Why We&rsquo;re Different
-                </a>
-              </div>
-
-              {/* Rotation indicators — one circular countdown ring per hero
-                  message. The active ring sweeps over HERO_ROTATE_MS so the
-                  viewer can see when the copy is about to change; each dot is
-                  clickable to jump straight to that message. */}
-              <div
-                className="hero-fade-up mt-9 flex items-center gap-3.5 [animation-delay:640ms]"
-                role="tablist"
-                aria-label="Hero message"
+                <Node />
+                Request a demo
+              </a>
+              <a
+                href="#platform"
+                onClick={() => handleCtaClick("hero_secondary")}
+                className={BTN_SOLID}
               >
-                {HERO_MESSAGES.map((message, index) => {
-                  const isActive = index === activeHeroMessage;
-                  return (
-                    <button
-                      key={message.accent}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-label={`Message ${index + 1} of ${HERO_MESSAGES.length}`}
-                      onClick={() => selectHeroMessage(index)}
-                      className="hero-timer group relative grid h-6 w-6 place-items-center"
-                    >
-                      <svg viewBox="0 0 24 24" className="absolute inset-0 h-6 w-6 -rotate-90">
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="9"
-                          fill="none"
-                          strokeWidth="1.75"
-                          className={
-                            isActive
-                              ? "stroke-slate-600"
-                              : "stroke-slate-700 transition-colors group-hover:stroke-slate-500"
-                          }
-                        />
-                        {isActive && (
-                          <circle
-                            key={heroCycle}
-                            cx="12"
-                            cy="12"
-                            r="9"
-                            fill="none"
-                            strokeWidth="1.75"
-                            strokeLinecap="round"
-                            className="hero-timer-progress stroke-cyan-400"
-                          />
-                        )}
-                      </svg>
-                      <span
-                        className={`h-1 w-1 rounded-full transition-colors ${
-                          isActive ? "bg-cyan-300" : "bg-slate-600 group-hover:bg-slate-400"
-                        }`}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
+                <Node />
+                Explore the platform
+              </a>
             </div>
           </div>
-
-          {/* ── PARTNERED WITH / BUILT ON ──
-              Mobile: a single auto-scrolling marquee (continuous loop) so the
-              logos always read inline without forcing the user to scroll.
-              Desktop (md+): the original static 4fr/3fr two-group grid with
-              vertical column rules. */}
-          {(() => {
-            const partnered = [
-              { name: "OpenAI", file: "openai.svg" },
-              { name: "Anthropic", file: "anthropic.svg" },
-              { name: "Google", file: "google.svg" },
-              { name: "Microsoft", file: "microsoft.svg" },
-            ];
-            const builtOn = [
-              { name: "AWS", file: "amazonwebservices.svg" },
-              { name: "MongoDB", file: "mongodb.svg" },
-              { name: "Next.js", file: "nextjs.svg" },
-            ];
-            const marqueeItems = [...partnered, ...builtOn];
-            const Logo = ({ b }: { b: { name: string; file: string } }) => (
-              <span className="flex shrink-0 items-center gap-2.5">
-                <img
-                  src={`/partners/${b.file}`}
-                  alt=""
-                  aria-hidden="true"
-                  className="h-5 w-5 shrink-0 opacity-90 [filter:brightness(0)_invert(1)]"
-                />
-                <span className="whitespace-nowrap text-[15px] font-medium tracking-tight text-white">
-                  {b.name}
-                </span>
-              </span>
-            );
-            // Logos cascade left-to-right after the CTAs settle.
-            // Desktop logos use a global index across both groups so the
-            // cascade doesn't restart at "BUILT ON".
-            const LOGO_BASE_DELAY = 720;
-            const LOGO_STEP = 80;
-            return (
-              <>
-                {/* Mobile — continuous-loop marquee with per-cell column rules.
-                    The whole row fades up as one (the marquee animates its own
-                    transform internally, so a per-logo cascade would fight it). */}
-                <div
-                  className="hero-fade-up relative z-10 overflow-hidden border-t border-white/[0.10] pt-5 pb-6 md:hidden"
-                  style={{ animationDelay: `${LOGO_BASE_DELAY}ms` }}
-                >
-                  <p className="mb-4 text-center font-mono text-[11px] tracking-[0.22em] text-slate-500">
-                    PARTNERED WITH · BUILT ON
-                  </p>
-                  <div className="marquee-track">
-                    {/* Set 1 */}
-                    <ul className="flex shrink-0 items-center">
-                      {marqueeItems.map((b) => (
-                        <li key={`a-${b.name}`} className="flex shrink-0 items-center border-l border-white/[0.08] px-7 first:border-l-0">
-                          <Logo b={b} />
-                        </li>
-                      ))}
-                    </ul>
-                    {/* Set 2 — duplicate for seamless wrap */}
-                    <ul className="flex shrink-0 items-center" aria-hidden="true">
-                      {marqueeItems.map((b) => (
-                        <li key={`b-${b.name}`} className="flex shrink-0 items-center border-l border-white/[0.08] px-7">
-                          <Logo b={b} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Desktop — static two-group grid */}
-                <div className="relative z-10 hidden border-t border-white/[0.10] md:grid md:grid-cols-[4fr_3fr]">
-                  {[
-                    { eyebrow: "PARTNERED WITH", items: partnered },
-                    { eyebrow: "BUILT ON", items: builtOn },
-                  ].map((group, gi) => (
-                    <div
-                      key={group.eyebrow}
-                      className={`px-6 pt-5 pb-9 sm:px-10 lg:pt-6 lg:pb-12 ${
-                        gi === 0 ? "lg:pl-[120px]" : "border-l border-white/[0.10] lg:pr-[120px]"
-                      }`}
-                    >
-                      <p
-                        className="hero-stagger font-mono text-[11px] tracking-[0.22em] text-slate-500"
-                        style={{ animationDelay: `${LOGO_BASE_DELAY - 80}ms` }}
-                      >
-                        {group.eyebrow}
-                      </p>
-                      <ul
-                        className="mt-3 grid items-center gap-y-3"
-                        style={{ gridTemplateColumns: `repeat(${group.items.length}, minmax(0, 1fr))` }}
-                      >
-                        {group.items.map((b, i) => {
-                          const globalIndex = gi === 0 ? i : partnered.length + i;
-                          return (
-                            <li
-                              key={b.name}
-                              className={`hero-stagger flex items-center justify-center gap-2.5 px-4 ${
-                                i > 0 ? "border-l border-white/[0.08]" : ""
-                              }`}
-                              style={{ animationDelay: `${LOGO_BASE_DELAY + globalIndex * LOGO_STEP}ms` }}
-                            >
-                              <Logo b={b} />
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </>
-            );
-          })()}
         </section>
 
-        {/* ── INDUSTRY PROBLEM ── */}
-        <section id="problem" data-tone="light" className="relative bg-[var(--bg-page)] py-24 text-[var(--ink-primary)] md:py-32">
-          <SectionScrollLine />
+        {/* ══ 02 · TRUSTED BY + BRACKETED STATS ══ */}
+        <section data-tone="light" className="bg-white pt-14">
+          <div className={GUTTER}>
+          <Eyebrow>What we put behind it</Eyebrow>
 
-          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-600">
-              THE INDUSTRY PROBLEM
-            </p>
+          <div className="mt-10 border-t border-slate-200" />
+          {/* Columns divided by vertical rules rather than a rail over each
+              stat — the section is already bracketed by full-width hairlines,
+              and a third horizontal line per column made it read as noise. The
+              kind label carries the meaning the rail was only decorating. */}
+          <div className="grid py-12 md:grid-cols-3">
+            {TRUST_STATS.map((item, i) => (
+              <div
+                key={item.stat}
+                className={`reveal-up py-4 md:py-0 md:px-10 ${
+                  i === 0 ? "md:pl-0" : "md:border-l md:border-slate-200"
+                }`}
+                style={{ animationDelay: `${i * 80}ms` }}
+              >
+                <p className="text-[12px] uppercase tracking-[0.14em] text-cyan-700">{item.kind}</p>
+                <p className="mt-5 text-[clamp(1.75rem,3vw,2.35rem)] font-normal leading-none tracking-[-0.02em]">
+                  {item.stat}
+                </p>
+                <p className="mt-3 max-w-[30ch] text-[17px] leading-[1.5] text-slate-700">{item.label}</p>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-slate-200" />
+          </div>
+        </section>
 
-            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-snug text-slate-950 [animation-delay:60ms]">
-              <span className="font-mono font-medium">96%</span> of enterprises <span className="text-cyan-700">aren&rsquo;t</span> creating real value from AI.
+        {/* ══ 03 · ONE CLAIM, END TO END ══
+            Four acts: an expert's judgment is captured, the clerical work around
+            it is automated, a manager keeps the gate, and the customer gets the
+            answer. The whole argument is provenance — the reply at the end
+            traces back to a named role and a specific approval. */}
+        <section id="problem" data-tone="light" className="bg-white pt-24 md:pt-32">
+          <div className={GUTTER}>
+            <Eyebrow>One claim, end to end</Eyebrow>
+
+            <h2 className="reveal-up mt-12 max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-[#0f1419]">
+              <span className="block">Your customer talks to an agent.</span>
+              <span className="mt-1 block text-slate-400">
+                They&rsquo;re really talking to your best people.
+              </span>
             </h2>
 
-            <p className="reveal-up mt-5 max-w-3xl text-lg leading-relaxed text-slate-600 md:text-xl [animation-delay:120ms]">
-              Everyone&rsquo;s experimenting. Almost no one&rsquo;s shipping. The data is brutal, but tells a consistent story.
+            <p className="reveal-up mt-8 max-w-[70ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
+              Every process has one person who knows how it really works, and a stack of clerical
+              work wrapped around them. AIOS separates the two: it learns the judgment, automates
+              everything else, and puts the result in front of the customer.
             </p>
 
-            {/* Scaling Gap + Total Cost of Ownership — side by side */}
-            <div className="mt-12 grid gap-5 lg:grid-cols-2">
-              {/* Scaling Gap Funnel */}
-              <div className="observe-viz reveal-up rounded-lg border border-slate-200 bg-white p-6 md:p-8 [animation-delay:160ms]">
-                <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
-                  THE SCALING GAP
+            {/* ── 01 · LEARN ── */}
+            <FlowAct num="01" label="Learn" />
+            <div className="reveal-up grid gap-8 md:grid-cols-[160px_1fr] md:gap-12">
+              <Ph label="Adjuster at work" ratio="1 / 1" className="max-w-[160px]" />
+              <div>
+                <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
+                  Senior claims adjuster · 18 years
                 </p>
-                <p className="mt-3 text-base font-medium text-slate-900 md:text-lg">
-                  88% of organizations use AI. Only 4% are creating substantial value.
+                <blockquote className="mt-4 max-w-[34ch] text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-[1.25] text-[#0f1419]">
+                  &ldquo;Anything over $10k goes to a manager — and the policyholder gets told why.&rdquo;
+                </blockquote>
+                <p className="mt-5 text-[15px] leading-[1.6] text-slate-600">
+                  One rule out of hundreds, captured from four interviews and thirty days of
+                  observed work. It was never written down anywhere.
                 </p>
-                <div className="mt-5 space-y-3">
-                  {FUNNEL_STAGES.map((stage, i) => {
-                    /* Slate gradient lightest→darkest as the funnel narrows; final stage is cyan-700 to mark "the gap". */
-                    const isFinal = i === FUNNEL_STAGES.length - 1;
-                    const barColor = isFinal ? "bg-cyan-700" : ["bg-slate-300", "bg-slate-400", "bg-slate-500"][i];
-                    const numColor = isFinal ? "text-cyan-700" : "text-slate-900";
-                    return (
-                      <div key={stage.label}>
-                        <div className="mb-1 flex items-baseline gap-2">
-                          <span className={`font-mono text-sm font-medium ${numColor}`}>
-                            {stage.pct}%
-                          </span>
-                          <span className="text-[13px] text-slate-500">
-                            {stage.label}
-                          </span>
-                        </div>
-                        <div
-                          className={`bar-fill h-7 rounded-md ${barColor}`}
-                          style={{ width: `${stage.pct}%`, minWidth: "16px", transitionDelay: `${400 + i * 200}ms` }}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-                <p className="mt-4 text-[13px] text-slate-500">
-                  Source: McKinsey State of AI, Nov 2025 &middot; BCG &ldquo;Widening AI Value Gap,&rdquo; Sept 2025
-                </p>
-              </div>
-
-              {/* Cost Over Time */}
-              <div className="observe-viz reveal-up rounded-lg border border-slate-200 bg-white p-6 md:p-8 [animation-delay:220ms]">
-                <p className="font-mono text-[13px] tracking-[0.18em] text-slate-500">
-                  TOTAL COST OF OWNERSHIP
-                </p>
-                <p className="mt-3 text-base font-medium text-slate-900">
-                  Custom workflows compound cost. Reusable skills flatten it.
-                </p>
-
-                <svg
-                  viewBox="0 0 300 160"
-                  className="mt-5 w-full"
-                  role="img"
-                  aria-label="Cost comparison: custom workflows and RPA rise over 5 years while AIOS stays flat"
-                >
-                  {[35, 70, 105].map((y) => (
-                    <line key={y} x1="10" y1={y} x2="290" y2={y} stroke="#e2e8f0" strokeWidth="0.5" />
-                  ))}
-
-                  {/* Filled areas under each line — slate for legacy approaches, cyan for AIOS */}
-                  <path className="chart-area" d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8 L290,140 L10,140 Z" fill="#0f172a" fillOpacity="0.04" />
-                  <path className="chart-area" d="M10,110 C80,114 155,120 220,122 S280,124 290,125 L290,140 L10,140 Z" fill="#0e7490" fillOpacity="0.06" style={{ transitionDelay: "1.4s" }} />
-
-                  {/* Lines: legacy approaches in slate tones, AIOS in brand cyan */}
-                  <path className="chart-line" d="M10,115 C50,108 90,95 130,78 S210,35 250,20 L290,8" fill="none" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" style={{ transitionDelay: "0.6s" }} />
-                  <polyline className="chart-line" points="10,108 80,100 150,72 220,68 290,42" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transitionDelay: "0.9s" }} />
-                  <path className="chart-line" d="M10,110 C80,114 155,120 220,122 S280,124 290,125" fill="none" stroke="#0e7490" strokeWidth="3" strokeLinecap="round" style={{ transitionDelay: "1.2s" }} />
-
-                  {["Yr 1", "Yr 2", "Yr 3", "Yr 4", "Yr 5"].map((yr, i) => (
-                    <text key={yr} x={10 + i * 70} y={155} style={{ fontSize: "13px", fill: "#64748b", fontFamily: "var(--font-code), monospace" }}>
-                      {yr}
-                    </text>
-                  ))}
-                  <text x="4" y="18" style={{ fontSize: "13px", fill: "#64748b", fontFamily: "var(--font-code), monospace" }}>
-                    Cost &uarr;
-                  </text>
-                </svg>
-
-                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="h-0.5 w-5 rounded bg-slate-900" />
-                    <span className="text-[13px] text-slate-500">Custom workflows</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-0.5 w-5 rounded bg-slate-500" />
-                    <span className="text-[13px] text-slate-500">RPA</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-0.5 w-5 rounded bg-cyan-700" />
-                    <span className="text-[13px] font-medium text-cyan-700">AIOS</span>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Kill Shot Stat */}
-            <div className="reveal-up mt-5 rounded-lg border border-slate-200 bg-white p-6 md:p-8 [animation-delay:220ms]">
-              <p className="text-center text-3xl font-light text-slate-950 md:text-4xl">
-                <span className="font-mono font-medium">40%+</span> of agentic AI projects will be canceled by 2027.
-              </p>
-              <p className="mt-3 text-center text-[13px] text-slate-500">
-                Due to escalating costs, unclear business value, or inadequate risk controls. &mdash; Gartner, June 2025
-              </p>
+            {/* ── 02 · AUTOMATE — the before/after, the centre of the section ── */}
+            <FlowAct num="02" label="Automate" />
+            <div className="grid gap-4 lg:grid-cols-2">
+              {/* Before: desaturated on a flat grey field — it should feel drab */}
+              <div className="reveal-up bg-[#f1f2f1] p-7 md:p-9">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">Before AIOS</p>
+                  <p className="text-[12px] text-slate-500">6 days · 11 handoffs · 4 people</p>
+                </div>
+                <ol className="mt-7 space-y-4">
+                  {FLOW_BEFORE.map((row, i) => (
+                    <li key={i} className="grid grid-cols-[46px_1fr] gap-4">
+                      <span className="pt-[3px] font-mono text-[11px] tracking-[0.06em] text-slate-400">
+                        {row.t}
+                      </span>
+                      <span className="relative border-l border-slate-300 pb-1 pl-5">
+                        <span className="absolute -left-[3.5px] top-[7px] h-[5px] w-[5px] rounded-full bg-slate-300" />
+                        <span className="block text-[14px] leading-[1.5] text-slate-600">{row.text}</span>
+                        {row.meta ? (
+                          <span className="mt-1 block font-mono text-[11px] text-slate-400">{row.meta}</span>
+                        ) : null}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                <p className="mt-6 border-t border-slate-300 pt-4 text-[14px] italic leading-[1.5] text-slate-500">
+                  The customer called twice. Both times: &ldquo;still processing.&rdquo;
+                </p>
+              </div>
+
+              {/* After: full contrast, live nodes, cyan rail */}
+              <div className="reveal-up border border-slate-200 bg-white p-7 [animation-delay:80ms] md:p-9">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <p className="flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-cyan-700">
+                    <Node />
+                    With AIOS
+                  </p>
+                  <p className="text-[12px] text-slate-600">4 min of work · 1 human decision</p>
+                </div>
+                <ol className="mt-7 space-y-4">
+                  {FLOW_AFTER.map((row, i) => (
+                    <li key={i} className="grid grid-cols-[46px_1fr] gap-4">
+                      <span className="pt-[3px] font-mono text-[11px] tracking-[0.06em] text-slate-400">
+                        {row.t}
+                      </span>
+                      {row.pause ? (
+                        /* The physical wait: rail goes dashed and grey. Keeping this
+                           visible is what makes the rest of the track believable. */
+                        <span className="relative border-l border-dashed border-slate-300 pb-1 pl-5">
+                          <span className="block text-[14px] leading-[1.5] text-slate-400">{row.text}</span>
+                        </span>
+                      ) : (
+                        <span className="relative border-l border-cyan-600/30 pb-1 pl-5">
+                          <span className="absolute -left-[4px] top-[6px] h-[7px] w-[7px] rounded-full bg-cyan-600" />
+                          <span className="block text-[14px] leading-[1.5] text-slate-800">{row.text}</span>
+                          {row.gate ? (
+                            <span className="mt-1 block font-mono text-[11px] text-cyan-700">
+                              HUMAN GATE — the one step that stayed manual
+                            </span>
+                          ) : null}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+                <p className="mt-6 border-t border-slate-200 pt-4 text-[14px] italic leading-[1.5] text-slate-600">
+                  The customer texted a follow-up. Answered in 2.4 seconds.
+                </p>
+              </div>
             </div>
 
-            {/* AIOS: The Antithesis — hidden for now, may bring back later */}
-            <div className="reveal-up mt-5 hidden rounded-lg border border-cyan-500/15 bg-cyan-500/[0.04] p-6 md:p-8 [animation-delay:400ms]">
-              <p className="text-lg font-medium text-white">
-                AIOS is built to solve the barriers that matter most.
-              </p>
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-                {[
-                  { title: "Trust & governance", desc: "Deterministic policy guardrails, plan-before-execute, evidence-grade audit trails." },
-                  { title: "Cascading failure", desc: "Circuit breakers, hierarchical kill switches, deterministic safety at every step." },
-                  { title: "Architecture complexity", desc: "Pre-built cognitive core replaces DIY agent sprawl. No architecture to maintain." },
-                  { title: "Talent gap", desc: "AI-powered knowledge extraction from SMEs. No ML engineers required." },
-                  { title: "ROI from day one", desc: "Outcome-based pricing. You pay per successful task. Failed tasks are free." },
-                ].map((item) => (
-                  <div key={item.title}>
-                    <p className="text-sm font-medium text-cyan-400">{item.title}</p>
-                    <p className="mt-0.5 text-[13px] leading-relaxed text-slate-500">{item.desc}</p>
+            {/* Deltas */}
+            <div className="reveal-up mt-4 grid gap-px border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+              {FLOW_DELTAS.map((d) => (
+                <div key={d.label} className="bg-white px-6 py-6">
+                  <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">{d.label}</p>
+                  <p className="mt-3 flex items-baseline gap-3">
+                    <span className="text-[22px] font-normal leading-none text-slate-400 line-through decoration-slate-300">
+                      {d.before}
+                    </span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="h-3.5 w-3.5 shrink-0 text-slate-400">
+                      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="text-[26px] font-normal leading-none text-[#0f1419]">{d.after}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600">
+              The adjuster spent that day on the{" "}
+              <span className="text-[#0f1419]">3% of claims that are genuinely ambiguous</span> — the
+              ones eighteen years of judgment are actually for.
+            </p>
+
+            {/* ── 03 · GOVERN ── */}
+            <FlowAct num="03" label="Govern" />
+            <div className="reveal-up grid gap-8 md:grid-cols-[160px_1fr] md:gap-12">
+              <Ph label="Claims manager" ratio="1 / 1" className="max-w-[160px]" />
+              <div>
+                <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
+                  Claims operations manager
+                </p>
+                <p className="mt-4 max-w-[30ch] text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-[1.25] text-[#0f1419]">
+                  He wasn&rsquo;t automated away. He was handed the gate.
+                </p>
+                <p className="mt-5 max-w-[52ch] text-[15px] leading-[1.6] text-slate-600">
+                  He reviewed the drafted workflow, certified it, and kept an approval on the exact
+                  step the adjuster flagged. Every run that trips it waits for him — and every one
+                  that doesn&rsquo;t is logged where he can audit it later.
+                </p>
+              </div>
+            </div>
+
+            {/* ── 04 · ANSWER — the payoff ── */}
+            <FlowAct num="04" label="Answer" />
+            <div className="reveal-up border border-slate-200">
+              <div className="space-y-4 bg-[#f7f8f7] p-7 md:p-10">
+                {FLOW_CHAT.map((m) => (
+                  <div
+                    key={m.who}
+                    className={`max-w-[62ch] border p-5 ${
+                      m.agent ? "ml-auto border-cyan-600/25 bg-white" : "border-slate-200 bg-white"
+                    }`}
+                  >
+                    <p className="flex items-center gap-2.5 text-[12px] uppercase tracking-[0.14em] text-slate-500">
+                      {m.agent ? <Node /> : null}
+                      {m.who}
+                    </p>
+                    <p className="mt-2.5 text-[16px] leading-[1.55] text-[#0f1419]">{m.text}</p>
                   </div>
                 ))}
               </div>
 
-              {/* Automation Spectrum Infographic — hidden for now, may bring back later */}
-              <div className="mt-10 hidden border-t border-white/[0.08] pt-10">
-                <svg viewBox="0 -20 1200 600" fill="none" className="w-full" role="img" aria-label="AIOS Automation Spectrum: Deterministic Automation, Deterministic Intelligence, and Full Autonomy">
+              {/* Provenance — the actual argument of the section */}
+              <div className="grid gap-px border-t border-slate-200 bg-slate-200 sm:grid-cols-3">
+                {FLOW_PROVENANCE.map((p) => (
+                  <div key={p.k} className="bg-white px-6 py-5">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-700">{p.k}</p>
+                    <p className="mt-1.5 text-[14px] text-slate-700">{p.v}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-                  {/* ── Full-width label above bar ── */}
-                  <text x="600" y="15" textAnchor="middle" fill="#e2e8f0" fontSize="14" fontWeight="600" letterSpacing="0.1em">AIOS COVERS THE FULL SPECTRUM (Deterministic thru Full Autonomy)</text>
+            <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600">
+              That answer wasn&rsquo;t improvised. It came from one adjuster&rsquo;s rule, ran through
+              one manager&rsquo;s gate, and can be traced back to both.
+            </p>
 
-                  {/* ── Spectrum bar ── */}
-                  <rect x="40" y="34" width="1120" height="8" rx="4" fill="#1e293b" />
-                  <rect x="40" y="34" width="280" height="8" rx="4" fill="#475569" />
-                  <rect x="320" y="32" width="560" height="12" rx="6" fill="#22d3ee" opacity="0.8" />
-                  <rect x="880" y="34" width="280" height="8" rx="4" fill="#475569" />
-                  {/* Center marker */}
-                  <circle cx="600" cy="38" r="6" fill="#22d3ee" />
-                  <circle cx="600" cy="38" r="10" fill="#22d3ee" opacity="0.2">
-                    <animate attributeName="r" values="10;14;10" dur="3s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.2;0.08;0.2" dur="3s" repeatCount="indefinite" />
-                  </circle>
-                  <text x="600" y="62" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="600" letterSpacing="0.1em">SWEET SPOT</text>
+            {/* Breadth — four labels, no detail. Platform, not point solution. */}
+            <div className="reveal-up mt-20 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-slate-200 pt-8">
+              <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
+                The same loop is running on
+              </p>
+              {FLOW_ALSO.map((item) => (
+                <span key={item} className="flex items-center gap-2.5 text-[15px] text-[#0f1419]">
+                  <Node />
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                  {/* ── LEFT COLUMN: Deterministic Automation ── */}
-                  <rect x="40" y="100" width="340" height="410" rx="12" fill="#0a0f1a" stroke="#1e293b" strokeWidth="1" />
+        {/* ══ 04 · THE PLATFORM — tinted surface, flat square cards ══ */}
+        <section id="platform" data-tone="light" className="mt-28 bg-[#f2faf9] py-24 md:py-28">
+          <div className={GUTTER}>
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <h2 className="reveal-up text-[clamp(2rem,4vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              The lorem ipsum platform
+            </h2>
+            <a href="/platform" className={`reveal-up ${BTN_LIGHT}`}>
+              <Node />
+              Explore the platform
+            </a>
+          </div>
 
-                  {/* Icon: rigid grid — centered */}
-                  <rect x="198" y="124" width="8" height="8" rx="1" fill="#475569" />
-                  <rect x="210" y="124" width="8" height="8" rx="1" fill="#475569" />
-                  <rect x="222" y="124" width="8" height="8" rx="1" fill="#475569" />
-                  <rect x="198" y="136" width="8" height="8" rx="1" fill="#475569" />
-                  <rect x="210" y="136" width="8" height="8" rx="1" fill="#475569" />
-                  <rect x="222" y="136" width="8" height="8" rx="1" fill="#475569" />
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {PILLARS.map((pillar, i) => (
+              <div
+                key={pillar.label}
+                className={`reveal-up bg-[#e6ebe8] p-10 md:p-12 ${i === PILLARS.length - 1 ? "md:col-span-2" : ""}`}
+                style={{ animationDelay: `${i * 70}ms` }}
+              >
+                <div className="flex items-center gap-4 text-cyan-600">
+                  <PillarIcon index={i} className="h-7 w-7" />
+                  <span className="text-[13px] font-medium uppercase tracking-[0.06em] text-[#0f1419]">
+                    {pillar.label}
+                  </span>
+                </div>
+                <h3 className="mt-8 max-w-[20ch] text-[clamp(1.75rem,3vw,2.5rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+                  {pillar.title}
+                </h3>
+                <p className="mt-5 max-w-[62ch] text-[16px] leading-[1.6] text-slate-600">{pillar.body}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+        </section>
 
-                  <text x="210" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="600" letterSpacing="0.12em">DETERMINISTIC AUTOMATION</text>
-                  <text x="210" y="198" textAnchor="middle" fill="#64748b" fontSize="11">Pure rule-based execution. No AI judgment.</text>
-                  <text x="210" y="214" textAnchor="middle" fill="#64748b" fontSize="11">Every action follows explicit if/then logic.</text>
-                  <text x="210" y="230" textAnchor="middle" fill="#64748b" fontSize="11">Predictable but brittle.</text>
+        {/* ══ 05 · FULL-BLEED ACCENT STAT BAND ══ */}
+        <section data-tone="light" className="bg-cyan-400">
+          <div className={`grid gap-12 py-16 md:grid-cols-3 md:gap-6 ${GUTTER}`}>
+            {BAND_STATS.map((item) => (
+              <div key={item.stat} className="reveal-up pr-8">
+                <RailH tone="accent" />
+                <p className="mt-5 text-[clamp(1.75rem,3.2vw,2.5rem)] font-normal leading-none tracking-[-0.02em] text-[#0f1419]">
+                  {item.stat}
+                </p>
+                <p className="mt-3 text-[17px] text-[#0f1419]/80">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
-                  {/* Traits — centered */}
-                  <circle cx="120" cy="262" r="3" fill="#475569" />
-                  <text x="132" y="266" fill="#94a3b8" fontSize="11">100% predictable</text>
-                  <circle cx="120" cy="286" r="3" fill="#475569" />
-                  <text x="132" y="290" fill="#94a3b8" fontSize="11">Strict decision matrix</text>
-                  <circle cx="120" cy="310" r="3" fill="#475569" />
-                  <text x="132" y="314" fill="#94a3b8" fontSize="11">High maintenance cost</text>
-                  <circle cx="120" cy="334" r="3" fill="#475569" />
-                  <text x="132" y="338" fill="#94a3b8" fontSize="11">Edge cases are hard to maintain</text>
+        {/* ══ 06 · HOW IT WORKS — dark, sticky step tabs ══ */}
+        <section id="how-it-works" data-tone="dark" className="relative bg-[#15181b] text-white">
+          {/* Sticky tab bar */}
+          {/* Pinned to the very top: the site nav is transparent and slides away
+              past HIDE_AFTER_Y, so reserving an offset for it would just leave a
+              strip of page content scrolling above this bar. */}
+          <div className="sticky top-0 z-20 border-b border-white/[0.06] bg-[#15181b]/95 backdrop-blur-sm">
+            <div className={`flex items-center justify-between gap-4 overflow-x-auto py-5 ${GUTTER}`}>
+              {STEPS.map((s, i) => (
+                <button
+                  key={s.key}
+                  type="button"
+                  onClick={() => {
+                    stepRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className="flex shrink-0 items-center gap-5 transition-opacity"
+                  aria-current={i === activeStep}
+                >
+                  {/* Steps reuse the first three pillar icons — observe,
+                      design, run — which is exactly what the steps are. */}
+                  <span className={`transition-colors ${i === activeStep ? "text-cyan-400" : "text-cyan-400/30"}`}>
+                    <PillarIcon index={i} className="h-7 w-7" />
+                  </span>
+                  <span
+                    className={`text-[clamp(1.5rem,3vw,2.25rem)] font-normal leading-none tracking-[-0.02em] transition-colors ${
+                      i === activeStep ? "text-white" : "text-white/35"
+                    }`}
+                  >
+                    {s.tab}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
 
-                  {/* Use case */}
-                  <text x="210" y="376" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.1em">USE CASE</text>
-                  <text x="210" y="396" textAnchor="middle" fill="#64748b" fontSize="11">Simple automations, scripted workflows</text>
+          <div className={`pt-20 pb-8 ${GUTTER}`}>
+            <h2 className="reveal-up max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em]">
+              Lorem ipsum dolor sit amet, consectetur adipiscing
+            </h2>
+          </div>
 
-                  {/* Bottom stat */}
-                  <rect x="62" y="420" width="296" height="32" rx="6" fill="#1e293b" />
-                  <text x="210" y="441" textAnchor="middle" fill="#64748b" fontSize="11" fontWeight="500">~5% of enterprise needs</text>
+          {STEPS.map((s, i) => (
+            <div
+              key={s.key}
+              data-step-index={i}
+              ref={(el) => {
+                stepRefs.current[i] = el;
+              }}
+              /* Clears the 77px sticky tab bar plus a little breathing room. */
+              className={`scroll-mt-[100px] py-16 ${GUTTER}`}
+            >
+              <div className="grid items-start gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
+                <Ph label={s.image} ratio="4 / 3" tone="dark" className="reveal-up" />
+                <div className="reveal-up lg:pt-6 [animation-delay:80ms]">
+                  <h3 className="max-w-[24ch] text-[clamp(1.5rem,2.6vw,2rem)] font-normal leading-[1.2] tracking-[-0.01em] text-white">
+                    {s.caption}
+                  </h3>
+                  <p className="mt-6 max-w-[46ch] text-[17px] leading-[1.6] text-white/60">{s.body}</p>
+                  <p className="mt-8 flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-white/35">
+                    <Node />
+                    Step {String(i + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="h-16" />
+        </section>
 
+        {/* ══ 07 · CUSTOMER STORIES — carousel with peeking neighbors ══ */}
+        <section id="proof" data-tone="light" className="bg-white py-24 md:py-32">
+          <div className={`flex flex-wrap items-end justify-between gap-8 ${GUTTER}`}>
+            <div>
+              <h2 className="reveal-up max-w-[20ch] text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+                Lorem ipsum dolor sit amet consectetur
+              </h2>
+              <a href="#demo" className={`reveal-up mt-8 ${BTN_LIGHT}`}>
+                <Node />
+                See all stories
+              </a>
+            </div>
+            <ArrowPair
+              onPrev={() => setStory((n) => wrap(n - 1, STORIES.length))}
+              onNext={() => setStory((n) => wrap(n + 1, STORIES.length))}
+            />
+          </div>
 
-                  {/* ── CENTER COLUMN: Deterministic Intelligence ── */}
-                  <rect x="400" y="96" width="400" height="418" rx="12" fill="#0a0f1a" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.3" />
-                  <rect x="401" y="97" width="398" height="416" rx="12" fill="#22d3ee" fillOpacity="0.02" />
+          {/* Card is 86% of the content measure with a 24px gap; the 7% lead-in
+              centers the active card and leaves the neighbours peeking. */}
+          <div className={`relative mt-16 overflow-hidden ${GUTTER}`}>
+            <div
+              className="flex gap-6 transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(calc(7% - ${story} * (86% + 24px)))` }}
+            >
+              {STORIES.map((s, i) => (
+                <article key={s.name} className="relative w-[86%] shrink-0">
+                  <div className={`relative transition-opacity duration-500 ${i === story ? "opacity-100" : "opacity-45"}`}>
+                    <Ph label="Customer story still" ratio="16 / 8" tone="dark" />
+                    <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12">
+                      <div className="self-start">
+                        <RailH tone="dark" className="w-40" />
+                        <p className="mt-3.5 text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-none text-white">
+                          {s.stat}
+                        </p>
+                      </div>
+                      <div>
+                        <blockquote className="max-w-[46ch] text-[clamp(1rem,1.6vw,1.35rem)] font-normal leading-[1.35] text-white">
+                          {s.quote}
+                        </blockquote>
+                        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-2">
+                          <span className="text-[12px] uppercase tracking-[0.14em] text-white/70">{s.name}</span>
+                          <span className="text-[12px] uppercase tracking-[0.14em] text-white/50">{s.title}</span>
+                        </div>
+                      </div>
+                      <span className="pointer-events-none absolute right-8 top-8 text-[12px] uppercase tracking-[0.14em] text-white/60 md:right-12 md:top-12">
+                        {s.statLabel}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                  {/* Icon: shield with circuit pattern inside — centered in box */}
-                  <path d="M586,118 L600,110 L614,118 L614,136 C614,146 600,154 600,154 C600,154 586,146 586,136 Z" stroke="#22d3ee" strokeWidth="1.5" fill="#22d3ee" fillOpacity="0.06" />
-                  {/* Circuit nodes inside shield — vertically centered */}
-                  <circle cx="600" cy="123" r="2.5" fill="#22d3ee" opacity="0.8" />
-                  <circle cx="593" cy="132" r="2" fill="#22d3ee" opacity="0.6" />
-                  <circle cx="607" cy="132" r="2" fill="#22d3ee" opacity="0.6" />
-                  <circle cx="600" cy="141" r="2" fill="#22d3ee" opacity="0.5" />
-                  <line x1="600" y1="123" x2="593" y2="132" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
-                  <line x1="600" y1="123" x2="607" y2="132" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
-                  <line x1="593" y1="132" x2="600" y2="141" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
-                  <line x1="607" y1="132" x2="600" y2="141" stroke="#22d3ee" strokeWidth="0.8" opacity="0.5" />
+        {/* ══ 08 · ENTERPRISE SCALE & SECURITY ══ */}
+        <section id="security" data-tone="light" className="bg-white py-16 md:py-24">
+          <div className={GUTTER}>
+          <div className="reveal-up relative py-2 pl-8">
+            <RailV nodeTop={14} />
+            <h2 className="max-w-[16ch] text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              Lorem ipsum dolor sit amet
+            </h2>
+          </div>
 
-                  <text x="600" y="178" textAnchor="middle" fill="#22d3ee" fontSize="10" fontWeight="600" letterSpacing="0.12em">GUIDED AUTONOMY</text>
-                  <text x="600" y="194" textAnchor="middle" fill="#22d3ee" fontSize="9" fontWeight="500" opacity="0.7">The AIOS default</text>
+          <a href="/platform" className="reveal-up mt-8 flex items-center gap-4 text-[16px] text-[#0f1419] hover:text-cyan-700">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="h-4 w-4">
+              <path d="m9 6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Learn more about lorem ipsum
+          </a>
 
-                  <text x="600" y="218" textAnchor="middle" fill="#94a3b8" fontSize="11">AI reasoning operates inside deterministic guardrails.</text>
-                  <text x="600" y="234" textAnchor="middle" fill="#94a3b8" fontSize="11">The system thinks, but policy controls what it can do.</text>
+          <div className="mt-14 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+            {SECURITY_BADGES.map((badge) => (
+              <div key={badge} className="reveal-up grid h-[100px] place-items-center bg-[#e9edea]">
+                <span className="text-[13px] uppercase tracking-[0.14em] text-slate-500">{badge}</span>
+              </div>
+            ))}
+          </div>
 
-                  {/* Traits with cyan checks — centered */}
-                  {[
-                    "AI reasoning + policy guardrails",
-                    "Adapts to edge cases within bounds",
-                    "Plan-before-execute architecture",
-                    "Evidence-grade audit trail",
-                    "Human-in-the-loop when needed",
-                  ].map((trait, i) => (
-                    <g key={trait}>
-                      <path d={`M480,${262 + i * 24} L484,${266 + i * 24} L490,${258 + i * 24}`} stroke="#22d3ee" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                      <text x="498" y={266 + i * 24} fill="#e2e8f0" fontSize="11">{trait}</text>
-                    </g>
-                  ))}
+          <div className="mt-20 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+            {SECURITY_POINTS.map((point, i) => (
+              <div key={point.title} className="reveal-up" style={{ animationDelay: `${i * 70}ms` }}>
+                <h3 className="max-w-[16ch] text-[clamp(1.25rem,2vw,1.6rem)] font-normal leading-[1.2] tracking-[-0.01em]">
+                  {point.title}
+                </h3>
+                <p className="mt-5 max-w-[34ch] text-[16px] leading-[1.6] text-slate-600">{point.body}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+        </section>
 
-                  {/* 90% stat */}
-                  <text x="600" y="434" textAnchor="middle" fill="#ffffff" fontSize="28" fontWeight="300">
-                    <tspan fill="#22d3ee" fontWeight="500" fontFamily="var(--font-code), monospace">90%</tspan>
-                    <tspan fill="#94a3b8" fontSize="14"> of enterprise workflows</tspan>
-                  </text>
-                  <text x="600" y="456" textAnchor="middle" fill="#94a3b8" fontSize="14">belong here*</text>
-                  <line x1="530" y1="462" x2="670" y2="462" stroke="#22d3ee" strokeWidth="1.5" strokeOpacity="0.4" />
+        {/* ══ 09 · DISCOVER THE PLATFORM — carousel ══ */}
+        <section data-tone="light" className="bg-white py-16 md:py-24">
+          <div className={`flex flex-wrap items-center justify-between gap-8 ${GUTTER}`}>
+            <h2 className="reveal-up text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              Discover the lorem ipsum platform
+            </h2>
+            <ArrowPair
+              onPrev={() => setDiscover((n) => wrap(n - 1, DISCOVER.length))}
+              onNext={() => setDiscover((n) => wrap(n + 1, DISCOVER.length))}
+            />
+          </div>
 
-                  {/* Bottom tag */}
-                  <text x="600" y="486" textAnchor="middle" fill="#64748b" fontSize="10" fontWeight="500" letterSpacing="0.08em">WHERE COMPLIANCE MEETS INTELLIGENCE</text>
-                  <text x="600" y="502" textAnchor="middle" fill="#475569" fontSize="9">*Based on internal analysis of enterprise deployment patterns.</text>
+          <div className={`mt-14 overflow-hidden ${GUTTER}`}>
+            <div
+              className="flex gap-6 transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(calc(${discover} * -1 * (32.6% + 24px)))` }}
+            >
+              {DISCOVER.map((item) => (
+                <article key={item.label} className="w-[85%] shrink-0 sm:w-[48%] lg:w-[32.6%]">
+                  <p className="flex items-center gap-4 text-[13px] font-medium uppercase tracking-[0.06em] text-[#0f1419]">
+                    <Node />
+                    {item.label}
+                  </p>
+                  <Ph label={item.image} ratio="4 / 3" className="mt-6" />
+                  <p className="mt-6 max-w-[34ch] text-[17px] leading-[1.5] text-[#0f1419]">{item.caption}</p>
+                  <a href="/platform" className="mt-5 flex items-center gap-3 text-[15px] text-slate-600 hover:text-cyan-700">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="h-4 w-4">
+                      <path d="m9 6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Learn more
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
+        {/* ══ 10 · MORE TO … — post carousel ══ */}
+        <section data-tone="light" className="bg-white py-16 md:py-24">
+          <div className={GUTTER}>
+            <h2 className="reveal-up text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              More to lorem
+            </h2>
+          </div>
 
-                  {/* ── RIGHT COLUMN: Full Autonomy ── */}
-                  <rect x="820" y="100" width="340" height="410" rx="12" fill="#0a0f1a" stroke="#1e293b" strokeWidth="1" />
+          <div className={`mt-12 flex items-start gap-10 ${GUTTER}`}>
+            <div className="hidden shrink-0 pt-2 lg:block">
+              <ArrowPair
+                onPrev={() => setPost((n) => wrap(n - 1, POSTS.length))}
+                onNext={() => setPost((n) => wrap(n + 1, POSTS.length))}
+              />
+            </div>
 
-                  {/* Icon: expanding neural nodes — centered */}
-                  <circle cx="978" cy="128" r="5" fill="#475569" />
-                  <circle cx="996" cy="120" r="3.5" fill="#475569" />
-                  <circle cx="1010" cy="134" r="4" fill="#475569" />
-                  <circle cx="990" cy="142" r="3" fill="#475569" />
-                  <line x1="978" y1="128" x2="996" y2="120" stroke="#475569" strokeWidth="1" />
-                  <line x1="996" y1="120" x2="1010" y2="134" stroke="#475569" strokeWidth="1" />
-                  <line x1="978" y1="128" x2="1010" y2="134" stroke="#475569" strokeWidth="1" />
-                  <line x1="978" y1="128" x2="990" y2="142" stroke="#475569" strokeWidth="1" />
-                  <line x1="1010" y1="134" x2="990" y2="142" stroke="#475569" strokeWidth="1" />
-
-                  <text x="990" y="174" textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="600" letterSpacing="0.12em">FULL AUTONOMY</text>
-                  <text x="990" y="198" textAnchor="middle" fill="#64748b" fontSize="11">Fully autonomous AI with maximum</text>
-                  <text x="990" y="214" textAnchor="middle" fill="#64748b" fontSize="11">agency. Minimal human oversight.</text>
-                  <text x="990" y="230" textAnchor="middle" fill="#64748b" fontSize="11">Requires the highest trust threshold.</text>
-
-                  {/* Traits — centered */}
-                  <circle cx="900" cy="262" r="3" fill="#475569" />
-                  <text x="912" y="266" fill="#94a3b8" fontSize="11">Maximum AI agency</text>
-                  <circle cx="900" cy="286" r="3" fill="#475569" />
-                  <text x="912" y="290" fill="#94a3b8" fontSize="11">Minimal guardrails</text>
-                  <circle cx="900" cy="310" r="3" fill="#475569" />
-                  <text x="912" y="314" fill="#94a3b8" fontSize="11">Highest risk surface</text>
-                  <circle cx="900" cy="334" r="3" fill="#475569" />
-                  <text x="912" y="338" fill="#94a3b8" fontSize="11">Requires mature governance</text>
-
-                  {/* Use case */}
-                  <text x="990" y="376" textAnchor="middle" fill="#475569" fontSize="9" fontWeight="600" letterSpacing="0.1em">USE CASE</text>
-                  <text x="990" y="396" textAnchor="middle" fill="#64748b" fontSize="11">Research, creative generation,</text>
-                  <text x="990" y="412" textAnchor="middle" fill="#64748b" fontSize="11">open-ended exploration</text>
-
-                  {/* Bottom stat */}
-                  <rect x="842" y="420" width="296" height="32" rx="6" fill="#1e293b" />
-                  <text x="990" y="441" textAnchor="middle" fill="#64748b" fontSize="11" fontWeight="500">~5% of enterprise needs</text>
-
-
-                  {/* ── Bottom callout — larger, more space ── */}
-                  <text x="600" y="548" textAnchor="middle" fill="#94a3b8" fontSize="14" fontWeight="400">
-                    One platform. Three modes. <tspan fill="#22d3ee" fontWeight="500">The 90% in the middle</tspan> is where enterprises actually operate.
-                  </text>
-                  <text x="600" y="570" textAnchor="middle" fill="#64748b" fontSize="12">
-                    AIOS handles all three, but the sweet spot is Deterministic Intelligence.
-                  </text>
-                </svg>
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div
+                className="flex gap-6 transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(calc(${post} * -1 * (32.6% + 24px)))` }}
+              >
+                {POSTS.map((p) => (
+                  <article key={p.title} className="w-[85%] shrink-0 sm:w-[48%] lg:w-[32.6%]">
+                    <Ph label="Article cover art" ratio="16 / 10" tone="accent" />
+                    <div className="mt-6 flex flex-wrap items-center gap-x-4 text-[12px] uppercase tracking-[0.12em] text-slate-500">
+                      <span className="text-[#0f1419]">{p.kind}</span>
+                      <Node />
+                      <span>{p.date}</span>
+                      <span className="ml-auto">{p.read}</span>
+                    </div>
+                    <h3 className="mt-4 max-w-[26ch] text-[clamp(1.15rem,1.8vw,1.5rem)] font-normal leading-[1.25] tracking-[-0.01em]">
+                      {p.title}
+                    </h3>
+                  </article>
+                ))}
               </div>
             </div>
           </div>
-        </section>
 
-        {/* ── Section divider ── */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-
-        {/* ── WHY CVLSOFT IS DIFFERENT ── */}
-        <section id="why-aios" data-tone="light" className="relative bg-[var(--bg-page)] py-24 text-[var(--ink-primary)] md:py-32">
-          <SectionScrollLine />
-
-          <div className=" px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-600">
-              WHY AIOS
-            </p>
-            <h2 className="reveal-up mt-5 text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-slate-950 [animation-delay:60ms]">
-              Why we&rsquo;re different.
-            </h2>
-            <p className="reveal-up mt-5 mb-12 md:mb-16 max-w-2xl text-lg leading-relaxed text-slate-600 md:text-xl [animation-delay:120ms]">
-              The industry builds an agent for every task.{" "}
-              <span className="font-medium text-cyan-700">AIOS builds cognition</span>
-              : adaptive intelligence that reasons about any workflow,
-              selects any tool, and scales without maintenance debt. &nbsp;
-              <span className="font-medium text-cyan-700">Stop building brittle AI agents. Start building intelligence.</span>
-            </p>
-
-            {/* Feature rows — static compact stack. Each row renders title,
-                subtitle, and description on the same white surface. */}
-            <div className="reveal-up overflow-hidden rounded-lg border border-slate-200 border-t-[3px] border-t-cyan-700 bg-white [animation-delay:160ms]">
-              {DIFFERENTIATORS.map((item, i) => (
-                <div
-                  key={item.title}
-                  className={i > 0 ? "border-t border-slate-200" : ""}
-                >
-                  <div className="grid w-full items-start gap-8 px-6 py-7 lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-14 lg:px-10 lg:py-10">
-                    <div>
-                      <h3 className="text-2xl font-light tracking-[-0.02em] text-slate-950 md:text-[34px] md:leading-[1.1]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-2 text-[14px] font-medium leading-snug text-cyan-700 md:text-[15px]">
-                        {item.subtitle}
-                      </p>
-                    </div>
-                    <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 md:text-base">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
+          <div className={`mt-10 lg:hidden ${GUTTER}`}>
+            <ArrowPair
+              onPrev={() => setPost((n) => wrap(n - 1, POSTS.length))}
+              onNext={() => setPost((n) => wrap(n + 1, POSTS.length))}
+            />
           </div>
         </section>
 
-        {/* ── Section divider ── */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+        {/* ══ 11 · CLOSING CTA + LEAD FORM ══ */}
+        <section id="demo" data-tone="dark" className="relative overflow-hidden bg-[#15181b] py-24 md:py-32">
+          {/* faint pixel dashes along the top and bottom edges, as on skan */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-3 opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 30px)" }} />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3 opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 30px)" }} />
 
-        {/* ── PRICING — single outcome-based callout, no calculator, no tier table ── */}
-        <section id="pricing" data-tone="light" className="relative bg-[var(--bg-page)] py-24 text-[var(--ink-primary)] md:py-32">
-          <SectionScrollLine />
-
-          <div className="px-6 sm:px-10 lg:pl-[205px] lg:pr-[112px]">
-            <p className="reveal-up inline-block rounded-full border border-slate-300 bg-white px-4 py-1.5 font-mono text-[13px] tracking-[0.18em] text-slate-600">
-              PRICING
-            </p>
-            <h2 className="reveal-up mt-6 text-[clamp(2rem,5vw,3.5rem)] font-light leading-[1.1] tracking-[-0.03em] text-slate-950 [animation-delay:60ms]">
-              We make money when <span className="text-cyan-700">you make money.</span>
+          <div className={GUTTER}>
+            <h2 className="reveal-up max-w-[16ch] text-[clamp(2.25rem,4.8vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em]">
+              <span className="text-white/45">Lorem ipsum dolor into</span>{" "}
+              <span className="text-white">sit amet consectetur</span>
             </h2>
-            <p className="reveal-up mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 md:text-xl [animation-delay:120ms]">
-              You pay for successful outcomes. Failed tasks are free. Always. No per-seat licenses. No per-connector fees. Just the floor cost of running your tenant.
-            </p>
 
-            <div className="reveal-up mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 [animation-delay:180ms]">
-              {[
-                {
-                  title: "Floor Cost Only",
-                  body: "Your platform fee covers the bare cost of running your tenant. Infrastructure, connectors, tokens, security, unlimited users.",
-                },
-                {
-                  title: "Per-Task Outcomes",
-                  body: "Each workflow has a per-task price anchored to 20-40% of what you'd pay a human. You save 60-80% on every successful task.",
-                },
-                {
-                  title: "Failed = Free*",
-                  body: "If a task fails, escalates, or gets killed, you pay no outcome fee. AIOS only earns when it delivers. Our incentives are your incentives.",
-                },
-                {
-                  title: "Skin in the Game",
-                  body: "Our revenue is tied directly to your savings. If your workflows stop paying for themselves, our paychecks stop too. No one in the building gets paid before you do.",
-                },
-              ].map((card) => (
-                <div
-                  key={card.title}
-                  className="rounded-md border border-slate-300 bg-white p-6"
-                >
-                  <h3 className="text-base font-semibold text-cyan-700">{card.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-slate-700">{card.body}</p>
-                </div>
-              ))}
-            </div>
-
-            <p className="reveal-up mt-6 max-w-3xl text-[13px] leading-relaxed text-slate-500 [animation-delay:240ms]">
-              *Tokens consumed during a failed attempt are passed through at provider cost + 5%. Bring your own key (BYOK) and a failed task is completely free.
-            </p>
-          </div>
-        </section>
-
-        {/* ── Section divider ── */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-
-        {/* ── DEMO CTA ── */}
-        <section id="demo" data-tone="dark" className="relative bg-[#0a0f1a] py-24 md:py-32">
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#050a14] to-transparent" />
-          <div className="mx-auto max-w-7xl px-6 sm:px-10">
-          <div className="relative overflow-hidden rounded-lg border border-white/[0.06] bg-[#0d1322] p-10 md:p-16">
-            {/* Decorative orbs */}
-            <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-[60px]" />
-            <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-cyan-500/10 blur-[60px]" />
-
-            <h2 className="reveal-up relative text-center text-[clamp(2rem,5vw,3.5rem)] font-light tracking-[-0.03em] text-white">
-              Not hype. <span className="text-cyan-400">Real enterprise agentic AI.</span>
-            </h2>
-            <p className="reveal-up relative mt-4 text-center text-2xl leading-relaxed text-slate-300 md:text-4xl [animation-delay:120ms]">
-              See it now.
-            </p>
-
-            <form noValidate className="relative mx-auto mt-8 grid max-w-xl gap-3" onSubmit={handleSubmit}>
+            <form noValidate className="reveal-up mt-12 grid max-w-xl gap-3 [animation-delay:120ms]" onSubmit={handleSubmit}>
               <LeadFields form={form} />
-              <div className="mt-2 flex gap-3">
+              <div className="mt-2 flex flex-wrap gap-3">
                 <button
                   type="submit"
                   disabled={formStatus === "loading"}
                   onClick={() => handleCtaClick("demo_form")}
-                  className="flex-1 rounded-md bg-cyan-400 px-8 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+                  className={`${BTN_DARK} disabled:cursor-not-allowed disabled:opacity-60`}
                 >
-                  {formStatus === "loading" ? "Submitting..." : "Start the conversation"}
+                  <Node />
+                  {formStatus === "loading" ? "Submitting..." : "Request a demo"}
                 </button>
-                <a
-                  href="#why-aios"
-                  className="rounded-md border border-slate-600 px-6 py-3.5 text-sm font-medium text-slate-300 transition hover:border-slate-400 hover:text-white"
-                >
-                  Learn More
+                <a href="#platform" className={BTN_DARK}>
+                  <Node />
+                  Explore the platform
                 </a>
               </div>
               {formMessage ? (
-                <p className={`text-center text-sm ${formStatus === "error" ? "text-slate-300" : "text-cyan-400"}`}>
-                  {formMessage}
-                </p>
+                <p className={`text-sm ${formStatus === "error" ? "text-slate-300" : "text-cyan-400"}`}>{formMessage}</p>
               ) : null}
             </form>
           </div>
-          </div>
         </section>
       </main>
-
     </div>
   );
 }
