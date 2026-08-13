@@ -49,19 +49,25 @@ type Line =
   | { kind: "answer"; text: string }
   | { kind: "rationale"; text: string };
 
-/* The session, in reveal order. One line lands per beat. */
+/* The session, in reveal order. One line lands per beat.
+
+   The case is a billing dispute — the customer's bill came in higher
+   than usual — because every company that bills anyone has this, and
+   because the rule the expert applies to it is nowhere in a document.
+   Watching the clicks gets you "pulled six months of invoices"; only
+   asking gets you why six and what the second one means. */
 const SCRIPT: Line[] = [
   { kind: "start", text: "Activated · capturing" },
-  { kind: "action", at: "01:24", app: "SAP", text: "Opened vendor master — Meridian Supply" },
-  { kind: "action", at: "02:36", app: "Excel", text: "Compared last three invoices" },
-  { kind: "ask", text: "Why did you choose those invoices?" },
+  { kind: "action", at: "01:24", app: "CRM", text: "Opened account — Northline Freight" },
+  { kind: "action", at: "02:36", app: "Billing", text: "Pulled six months of invoices" },
+  { kind: "ask", text: "Why six months and not the one bill in question?" },
   {
     kind: "answer",
-    text: "I only compare against the same PO line — anything older is a different rate card.",
+    text: "If there are multiple overages in 6 months we should upgrade the plan; otherwise it's an anomaly and can be credited.",
   },
   { kind: "rationale", text: "Decision rationale captured" },
-  { kind: "action", at: "03:41", app: "Outlook", text: "Read approval thread — Controller" },
-  { kind: "action", at: "04:12", app: "SAP", text: "Released the exception hold" },
+  { kind: "action", at: "03:41", app: "Usage", text: "Compared usage to the plan ceiling" },
+  { kind: "action", at: "04:12", app: "Billing", text: "Issued the credit — $240" },
 ];
 
 /* Per-kind geometry: row height, and the air above it. Sub-lines sit
@@ -77,13 +83,17 @@ const GEO: Record<
 > = {
   start: { h: 44, gap: 22, sub: false },
   action: { h: 44, gap: 22, sub: false },
-  ask: { h: 28, gap: 10, sub: true },
+  // 34, not 28: a one-line bubble, the height a one-line bubble is
+  // everywhere else in the loop.
+  ask: { h: 34, gap: 10, sub: true },
   // gap 18, not 8: the expert's reply gets a beat of air under the
   // question, which the avatar needs more than a text label did.
-  // tick 10: the centre of the avatar, which sits on the first line —
-  // h/2 put the crossbar between the two lines of the reply, well below
-  // the face it was supposed to point at.
-  answer: { h: 50, gap: 18, sub: true, tick: 10 },
+  // h 70: the reply runs to three lines at 400px. Three 19px lines plus
+  // the slack the bubble needs — anything less and the last line hangs
+  // below the row and the rationale chip lands on top of it.
+  // Both sub-rows centre their speaker mark on the bubble now, so the
+  // crossbar's default (h/2) meets the face and neither needs a tick.
+  answer: { h: 70, gap: 18, sub: true },
   rationale: { h: 30, gap: 8, sub: true },
   cta: { h: 44, gap: 26, sub: false },
 };
@@ -111,89 +121,117 @@ type BpNode = {
 };
 
 const BP_NODES: BpNode[] = [
-  { id: "t", kind: "trigger", y: 0, h: 30, label: "Invoice exception raised", meta: "TRIGGER" },
-  { id: "s1", kind: "step", y: 46, h: 44, lead: "01", label: "Pull vendor history", meta: "SAP" },
+  { id: "t", kind: "trigger", y: 0, h: 30, label: "Bill overage detected", meta: "TRIGGER" },
+  { id: "s1", kind: "step", y: 42, h: 40, lead: "01", label: "Pull six months of billing", meta: "BILLING" },
   {
     id: "r",
     kind: "reason",
-    y: 106,
+    y: 94,
     h: 70,
     label: "AI REASONING",
-    sub: "Compare the same PO line only — anything older is a different rate card.",
+    sub: "One overage in six months is a mistake. A second one is the wrong plan.",
     meta: "FROM RATIONALE",
   },
-  { id: "d", kind: "decision", y: 192, h: 44, label: "Variance over 10%?" },
+  { id: "d", kind: "decision", y: 176, h: 40, label: "Second overage in 6 months?" },
+  // The two branches are the two halves of the rule, and the loop shows
+  // both: the Executor takes YES, the customer on the phone takes NO.
   {
     id: "b1",
     kind: "branch",
-    y: 264,
+    y: 236,
     h: 52,
     x: "0%",
     w: "47%",
     lead: "YES",
-    label: "Approval gate",
-    meta: "Controller",
+    label: "Plan change offer",
+    meta: "RETENTION GATE",
   },
   {
     id: "b2",
     kind: "branch",
-    y: 264,
+    y: 236,
     h: 52,
     x: "53%",
     w: "47%",
     lead: "NO",
-    label: "Auto-release",
-    meta: "Payment run",
+    label: "Auto-credit ≤ $100",
+    meta: "NOTE FOR UPSELL",
   },
   // Numbered 2, not 3: the branches are the gate, not a step of their
   // own, which is what the footer's "2 actions · 1 decision · 1 gate"
   // is counting.
-  { id: "m", kind: "merge", y: 344, h: 44, lead: "02", label: "Post decision · notify requester", meta: "SAP" },
+  { id: "m", kind: "merge", y: 306, h: 40, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
 ];
 
-/** Overall height of the routed graph, and where the Launch button sits
-    once it pans up to make room. */
-const BP_H = 388;
-const BP_CTA_Y = BP_H + 22;
-/** Resting offset. The viewport feathers its top edge, so the graph sits
-    below that feather rather than starting in it. */
+/** Overall height of the routed graph. */
+const BP_H = 346;
+
+/* The sheet the graph is drawn on. A workflow with a document's header
+   above it reads as the standard operating procedure it is replacing —
+   the same nodes floating loose on the background read as a diagram
+   about the work rather than as the work itself. The grid above is
+   drawn tight for exactly this reason: the chrome has to come out of
+   the same 430px the graph used to have to itself.
+
+   Every part of the sheet is a named number and BP_SHEET_H adds all of
+   them, borders included. An earlier version left the header's own
+   margin and the 1px borders out of the total, and the missing 10px is
+   precisely what put the bottom of the sheet under the timeline. */
+const BP_HEAD_H = 32;
+const BP_HEAD_GAP = 8;
+const BP_PAD_T = 8;
+const BP_PAD_B = 8;
+const BP_BORDER = 2;
+const BP_SHEET_H = BP_PAD_T + BP_HEAD_H + BP_HEAD_GAP + BP_H + BP_PAD_B + BP_BORDER;
+
+/** Where the Launch button sits once the sheet pans up to make room. */
+const BP_CTA_Y = BP_SHEET_H + 22;
+/** Resting offset. The viewport feathers its top edge over 3%, so the
+    sheet starts below that feather rather than inside it — and, with
+    the height above, lands clear of the timeline at the bottom. */
 const BP_REST = 14;
-/** How far the graph pans up to clear room for the Launch button. */
-const BP_PAN = 52;
+/** How far the sheet pans up to clear room for the Launch button. Its
+    header and first node slide under the feather as it goes. */
+const BP_PAN = 56;
 
 /** Orthogonal hairlines between the nodes above. `len` is a vertical
     run from `y`; `w` is a horizontal run from `x`. Branch centres are
     23.5% and 76.5% — the midpoints of the two 47%-wide boxes. */
 const BP_LINKS: { x: string; y: number; len?: number; w?: string }[] = [
-  { x: "50%", y: 30, len: 16 },
-  { x: "50%", y: 90, len: 16 },
-  { x: "50%", y: 176, len: 16 },
-  { x: "50%", y: 236, len: 20 }, // stem below the decision
-  { x: "23.5%", y: 256, w: "53%" }, // fork rail
-  { x: "23.5%", y: 256, len: 8 },
-  { x: "76.5%", y: 256, len: 8 },
-  { x: "23.5%", y: 316, len: 8 },
-  { x: "76.5%", y: 316, len: 8 },
-  { x: "23.5%", y: 324, w: "53%" }, // merge rail
-  { x: "50%", y: 324, len: 20 },
+  { x: "50%", y: 30, len: 12 },
+  { x: "50%", y: 82, len: 12 },
+  { x: "50%", y: 164, len: 12 },
+  { x: "50%", y: 216, len: 10 }, // stem below the decision
+  { x: "23.5%", y: 226, w: "53%" }, // fork rail
+  { x: "23.5%", y: 226, len: 10 },
+  { x: "76.5%", y: 226, len: 10 },
+  { x: "23.5%", y: 288, len: 10 },
+  { x: "76.5%", y: 288, len: 10 },
+  { x: "23.5%", y: 298, w: "53%" }, // merge rail
+  { x: "50%", y: 298, len: 8 },
 ];
 
 /** Junction dots where the spine meets the fork and merge rails —
     without them the two rails plus their drops read as a stray
     rectangle around the branch pair rather than as routing. */
-const BP_JOINTS: { y: number }[] = [{ y: 256 }, { y: 324 }];
+const BP_JOINTS: { y: number }[] = [{ y: 226 }, { y: 298 }];
 
 /* ══ Phase 9 · the run ═════════════════════════════════════ */
 
 /* One box, not five rows. The steps are AIOS's business, not the
    viewer's — what the viewer needs is that something is working, what
    it is working on right now, and how far through it is. */
+/* What the Executor is allowed to do on its own, and what it is not.
+   It credits inside a standing authority and leaves a note; it does not
+   move anyone's plan. A plan change is an offer to a customer, so it
+   goes to a human — which is the YES branch of the blueprint, and the
+   reason the run below takes the other one. */
 const RUN_STEPS: { detail: string; took: string }[] = [
-  { detail: "Pulling vendor history from SAP", took: "0.6s" },
-  { detail: "Applying your rule — same PO line only", took: "0.9s" },
-  { detail: "Variance 14.2% — over the 10% threshold", took: "0.2s" },
-  { detail: "Routing to the Controller for approval", took: "0.4s" },
-  { detail: "Posting the decision · notifying the requester", took: "0.3s" },
+  { detail: "Pulling six months of billing history", took: "0.6s" },
+  { detail: "No overages in the last six months", took: "0.9s" },
+  { detail: "Within your $100 credit authority — applying it", took: "0.2s" },
+  { detail: "Notifying the customer — credit on next bill", took: "0.4s" },
+  { detail: "Noting the account — upsell if it recurs", took: "0.3s" },
 ];
 
 const RUN_GAP = 12;
@@ -210,7 +248,7 @@ const EXPOSE_CHANNELS = [
   { key: "voice", label: "Voice", meta: "Inbound calls" },
   { key: "chat", label: "Chat", meta: "Website & in-app" },
   { key: "sms", label: "SMS", meta: "Text messages" },
-  { key: "assistants", label: "ChatGPT & Claude", meta: "Where they already ask" },
+  { key: "assistants", label: "ChatGPT & Claude", meta: "New AI marketplace" },
 ];
 
 /* Geometry, so the cursor can be told exactly where each checkbox is.
@@ -227,49 +265,66 @@ const EX_TOTAL = EX_CTA_Y + 44;
     card padding (16) + row padding (12) + half the 18px box. */
 const EX_CURSOR_X = 40;
 
-/* ══ Phase 12 · the same case, by phone ════════════════════
-   A customer rings about the invoice the workflow already knows how to
-   handle. AIOS answers, recognises the case, triggers that workflow,
-   and closes the call — no transfer, no callback, no ticket.
+/* ══ Phase 12 · the same skill, by phone ═══════════════════
+   A customer rings about a bill the workflow already knows how to
+   handle. AIOS answers, recognises the case, runs that workflow, and
+   closes the call — no transfer, no callback, no ticket.
 
-   Heights are declared per line because the transcript wraps: the copy
-   below is written to fit these at a 360px column, the narrowest the
-   frame ever gets. */
+   This caller takes the other branch: it is their first overage, so the
+   credit is automatic where the Executor's run needed a gate. Same
+   rule, same workflow, two outcomes — which is the decision node up in
+   the blueprint actually deciding something.
 
-type CallKind = "head" | "caller" | "aios" | "system" | "resolved";
+   Heights are declared per line because the transcript wraps, and a
+   spoken row's height is arithmetic, not taste: 19px a line plus 14 of
+   slack, so `h` is 33 for one line and 52 for two. Get that wrong and
+   the row still renders — it just leaves a hole under itself that no
+   other row in the transcript has, because the slack is what sets the
+   spacing, not the gap alone. Copy is written to fit at 400px. */
+
+type CallKind = "head" | "caller" | "aios" | "verify" | "system" | "resolved";
 
 const CALL: { kind: CallKind; text?: string; h: number; gap: number }[] = [
   { kind: "head", h: 56, gap: 0 },
+  // Names the line being called, which is what the header above it is
+  // also naming — the caller is the anonymous half of this transcript.
+  // Two lines at 400px, so it declares two.
   {
     kind: "aios",
-    text: "Thanks for calling accounts payable — this is AIOS. How can I help?",
+    text: "Thanks for calling Halton Logistics. How can I help you today?",
     h: 52,
     gap: 18,
   },
   {
     kind: "caller",
-    text: "Hi — invoice 8812 is still showing as held. Can someone look at it?",
+    // Under the $100 the workflow is authorised to credit, so the call
+    // can end on the spot. Anything above it would route to a human and
+    // this act would be telling a different story.
+    text: "Hi — my bill is $92 higher than usual this month. What happened?",
     h: 52,
     gap: 14,
   },
+  // Nothing happens on the account until it knows who is asking. The
+  // PIN stands in for whatever the business actually uses — it is the
+  // beat that matters, not the factor: an inbound caller is a stranger
+  // until they are not, and a workflow that skips this is a workflow no
+  // one can put on a phone line.
+  { kind: "aios", text: "Sure — what's the 4-digit account PIN?", h: 33, gap: 14 },
+  { kind: "caller", text: "It's 8134.", h: 34, gap: 14 },
+  { kind: "verify", text: "Identity verified · Marcus · acct 7712", h: 44, gap: 14 },
   // It says it is going to look, then it looks. The workflow running
   // under this line is what it means by "one second".
+  { kind: "aios", text: "Thanks Marcus — pulling it up now.", h: 33, gap: 14 },
+  { kind: "system", text: "Billing Overage Review", h: 44, gap: 14 },
   {
     kind: "aios",
-    text: "Of course — let me check on that for you. One second while I pull it up.",
-    h: 52,
-    gap: 14,
-  },
-  { kind: "system", text: "Invoice Exception Review", h: 44, gap: 14 },
-  {
-    kind: "aios",
-    text: "Found it. It was held for a 14.2% variance against the PO line.",
+    text: "You went 20GB over the plan ceiling on the 14th — that's the $92.",
     h: 52,
     gap: 14,
   },
   {
     kind: "aios",
-    text: "I compared the last three invoices on that account and released it — payment goes out tonight.",
+    text: "First overage in six months, so I've credited it back — it'll show on your next bill.",
     h: 52,
     gap: 14,
   },
@@ -277,15 +332,77 @@ const CALL: { kind: CallKind; text?: string; h: number; gap: number }[] = [
   { kind: "resolved", text: "Call resolved · 1:12 · no transfer, no callback", h: 30, gap: 18 },
 ];
 
+/* ══ Phase 13 · what it keeps ══════════════════════════════
+   The fifth act, and the only one whose contents the other four
+   produced: the note the Executor left, the credit the call issued,
+   the channel this customer keeps choosing. Nothing in the card is
+   invented for the demo — the viewer watched every row of it happen,
+   which is the difference between claiming memory and showing it. */
+
+const MEM_ROWS: { text: string; src: string }[] = [
+  { text: "Credited $92 overage · 14 Mar", src: "FROM CALL" },
+  { text: "Upsell if an overage recurs in 6 months", src: "FROM RUN" },
+  { text: "Prefers SMS · calls before 10am", src: "LEARNED" },
+  { text: "Wants the short version — no small talk", src: "LEARNED" },
+];
+
+/* Same card arithmetic as the channel panel: py-4 (16) + title 14 +
+   mt-1.5 (6) + subtitle 16 + mt-4 (16), then rows on a 48px pitch. */
+const MEM_ROW_H = 40;
+const MEM_ROWS_Y = 68;
+const MEM_CARD_H = MEM_ROWS_Y + MEM_ROW_H * MEM_ROWS.length + 8 * (MEM_ROWS.length - 1) + 16;
+const MEM_CHIP_Y = MEM_CARD_H + 22;
+const MEM_TOTAL = MEM_CHIP_Y + 30;
+
+/* ══ Phase 14 · six weeks later ════════════════════════════
+   The note fires. It goes out by SMS because that is what the memory
+   says this customer prefers, and it asks rather than acts: AIOS still
+   cannot move anyone's plan on its own. What it can do is ask — and the
+   yes is what makes the change legitimate. The act the Executor was not
+   allowed to take in act three is the act memory and consent earn. */
+
+type SmsKind = "head" | "aios" | "caller" | "verify" | "done";
+
+const SMS: { kind: SmsKind; text?: string; h: number; gap: number }[] = [
+  { kind: "head", h: 56, gap: 0 },
+  {
+    kind: "aios",
+    text: "Hi Marcus — you're 15GB over again. Last time we credited it; the 500GB plan saves you $40 a month. Want me to switch you?",
+    h: 71,
+    gap: 18,
+  },
+  { kind: "caller", text: "Yes, do it.", h: 34, gap: 14 },
+  // A yes by text is not proof of who is holding the handset, and this
+  // one costs money. Same gate as the call, same wording, so the two
+  // channels are visibly one skill rather than two builds.
+  { kind: "aios", text: "Just reply with your 4-digit account PIN.", h: 33, gap: 14 },
+  { kind: "caller", text: "8134", h: 34, gap: 14 },
+  { kind: "verify", text: "Identity verified · Marcus · acct 7712", h: 44, gap: 14 },
+  {
+    kind: "aios",
+    text: "Done — you're on the 500GB plan from today. I'll keep watching it for you.",
+    h: 52,
+    gap: 14,
+  },
+  { kind: "done", text: "Upsell accepted · plan changed with consent", h: 30, gap: 18 },
+];
+
 /* ══ Phase 9 · the trigger ═════════════════════════════════
    Nobody presses run. The Executor sits armed, watching the systems the
    blueprint was drawn from, and an inbound event is what wakes it — the
-   same bookend as the Observer at the top of the loop. */
+   same bookend as the Observer at the top of the loop.
+
+   Note what the event is not: a customer complaining. The bill has gone
+   out over the plan ceiling and the workflow starts on that alone, so
+   this run happens before anyone has picked up a phone. The call in the
+   last act is the one that still comes in. */
 
 const TRIGGER = {
   at: "09:42:07",
-  app: "SAP",
-  text: "Exception PO-8812 · $14,200",
+  app: "Billing",
+  // Written short: the row carries a timestamp and an app chip before it
+  // gets to the text, and "over average" truncated at 400px.
+  text: "Acct 7712 · $88 overage",
 };
 
 const DOCK_H = 78;
@@ -302,10 +419,10 @@ const FOOTER_H = 90;
 
 /** How far the markers hang below the rail. */
 const TL_STEM = 18;
-/** Diameter of an inactive step's marker. Three of these plus the gaps
+/** Diameter of an inactive step's marker. Four of these plus the gaps
     are what the open box has to share the floor with, so it is sized
     down until the longest `does` line fits on one row. */
-const TL_DOT = 28;
+const TL_DOT = 24;
 /** Between markers. */
 const TL_GAP = 8;
 /** The open box's left padding — and so how far its mark sits from the
@@ -350,6 +467,12 @@ type Phase =
   | "exexit"
   | "call"
   | "callexit"
+  /** What the four acts before it wrote down about this customer. */
+  | "memory"
+  | "memexit"
+  /** That memory acting, on the channel the memory chose. */
+  | "sms"
+  | "smsexit"
   /** The act's own marker leaving the timeline, once the canvas above
       it is already empty. `step` is the index of the act going out. */
   | "handoff";
@@ -433,15 +556,39 @@ const SEQUENCE: Beat[] = [
   { phase: "call", step: 1, hold: 2400 }, // AIOS answers
   { phase: "call", step: 2, hold: 3400 }, // greeting
   { phase: "call", step: 3, hold: 3400 }, // the customer's problem
-  { phase: "call", step: 4, hold: 3600 }, // "let me check on that for you"
-  { phase: "call", step: 5, hold: 3600 }, // …and the workflow is the checking
-  { phase: "call", step: 6, hold: 3400 }, // "found it" — the check completes
-  { phase: "call", step: 7, hold: 4000 }, // what it did about it
-  { phase: "call", step: 8, hold: 3000 }, // the customer is happy
-  { phase: "call", step: 9, hold: 2800 }, // resolved
-  { phase: "call", step: 10, hold: 7000 }, // held — it's the payoff
+  { phase: "call", step: 4, hold: 2800 }, // …and first, who is asking
+  { phase: "call", step: 5, hold: 2000 }, // the PIN
+  { phase: "call", step: 6, hold: 2600 }, // verified — now it can act
+  { phase: "call", step: 7, hold: 2600 }, // "one second"
+  { phase: "call", step: 8, hold: 3400 }, // …and the workflow is the checking
+  { phase: "call", step: 9, hold: 3400 }, // "found it" — the check completes
+  { phase: "call", step: 10, hold: 4000 }, // what it did about it
+  { phase: "call", step: 11, hold: 3000 }, // the customer is happy
+  { phase: "call", step: 12, hold: 7000 }, // held — it's the payoff
   { phase: "callexit", step: 0, hold: 1100 }, // the call slides off
-  { phase: "handoff", step: 3, hold: 620 }, // …and round again
+  { phase: "handoff", step: 3, hold: 620 },
+
+  { phase: "intro", step: 4, hold: 4000 }, // MEMORY
+  { phase: "memory", step: 0, hold: 2200 }, // the card, still empty
+  { phase: "memory", step: 1, hold: 2200 }, // what the call did
+  { phase: "memory", step: 2, hold: 2600 }, // the note the run left
+  { phase: "memory", step: 3, hold: 2200 }, // how they like to be reached
+  { phase: "memory", step: 4, hold: 2400 }, // how they like to be talked to
+  { phase: "memory", step: 5, hold: 2800 }, // …and it is used, not filed
+  { phase: "memexit", step: 0, hold: 1000 },
+
+  // The note firing. Paced like a text conversation: the offer needs
+  // reading, the yes does not.
+  { phase: "sms", step: 0, hold: 2400 }, // outbound, six weeks on
+  { phase: "sms", step: 1, hold: 5000 }, // the offer — three lines
+  { phase: "sms", step: 2, hold: 2000 }, // "yes, do it"
+  { phase: "sms", step: 3, hold: 2600 }, // …and first, who is asking
+  { phase: "sms", step: 4, hold: 2000 }, // the PIN
+  { phase: "sms", step: 5, hold: 2400 }, // verified — now it can act
+  { phase: "sms", step: 6, hold: 3600 }, // done, with consent
+  { phase: "sms", step: 7, hold: 6000 }, // held — it's the payoff
+  { phase: "smsexit", step: 0, hold: 1100 },
+  { phase: "handoff", step: 4, hold: 620 }, // …and round again
 ];
 
 /* ══ Act title cards ═══════════════════════════════════════
@@ -450,11 +597,17 @@ const SEQUENCE: Beat[] = [
    does. Four words because the card is on screen for a second and a
    half — anything longer is read after it has gone. */
 
+/* Five marks now share the floor, so the open box is 36px narrower than
+   it was and `does` has to be shorter to match: the line is on one row
+   or it is wrong. Roughly thirty characters is the ceiling. */
 const ACTS: { icon: number; name: string; does: string }[] = [
-  { icon: 0, name: "OBSERVER", does: "Watches, learns, & interviews experts" },
-  { icon: 1, name: "BLUEPRINT", does: "Converts it into an agentic workflow" },
-  { icon: 2, name: "EXECUTOR", does: "Listens, detects, classifies, & executes" },
-  { icon: 3, name: "COMMUNICATOR", does: "Talks with customers & resolves issues" },
+  // Stored as sentences. Every label in this file that shouts does the
+  // shouting in the view, so the data never encodes a type decision.
+  { icon: 0, name: "Observer", does: "Watches experts & asks why" },
+  { icon: 1, name: "Blueprint", does: "Turns it into a workflow" },
+  { icon: 2, name: "Executor", does: "Detects, decides, & executes" },
+  { icon: 3, name: "Communicator", does: "Answers & resolves, live" },
+  { icon: 5, name: "Customer Memory", does: "Hyper-personalization" },
 ];
 
 /* The overview stack, up front: the same four cards the acts announce
@@ -494,37 +647,60 @@ function useReducedMotion(): boolean {
     the last `call` rather than the end. */
 const FROZEN = SEQUENCE.map((b) => b.phase).lastIndexOf("call");
 
+/* ══ Jumping between acts ══════════════════════════════════
+   The four marks on the timeline are controls: click one and the story
+   goes there. Which is also why the loop can afford to be two minutes
+   long — nobody has to sit through act three to see act four. */
+
+/** Where each act starts: its title card, so a jump plays the act from
+    the top rather than dropping into the middle of one. */
+const ACT_ENTRY = ACTS.map((_, idx) =>
+  SEQUENCE.findIndex((b) => b.phase === "intro" && b.step === idx),
+);
+
+/** Where each act rests for anyone who has asked for reduced motion —
+    the last beat of its main phase, i.e. that act with everything it
+    ever puts on screen already on screen. The title cards are no use
+    here: they play over an empty canvas. */
+const ACT_PHASE: Phase[] = ["observe", "blueprint", "run", "call", "sms"];
+const ACT_STILL = ACT_PHASE.map((p) => SEQUENCE.map((b) => b.phase).lastIndexOf(p));
+
 /* ══ Session rows ══════════════════════════════════════════ */
 
 /** A white mark beside the application a captured action happened in.
-    Category glyphs, not brand marks: a system of record, a sheet, a
-    mailbox. Vendor logos would be trademark use on a marketing page,
-    and they would also pull the eye — these read as "which kind of
-    tool" at 12px and stay out of the way. */
+    Category glyphs, not brand marks: a customer record, a meter, a
+    system of record. Vendor logos would be trademark use on a marketing
+    page, and they would also pull the eye — these read as "which kind
+    of tool" at 12px and stay out of the way.
+
+    They have to separate by silhouette at 13px, so: a card with a face
+    on it, a bar chart, a stack of drums. Not three rectangles with
+    different insides. */
 function AppGlyph({ app }: { app: string }) {
   const s = {
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.4,
+    strokeWidth: 1.5,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
 
   const glyph =
-    app === "Excel" ? (
-      // A sheet: the grid
+    app === "CRM" ? (
+      // The customer record: a card with a person on it
       <g>
-        <rect x="3.2" y="4" width="17.6" height="16" rx="1.6" {...s} />
-        <path d="M3.2 9.2h17.6M9.6 9.2V20" {...s} />
+        <rect x="3.2" y="4.6" width="17.6" height="14.8" rx="2" {...s} />
+        <circle cx="12" cy="10.2" r="2.2" {...s} />
+        <path d="M7.9 16.5c.9-2 2.3-3 4.1-3s3.2 1 4.1 3" {...s} />
       </g>
-    ) : app === "Outlook" ? (
-      // A mailbox
+    ) : app === "Usage" ? (
+      // Metered consumption: bars off a baseline
       <g>
-        <rect x="2.6" y="5" width="18.8" height="14" rx="2" {...s} />
-        <path d="m3.4 6.6 8.6 6.2 8.6-6.2" {...s} />
+        <path d="M3.8 19.6h16.4" {...s} />
+        <path d="M7.6 19.6v-4.4M12 19.6v-8.2M16.4 19.6v-12" {...s} />
       </g>
     ) : (
-      // A system of record: stacked stores
+      // Billing — a system of record: stacked stores
       <g>
         <ellipse cx="12" cy="6.2" rx="7.4" ry="2.8" {...s} />
         <path d="M4.6 6.2v11.6c0 1.55 3.31 2.8 7.4 2.8s7.4-1.25 7.4-2.8V6.2" {...s} />
@@ -536,6 +712,17 @@ function AppGlyph({ app }: { app: string }) {
     <svg viewBox="0 0 24 24" className="h-[13px] w-[13px] shrink-0 text-white" aria-hidden="true">
       {glyph}
     </svg>
+  );
+}
+
+/** The application an action happened in. One chip wherever an app is
+    named — the captured session and the inbound trigger row both. */
+function AppChip({ app }: { app: string }) {
+  return (
+    <span className="flex shrink-0 items-center gap-1.5 rounded-[4px] border border-white/[0.14] py-0.5 pl-1.5 pr-2 text-[10px] tracking-[0.08em] text-white/60">
+      <AppGlyph app={app} />
+      {app}
+    </span>
   );
 }
 
@@ -556,45 +743,38 @@ function LineRow({ line }: { line: Line }) {
 
   if (line.kind === "action") {
     return (
-      <div className="flex h-[44px] items-center gap-3 rounded-md border border-white/[0.07] bg-[#0d1013]/55 px-3.5 backdrop-blur-sm">
-        <span className="font-mono text-[11px] text-white/35">{line.at}</span>
-        <span className="flex shrink-0 items-center gap-1.5 rounded border border-white/15 py-0.5 pl-1.5 pr-2 text-[10px] tracking-[0.08em] text-white/55">
-          <AppGlyph app={line.app ?? ""} />
-          {line.app}
-        </span>
-        <span className="truncate text-[13px] text-white/75">{line.text}</span>
+      <div className="flex h-[44px] items-center gap-3 rounded-md border border-white/[0.10] bg-[#0d1013]/55 px-3.5 backdrop-blur-md">
+        <span className="font-mono text-[11px] text-white/40">{line.at}</span>
+        <AppChip app={line.app ?? ""} />
+        <span className="truncate text-[13px] leading-[19px] text-white/75">{line.text}</span>
       </div>
     );
   }
 
   if (line.kind === "ask") {
     return (
-      <div className="flex h-[28px] items-center gap-2.5">
+      <div className="flex h-[34px] items-center gap-2.5">
         {/* Fixed width on the speaker label, so the two bodies start on
-            the same x — "YOU" is a character shorter than "AIOS" and
-            the reply used to sit left of the question. */}
-        <span className="w-[32px] shrink-0 text-[10px] font-medium tracking-[0.12em] text-cyan-400">
+            the same x — the avatar below is a character wider than the
+            label and the reply used to sit right of the question. */}
+        <span className="w-[32px] shrink-0 text-[10px] font-medium tracking-[0.14em] text-cyan-400">
           AIOS
         </span>
-        <span className="truncate text-[13px] text-white/70">{line.text}</span>
+        <Bubble side="left">
+          <span className="truncate text-[13px] leading-[19px] text-white/80">{line.text}</span>
+        </Bubble>
       </div>
     );
   }
 
   if (line.kind === "answer") {
     return (
-      <div className="flex h-[50px] items-start gap-2.5">
-        {/* Same 19px line box as the body's first line, so the caps
-            centre on that line instead of hanging off the top of the
-            block. `items-start` + a padding nudge got it close and was
-            wrong at every other size. */}
+      <div className="flex h-[70px] items-center gap-2.5">
         {/* The expert, as a face. Same 32px column the AIOS label
-            occupies, so both speakers' text still starts on one x, and
-            nudged up so the circle centres on the first line rather
-            than hanging below it. */}
+            occupies, so both speakers' text still starts on one x. */}
         <span className="flex w-[32px] shrink-0 justify-start">
           <span
-            className="-mt-[3px] h-[26px] w-[26px] rounded-full border border-white/20"
+            className="h-[26px] w-[26px] rounded-full border border-white/25"
             style={{
               backgroundImage: "url(/videos/expert.jpg)",
               backgroundSize: "132%",
@@ -602,17 +782,48 @@ function LineRow({ line }: { line: Line }) {
             }}
           />
         </span>
-        <span className="text-[13px] leading-[19px] text-white/85">{line.text}</span>
+        <Bubble side="left">
+          <span className="text-[13px] leading-[19px] text-white/85">{line.text}</span>
+        </Bubble>
       </div>
     );
   }
 
   // rationale — the beat the whole session exists to land
+  return <DoneChip label={line.text} />;
+}
+
+/** Anything anyone says, in any act, sits on one of these. Bare text on
+    the plate was legible on the dark half of a frame and gone on the
+    bright half — and the customer already had a bubble, so half of
+    every exchange floated while the other half sat on glass.
+
+    Both sides get the same glass; the speaker is told by which side the
+    tail is on and by the label or face outside it, which is how a chat
+    thread has always done it. `h-full` so the bubble takes the row
+    height the geometry above already allotted for the text. */
+function Bubble({ side, children }: { side: "left" | "right"; children: React.ReactNode }) {
   return (
-    <div className="flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3 backdrop-blur-sm">
+    <div
+      className={`flex h-full min-w-0 items-center rounded-[10px] border border-white/[0.14] bg-white/[0.06] px-3 backdrop-blur-md ${
+        side === "left" ? "rounded-bl-[3px]" : "rounded-br-[3px]"
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** The chip that lands when something is finished — a rationale
+    captured, a call resolved. One component, so the two cannot drift
+    apart in tracking, blur and casing the way they had. Casing is the
+    view's job: the data stores the sentence. */
+function DoneChip({ label }: { label: string }) {
+  return (
+    <div className="flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3 backdrop-blur-md">
       <Check />
       <span className="whitespace-nowrap text-[11px] tracking-[0.10em] text-cyan-200">
-        {line.text.toUpperCase()}
+        {label.toUpperCase()}
       </span>
     </div>
   );
@@ -622,6 +833,17 @@ function Check({ className = "h-3 w-3 text-cyan-400" }: { className?: string }) 
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" className={`shrink-0 ${className}`}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M4 12.5l5 5L20 6.5" />
+    </svg>
+  );
+}
+
+/** The identity gate. Shackle drawn separately so it reads as a lock at
+    16px rather than as a filled blob. */
+function Lock({ className = "h-4 w-4 text-cyan-400" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={`shrink-0 ${className}`}>
+      <rect x="4.8" y="10.4" width="14.4" height="9.4" rx="2" strokeLinejoin="round" />
+      <path strokeLinecap="round" d="M8.4 10.4V8a3.6 3.6 0 0 1 7.2 0v2.4" />
     </svg>
   );
 }
@@ -646,7 +868,7 @@ function FakeButton({ label, pressed }: { label: string; pressed: boolean }) {
       className={`mx-auto flex h-[44px] w-fit items-center gap-2.5 rounded-[6px] border px-4 text-[14px] font-medium backdrop-blur-md transition-all duration-150 ${
         pressed
           ? "scale-[0.97] border-cyan-400/70 bg-cyan-400/20 text-white"
-          : "border-white/30 bg-[#0d1013]/70 text-white"
+          : "border-white/25 bg-[#0d1013]/82 text-white"
       }`}
     >
       <span className="h-[7px] w-[7px] rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
@@ -676,13 +898,13 @@ function Cursor({ clickKey }: { clickKey?: string | number }) {
 function ExposeCard({ checked }: { checked: number }) {
   return (
     <div
-      className="rounded-lg border border-white/[0.14] bg-[#0d1013]/85 px-4 py-4 backdrop-blur-md"
+      className="rounded-lg border border-white/[0.14] bg-[#0d1013]/82 px-4 py-4 backdrop-blur-md"
       style={{ height: EX_CARD_H }}
     >
       <p className="h-[14px] text-[11px] font-medium leading-[14px] tracking-[0.14em] text-white">
         EXPOSE TO CUSTOMERS
       </p>
-      <p className="mt-1.5 h-[16px] text-[12px] leading-[16px] text-white/50">
+      <p className="mt-1.5 h-[16px] text-[11px] leading-[16px] text-white/50">
         Which channels should this skill be exposed on?
       </p>
 
@@ -693,13 +915,13 @@ function ExposeCard({ checked }: { checked: number }) {
             <div
               key={c.key}
               className={`flex items-center gap-3 rounded-md border px-3 transition-colors duration-300 ${
-                on ? "border-cyan-400/50 bg-cyan-400/[0.14]" : "border-white/[0.10] bg-[#0d1013]/50"
+                on ? "border-cyan-400/50 bg-cyan-400/[0.14]" : "border-white/[0.10] bg-[#0d1013]/55"
               }`}
               style={{ height: EX_ROW_H }}
             >
               <span
                 className={`grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[4px] border transition-colors duration-200 ${
-                  on ? "border-cyan-400 bg-cyan-400/25" : "border-white/30"
+                  on ? "border-cyan-400 bg-cyan-400/25" : "border-white/25"
                 }`}
               >
                 {on ? <Check className="h-3 w-3 text-cyan-200" /> : null}
@@ -721,9 +943,9 @@ const BP_CARD = "rounded-md border backdrop-blur-md";
 function BpBox({ node }: { node: BpNode }) {
   if (node.kind === "trigger") {
     return (
-      <div className={`${BP_CARD} flex h-full items-center gap-2.5 border-white/15 bg-[#0d1013]/70 px-3`}>
+      <div className={`${BP_CARD} flex h-full items-center gap-2.5 border-white/[0.14] bg-[#0d1013]/72 px-3`}>
         <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-white/45" />
-        <span className="truncate text-[12px] text-white/75">{node.label}</span>
+        <span className="truncate text-[13px] text-white/75">{node.label}</span>
         <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/35">{node.meta}</span>
       </div>
     );
@@ -738,9 +960,9 @@ function BpBox({ node }: { node: BpNode }) {
         <div className="flex items-center gap-2">
           <Sparkle />
           <span className="text-[10px] font-medium tracking-[0.14em] text-cyan-300">{node.label}</span>
-          <span className="ml-auto shrink-0 text-[9px] tracking-[0.12em] text-cyan-300/90">{node.meta}</span>
+          <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300/90">{node.meta}</span>
         </div>
-        <p className="mt-1.5 text-[12px] leading-[1.4] text-white/80">{node.sub}</p>
+        <p className="mt-1.5 text-[13px] leading-[17px] text-white/80">{node.sub}</p>
       </div>
     );
   }
@@ -748,7 +970,7 @@ function BpBox({ node }: { node: BpNode }) {
   if (node.kind === "decision") {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className={`${BP_CARD} flex h-[40px] items-center gap-2.5 border-white/25 bg-[#0d1013]/80 px-4`}>
+        <div className={`${BP_CARD} flex h-[40px] items-center gap-2.5 border-white/25 bg-[#0d1013]/72 px-4`}>
           <span className="h-2.5 w-2.5 rotate-45 border border-cyan-400" />
           <span className="whitespace-nowrap text-[13px] text-white">{node.label}</span>
         </div>
@@ -761,26 +983,26 @@ function BpBox({ node }: { node: BpNode }) {
     // Line heights are explicit: three stacked lines have to total the
     // box height exactly, or the last one hangs out of the bottom.
     return (
-      <div className={`${BP_CARD} h-full border-white/[0.12] bg-[#0d1013]/72 px-3 py-1.5`}>
+      <div className={`${BP_CARD} h-full border-white/[0.14] bg-[#0d1013]/72 px-3 py-1.5`}>
         <p
-          className={`h-[12px] text-[9px] font-medium leading-[12px] tracking-[0.16em] ${
+          className={`h-[12px] text-[9px] font-medium leading-[12px] tracking-[0.14em] ${
             yes ? "text-cyan-400" : "text-white/35"
           }`}
         >
           {node.lead}
         </p>
-        <p className="h-[16px] truncate text-[12px] leading-[16px] text-white/85">{node.label}</p>
-        <p className="h-[12px] truncate text-[9.5px] leading-[12px] text-white/40">{node.meta}</p>
+        <p className="h-[16px] truncate text-[13px] leading-[16px] text-white/85">{node.label}</p>
+        <p className="h-[12px] truncate text-[9px] leading-[12px] tracking-[0.14em] text-white/40">{node.meta}</p>
       </div>
     );
   }
 
   // step / merge — the plain executable rows
   return (
-    <div className={`${BP_CARD} flex h-full items-center gap-3 border-white/[0.12] bg-[#0d1013]/72 px-3.5`}>
+    <div className={`${BP_CARD} flex h-full items-center gap-3 border-white/[0.14] bg-[#0d1013]/72 px-3.5`}>
       <span className="font-mono text-[11px] text-white/30">{node.lead}</span>
       <span className="truncate text-[13px] text-white/90">{node.label}</span>
-      <span className="ml-auto shrink-0 text-[10px] text-white/40">{node.meta}</span>
+      <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/40">{node.meta}</span>
     </div>
   );
 }
@@ -798,7 +1020,7 @@ function ExecDock({ triggered }: { triggered: boolean }) {
   return (
     <div
       className={`flex items-center gap-3.5 rounded-lg border px-4 backdrop-blur-md transition-colors duration-500 ${
-        triggered ? "border-cyan-400/55 bg-cyan-400/[0.16]" : "border-white/[0.16] bg-[#0d1013]/85"
+        triggered ? "border-cyan-400/55 bg-cyan-400/[0.16]" : "border-white/[0.14] bg-[#0d1013]/82"
       }`}
       style={{ height: DOCK_H }}
     >
@@ -810,8 +1032,8 @@ function ExecDock({ triggered }: { triggered: boolean }) {
       <div className="flex items-center gap-2.5">
         <span className="text-[11px] font-medium tracking-[0.14em] text-white">EXECUTOR</span>
         <span
-          className={`shrink-0 rounded border px-1.5 py-0.5 text-[9px] tracking-[0.12em] transition-colors duration-300 ${
-            triggered ? "border-cyan-400/45 text-cyan-300" : "border-white/20 text-white/50"
+          className={`shrink-0 rounded-[4px] border px-1.5 py-0.5 text-[9px] tracking-[0.14em] transition-colors duration-300 ${
+            triggered ? "border-cyan-400/45 text-cyan-300" : "border-white/25 text-white/50"
           }`}
         >
           {triggered ? "MATCHED" : "ON WATCH"}
@@ -823,8 +1045,8 @@ function ExecDock({ triggered }: { triggered: boolean }) {
       <div className="mt-2">
         {/* The turning ring already carries "on duty" — a scanner as
             well was two elements saying one thing. */}
-        <span className="truncate text-[12px] text-white/55">
-          {triggered ? "Matched · starting run #1284" : "Watching SAP for exceptions"}
+        <span className="truncate text-[13px] text-white/55">
+          {triggered ? "Matched · starting run #1284" : "Watching billing for overages"}
         </span>
       </div>
       </div>
@@ -837,10 +1059,8 @@ function ExecDock({ triggered }: { triggered: boolean }) {
 function EventRow() {
   return (
     <div className="flex h-[44px] items-center gap-3 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 backdrop-blur-md">
-      <span className="font-mono text-[11px] text-white/45">{TRIGGER.at}</span>
-      <span className="shrink-0 rounded border border-white/20 px-1.5 py-0.5 text-[10px] tracking-[0.08em] text-white/65">
-        {TRIGGER.app}
-      </span>
+      <span className="font-mono text-[11px] text-white/40">{TRIGGER.at}</span>
+      <AppChip app={TRIGGER.app} />
       <span className="truncate text-[13px] text-white/85">{TRIGGER.text}</span>
       <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300">TRIGGER</span>
     </div>
@@ -924,7 +1144,7 @@ function SwapLine({ text, className = "" }: { text: string; className?: string }
 function WorkCard({ cursor, done }: { cursor: number; done: boolean }) {
   const complete = Math.min(RUN_STEPS.length, Math.max(0, done ? RUN_STEPS.length : cursor));
   const detail = done
-    ? "Exception cleared — $14,200 released, requester notified"
+    ? "Credited · customer told before they called"
     : cursor < 0
       ? "Blueprint matched — starting run #1284"
       : RUN_STEPS[cursor].detail;
@@ -976,7 +1196,7 @@ function CallHead({ answered }: { answered: boolean }) {
   return (
     <div
       className={`flex h-[56px] items-center gap-3 rounded-lg border px-4 backdrop-blur-md transition-colors duration-500 ${
-        answered ? "border-cyan-400/50 bg-cyan-400/[0.16]" : "border-white/20 bg-[#0d1013]/85"
+        answered ? "border-cyan-400/50 bg-cyan-400/[0.16]" : "border-white/25 bg-[#0d1013]/82"
       }`}
     >
       <span className="relative grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full border border-cyan-400/40">
@@ -993,7 +1213,7 @@ function CallHead({ answered }: { answered: boolean }) {
         <p className="truncate text-[13px] font-medium text-white">
           {answered ? "AIOS answered" : "Inbound call"}
         </p>
-        <p className="truncate text-[11px] text-white/45">Meridian Supply · accounts payable</p>
+        <p className="truncate text-[11px] text-white/45">Halton Logistics · billing</p>
       </div>
       <span className={`ml-auto shrink-0 text-[10px] tracking-[0.14em] ${answered ? "text-cyan-300" : "hg-pulse-text text-white/55"}`}>
         {answered ? "LIVE · 0:04" : "RINGING"}
@@ -1005,8 +1225,8 @@ function CallHead({ answered }: { answered: boolean }) {
 function CallLine({ line, done }: { line: (typeof CALL)[number]; done: boolean }) {
   if (line.kind === "system") {
     // The workflow the earlier acts built, triggered again — this time
-    // by a voice on the phone rather than by an event in SAP. It stops
-    // spinning the moment AIOS says it has found the invoice: a lookup
+    // by a voice on the phone rather than by a bill crossing a ceiling.
+    // It stops spinning the moment AIOS says what it found: a lookup
     // still turning while the agent talks about the result would read
     // as theatre.
     return (
@@ -1016,7 +1236,7 @@ function CallLine({ line, done }: { line: (typeof CALL)[number]; done: boolean }
         }`}
       >
         <WorkingMark working={!done} small />
-        <span className="truncate text-[12px] text-white/85">{line.text}</span>
+        <span className="truncate text-[13px] text-white/85">{line.text}</span>
         {done ? (
           <span className="ml-auto flex shrink-0 items-center gap-1.5">
             <span className="font-mono text-[10px] text-white/40">2.4s</span>
@@ -1031,57 +1251,160 @@ function CallLine({ line, done }: { line: (typeof CALL)[number]; done: boolean }
     );
   }
 
-  if (line.kind === "resolved") {
-    return (
-      <div className="flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3 backdrop-blur-md">
-        <Check />
-        <span className="whitespace-nowrap text-[11px] tracking-[0.08em] text-cyan-200">{line.text}</span>
-      </div>
-    );
+  if (line.kind === "verify") {
+    return <VerifyRow text={line.text ?? ""} />;
   }
 
-  // The caller is indented and boxed, the way the other party sits in a
-  // chat thread — so a glance tells you who is speaking before you read
-  // a word of it. AIOS stays flush left: it is the one running the room.
-  const aios = line.kind === "aios";
-  if (aios) {
+  if (line.kind === "resolved") {
+    return <DoneChip label={line.text ?? ""} />;
+  }
+
+  // The header is the call block's own business — it needs to know
+  // whether the phone is still ringing, which a transcript row does not.
+  if (line.kind === "head") return null;
+
+  return <Speech kind={line.kind} text={line.text ?? ""} h={line.h} />;
+}
+
+/** The identity gate, once, for both channels. A full-width row rather
+    than a chip: it is something the conversation passed through, on the
+    same rail as the workflow row that follows it — both are the machine
+    acting between two lines of talk. */
+function VerifyRow({ text }: { text: string }) {
+  return (
+    <div className="flex h-[44px] items-center gap-3 rounded-md border border-cyan-400/45 bg-cyan-400/[0.12] px-3.5 backdrop-blur-md">
+      <Lock />
+      <span className="truncate text-[13px] text-white/85">{text}</span>
+      <Check className="ml-auto h-3 w-3 shrink-0 text-cyan-400" />
+    </div>
+  );
+}
+
+/** One turn of a conversation, shared by the call and the SMS thread —
+    the two acts are the same exchange on two channels, so they had
+    better not drift apart in how a speaker looks.
+
+    The customer is indented and boxed, the way the other party sits in
+    a chat thread, so a glance tells you who is speaking before you read
+    a word of it. AIOS stays flush left: it is the one running the room. */
+function Speech({ kind, text, h }: { kind: "aios" | "caller"; text: string; h: number }) {
+  if (kind === "aios") {
     return (
-      <div className="flex items-start gap-2.5" style={{ height: line.h }}>
-        <span className="w-[32px] shrink-0 text-[10px] font-medium leading-[19px] tracking-[0.12em] text-cyan-400">
+      <div className="flex items-center gap-2.5 pr-10" style={{ height: h }}>
+        <span className="w-[32px] shrink-0 text-[10px] font-medium tracking-[0.14em] text-cyan-400">
           AIOS
         </span>
-        <span className="text-[13px] leading-[19px] text-white/90">{line.text}</span>
+        <Bubble side="left">
+          <span className="text-[13px] leading-[19px] text-white/90">{text}</span>
+        </Bubble>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-end gap-2.5 pl-10" style={{ height: line.h }}>
-      {/* The caller, as a face, ahead of what he says. Painted as a
+    <div className="flex items-center justify-end gap-2.5 pl-10" style={{ height: h }}>
+      {/* The customer, as a face, ahead of what he says. Painted as a
           background so it can be zoomed past the frame's white margin
           onto the head — the source is a full headshot and
           `object-cover` on a 28px circle would show mostly backdrop. */}
       <span
-        className="h-[28px] w-[28px] shrink-0 rounded-full border border-white/20"
+        className="h-[28px] w-[28px] shrink-0 rounded-full border border-white/25"
         style={{
           backgroundImage: "url(/videos/customer.jpg)",
           backgroundSize: "165%",
           backgroundPosition: "50% 20%",
         }}
       />
-      <div className="flex h-full items-center rounded-[10px] rounded-br-[3px] border border-white/[0.12] bg-white/[0.06] px-3 backdrop-blur-sm">
-        <span className="text-[13px] leading-[19px] text-white/75">{line.text}</span>
+      <Bubble side="right">
+        <span className="text-[13px] leading-[19px] text-white/75">{text}</span>
+      </Bubble>
+    </div>
+  );
+}
+
+/* ══ Memory, and the SMS it sends ══════════════════════════ */
+
+/** What the four acts before it wrote down. Rows arrive one at a time,
+    each stamped with which act produced it — the stamp is the whole
+    point, so it is the one part of the row that carries the accent. */
+function MemoryCard({ shown }: { shown: number }) {
+  return (
+    <div
+      className="rounded-lg border border-white/[0.14] bg-[#0d1013]/82 px-4 py-4 backdrop-blur-md"
+      style={{ height: MEM_CARD_H }}
+    >
+      <p className="h-[14px] text-[11px] font-medium leading-[14px] tracking-[0.14em] text-white">
+        CUSTOMER MEMORY
+      </p>
+      <p className="mt-1.5 h-[16px] text-[11px] leading-[16px] text-white/50">
+        Marcus · Halton Logistics
+      </p>
+
+      <div className="mt-4 flex flex-col gap-2">
+        {MEM_ROWS.map((r, idx) => {
+          const on = idx < shown;
+          return (
+            <div
+              key={r.text}
+              // The empty slots hold their space rather than the rows
+              // stacking up from nothing: this card is a record being
+              // filled in, not a feed.
+              className={`flex items-center gap-3 rounded-md border px-3 transition-all duration-500 ${
+                on
+                  ? "border-cyan-400/40 bg-cyan-400/[0.10] opacity-100"
+                  : "border-white/[0.06] bg-[#0d1013]/40 opacity-0"
+              }`}
+              style={{ height: MEM_ROW_H }}
+            >
+              <span className="truncate text-[12px] text-white/85">{r.text}</span>
+              <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300/80">
+                {r.src}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
+function SmsHead() {
+  return (
+    <div className="flex h-[56px] items-center gap-3 rounded-lg border border-cyan-400/50 bg-cyan-400/[0.16] px-4 backdrop-blur-md">
+      <span className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full border border-cyan-400/40">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="h-3.5 w-3.5 text-cyan-400">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M20.5 12.4c0 3.5-3.8 6.3-8.5 6.3-.9 0-1.8-.1-2.6-.3l-4.4 1.6 1.4-3.6c-1.5-1.1-2.4-2.6-2.4-4.3 0-3.5 3.8-6.3 8.5-6.3s8 2.8 8 6.6z"
+          />
+        </svg>
+      </span>
+      <div className="min-w-0">
+        <p className="truncate text-[13px] font-medium text-white">Outbound SMS</p>
+        <p className="truncate text-[11px] text-white/45">Marcus · Halton Logistics</p>
+      </div>
+      <span className="ml-auto shrink-0 text-[10px] tracking-[0.14em] text-cyan-300">
+        6 WEEKS LATER
+      </span>
+    </div>
+  );
+}
+
+function SmsLine({ line }: { line: (typeof SMS)[number] }) {
+  if (line.kind === "head") return <SmsHead />;
+  if (line.kind === "verify") return <VerifyRow text={line.text ?? ""} />;
+  if (line.kind === "done") return <DoneChip label={line.text ?? ""} />;
+  return <Speech kind={line.kind} text={line.text ?? ""} h={line.h} />;
+}
+
 /* ══ The component ═════════════════════════════════════════ */
 
-/** Which half of the story is on screen. The hero background swaps with
-    it — the build acts play over the expert at her desk, the call act
-    over the customer on the phone. See `onAct` below. */
-export type HeroAct = "build" | "call";
+/** Which stretch of the story is on screen. The hero background swaps
+    with it: the build acts play over the expert at her desk, the
+    Communicator over the customer on the phone, and Customer Memory
+    over the same customer texting. See `onAct` below. */
+export type HeroAct = "build" | "call" | "text";
 
 export default function HeroGraph({
   className = "",
@@ -1093,6 +1416,10 @@ export default function HeroGraph({
   onAct?: (act: HeroAct) => void;
 }) {
   const [i, setI] = useState(0);
+  /** Which act a visitor has asked for, under reduced motion — where
+      nothing advances on its own, so a click is the only thing that
+      moves the story. Null until they click. */
+  const [pinned, setPinned] = useState<number | null>(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -1106,13 +1433,19 @@ export default function HeroGraph({
     return () => clearTimeout(t);
   }, [i, reduced]);
 
-  const act: HeroAct = (reduced ? SEQUENCE[FROZEN] : SEQUENCE[i]).phase === "call" ? "call" : "build";
-  useEffect(() => {
-    onAct?.(act);
-  }, [act, onAct]);
-
-  const beat = reduced ? SEQUENCE[FROZEN] : SEQUENCE[i];
+  const beat = reduced ? SEQUENCE[pinned ?? FROZEN] : SEQUENCE[i];
   const { phase, step } = beat;
+
+  /** Go to an act. The timer effect keys off `i`, so a jump also buys
+      the act it lands on its full hold rather than the remainder of
+      whatever beat was interrupted. */
+  const jump = (idx: number) => {
+    if (reduced) {
+      setPinned(ACT_STILL[idx]);
+      return;
+    }
+    setI(ACT_ENTRY[idx]);
+  };
 
   /* ── Session stream ──
      On screen for observe, cta and exit. During cta and exit the CTA
@@ -1170,13 +1503,22 @@ export default function HeroGraph({
   const showExec = phase === "armed" || running;
   const stacked = triggered || running;
 
-  const execEventTop = 0;
-  const execDockTop = stacked ? EVENT_H + RUN_GAP : 0;
-  const execWorkTop = execDockTop + DOCK_H + RUN_GAP;
+  /* The dock holds the top of the stack and everything it produces
+     lands under it, in the order it happened: the match, then the run,
+     then the receipt. It used to sit under its own trigger row, which
+     read as the event arriving from somewhere above rather than as the
+     agent on watch reporting what it caught. */
+  const execDockTop = 0;
+  const execEventTop = DOCK_H + RUN_GAP;
+  const execWorkTop = execEventTop + EVENT_H + RUN_GAP;
   const execReceiptTop = execWorkTop + WORK_H + RUN_GAP;
   const execTotal = running
-    ? (showReceipt ? execReceiptTop + RECEIPT_H : execWorkTop + WORK_H)
-    : execDockTop + DOCK_H;
+    ? showReceipt
+      ? execReceiptTop + RECEIPT_H
+      : execWorkTop + WORK_H
+    : stacked
+      ? execEventTop + EVENT_H
+      : DOCK_H;
   const execOffset = STREAM_H - FLOOR - execTotal;
 
   /* ── Expose ──
@@ -1211,6 +1553,30 @@ export default function HeroGraph({
   const callOffset = STREAM_H - FLOOR - cy;
   const callResolved = exitingCall || (phase === "call" && step >= CALL.length);
 
+  /* ── Memory ──
+     The card holds its full height from the first beat and the rows land
+     into it; only the chip below changes the stack's height, so the card
+     rises once, at the end, the way the run rises for its receipt. */
+  const exitingMem = phase === "memexit";
+  const memShown = exitingMem ? MEM_ROWS.length : Math.min(MEM_ROWS.length, step);
+  const memChip = exitingMem || (phase === "memory" && step > MEM_ROWS.length);
+  const memOffset = STREAM_H - FLOOR - (memChip ? MEM_TOTAL : MEM_CARD_H);
+
+  /* ── SMS ──
+     Same shape as the call: bottom-anchored, one line per beat, newest on
+     the floor. Step 0 is the header alone — the message being sent. */
+  const exitingSms = phase === "smsexit";
+  const smsLines = exitingSms ? SMS : SMS.slice(0, Math.min(SMS.length, step + 1));
+  const smsTops: number[] = [];
+  let sy = 0;
+  smsLines.forEach((line, idx) => {
+    sy += idx === 0 ? 0 : line.gap;
+    smsTops.push(sy);
+    sy += line.h;
+  });
+  const smsOffset = STREAM_H - FLOOR - sy;
+  const smsDone = exitingSms || (phase === "sms" && step >= SMS.length - 1);
+
   /* ── Status block ── */
   const observeDone = step >= SEQUENCE.filter((b) => b.phase === "observe").length - 1;
   const runDone = phase === "run" && step >= SEQUENCE.filter((b) => b.phase === "run").length - 2;
@@ -1231,11 +1597,29 @@ export default function HeroGraph({
           ? 1
           : phase === "expose" || phase === "exexit" || phase === "call" || phase === "callexit"
             ? 3
-            : 2;
-  /* The four act boundaries: whatever is on screen rides out to the left
+            : phase === "memory" || phase === "memexit" || phase === "sms" || phase === "smsexit"
+              ? 4
+              : 2;
+  /* The act boundaries: whatever is on screen rides out to the left
      before the next act rides in. */
   const exiting =
-    phase === "exit" || phase === "bpexit" || phase === "runexit" || phase === "callexit";
+    phase === "exit" ||
+    phase === "bpexit" ||
+    phase === "runexit" ||
+    phase === "callexit" ||
+    exitingMem ||
+    exitingSms;
+
+  /* Which plate the hero paints behind all this. Keyed off the act
+     rather than the phase, so an act and its own title card are one
+     continuous stretch — reading the phase instead cut back to the
+     expert for every title card in between. Three plates, so three
+     crossfades a loop: to the call, to the text thread, and back to the
+     expert when the overview comes round again. */
+  const act: HeroAct = actIndex >= 4 ? "text" : actIndex === 3 ? "call" : "build";
+  useEffect(() => {
+    onAct?.(act);
+  }, [act, onAct]);
 
 
   /* Whether the part is mid-task. Drives the pulse on its mark — the
@@ -1246,7 +1630,9 @@ export default function HeroGraph({
     (phase === "observe" && !observeDone) ||
     (phase === "armed" && !triggered) ||
     (phase === "run" && !runDone) ||
-    (phase === "call" && !callResolved);
+    (phase === "call" && !callResolved) ||
+    (phase === "memory" && !memChip) ||
+    (phase === "sms" && !smsDone);
 
 
   return (
@@ -1261,15 +1647,14 @@ export default function HeroGraph({
         {phase === "overview" || phase === "ovexit" ? (
           <div
             className="absolute inset-x-0"
-            // Sits on the same floor every other stream does, rather
-            // than centred: the overview is where the animation starts,
-            // so it should start from the line the rest of it works up
-            // from, not float in the middle of the frame.
+            // Rests on the rail the timeline draws a beat later, rather
+            // than on the stream floor above it (which left a band of
+            // dead air, since the timeline is hidden for the whole
+            // overview) or on the frame's own bottom edge (which pushed
+            // the stack into the space the timeline is about to take).
             style={{
-              top:
-                STREAM_H -
-                FLOOR -
-                (OV_HEAD_H + ACTS.length * OV_ROW_H + (ACTS.length - 1) * OV_GAP),
+              bottom: FOOTER_H,
+              height: OV_HEAD_H + ACTS.length * OV_ROW_H + (ACTS.length - 1) * OV_GAP,
             }}
           >
             {/* Names the stack before it builds, so the four rows read
@@ -1296,7 +1681,7 @@ export default function HeroGraph({
                 // Right to left, like everything else in the loop — the
                 // overview is the first leg of the same line of travel,
                 // not a separate opening title.
-                className={`absolute inset-x-0 flex items-center gap-3.5 rounded-lg border border-white/[0.07] bg-[#0d1013]/55 px-4 backdrop-blur-sm ${
+                className={`absolute inset-x-0 flex items-center gap-3 rounded-[10px] border border-white/[0.10] bg-[#0d1013]/55 px-3.5 backdrop-blur-md ${
                   phase === "ovexit" ? "hg-exit" : "hg-slide-in"
                 }`}
                 style={{
@@ -1312,12 +1697,19 @@ export default function HeroGraph({
                       }),
                 }}
               >
-                <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md border border-cyan-400/45 bg-cyan-400/[0.13] text-cyan-400">
+                {/* Same tile, same glyph, same type as the timeline
+                    card this row becomes twenty seconds later. */}
+                <span
+                  className="grid shrink-0 place-items-center rounded-md border border-cyan-400/45 bg-cyan-400/[0.13] text-cyan-400"
+                  style={{ height: TL_DOT, width: TL_DOT }}
+                >
                   <PillarIcon index={a.icon} className="h-[17px] w-[17px]" />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-medium tracking-[0.14em] text-white">{a.name}</div>
-                  <div className="mt-1.5 text-[12px] text-white/55">{a.does}</div>
+                  <div className="text-[11px] font-medium tracking-[0.14em] text-white">
+                    {a.name.toUpperCase()}
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-white/55">{a.does}</p>
                 </div>
               </div>
             ))}
@@ -1390,7 +1782,40 @@ export default function HeroGraph({
               className="absolute inset-x-0 top-0 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{ transform: `translateY(${bpPan}px)` }}
             >
-              <div className="relative" style={{ height: BP_H }}>
+              {/* The sheet. It arrives first and empty, and the graph
+                  draws itself onto it — a procedure being written down,
+                  which is what the act is claiming. On the way out it
+                  goes last, after the nodes it carries. */}
+              <div
+                className={`rounded-lg border border-white/[0.14] bg-[#0d1013]/82 backdrop-blur-md ${
+                  exitingBp ? "hg-exit" : "hg-enter"
+                }`}
+                style={{
+                  paddingLeft: 14,
+                  paddingRight: 14,
+                  paddingTop: BP_PAD_T,
+                  paddingBottom: BP_PAD_B,
+                  animationDelay: exitingBp ? `${BP_EXIT_LEAD + BP_NODES.length * 85}ms` : undefined,
+                }}
+              >
+                {/* The document's header: what this is, and which
+                    procedure it is. Negative margins so the rule under
+                    it runs the full width of the sheet rather than
+                    stopping inside its padding. */}
+                <div
+                  className="-mx-3.5 flex items-center gap-2.5 border-b border-white/[0.10] px-3.5"
+                  style={{ height: BP_HEAD_H, marginBottom: BP_HEAD_GAP }}
+                >
+                  <span className="shrink-0 rounded-[4px] border border-white/25 px-1.5 py-0.5 text-[9px] tracking-[0.14em] text-white/70">
+                    SOP
+                  </span>
+                  <span className="truncate text-[12px] text-white">Billing Overage Review</span>
+                  <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/35">
+                    v1 · DRAFT
+                  </span>
+                </div>
+
+                <div className="relative" style={{ height: BP_H }}>
                 <div className="absolute inset-0">
                   {BP_LINKS.map((link, idx) => (
                     <span
@@ -1403,10 +1828,11 @@ export default function HeroGraph({
                         top: link.y,
                         height: link.len,
                         width: link.w,
-                        // Links draw just behind the node they lead into.
+                        // Links draw just behind the node they lead into,
+                        // and the whole graph waits on the sheet landing.
                         animationDelay: exitingBp
                           ? `${BP_EXIT_LEAD + idx * 45}ms`
-                          : `${300 + idx * 90}ms`,
+                          : `${480 + idx * 90}ms`,
                       }}
                     />
                   ))}
@@ -1419,7 +1845,7 @@ export default function HeroGraph({
                       style={{
                         left: "50%",
                         top: joint.y,
-                        animationDelay: exitingBp ? `${BP_EXIT_LEAD}ms` : "900ms",
+                        animationDelay: exitingBp ? `${BP_EXIT_LEAD}ms` : "1080ms",
                       }}
                     />
                   ))}
@@ -1434,12 +1860,13 @@ export default function HeroGraph({
                         width: node.w ?? "100%",
                         animationDelay: exitingBp
                           ? `${BP_EXIT_LEAD + idx * 85}ms`
-                          : `${idx * 150}ms`,
+                          : `${180 + idx * 150}ms`,
                       }}
                     >
                       <BpBox node={node} />
                     </div>
                   ))}
+                </div>
                 </div>
               </div>
 
@@ -1469,28 +1896,25 @@ export default function HeroGraph({
               className="absolute inset-x-0 top-0 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{ transform: `translateY(${execOffset}px)` }}
             >
-              {/* The event that caused the run. Enters once, on the
+              {/* The agent on watch. Holds the top of the stack from the
+                  first beat of the act to the last. */}
+              <div
+                className={`absolute inset-x-0 ${exitingRun ? "hg-exit" : "hg-enter"}`}
+                style={{ top: execDockTop }}
+              >
+                <ExecDock triggered={stacked} />
+              </div>
+
+              {/* What it caught, directly under it. Enters once, on the
                   trigger, and holds its place from there. */}
               {stacked ? (
                 <div
                   className={`absolute inset-x-0 ${exitingRun ? "hg-exit" : "hg-enter"}`}
-                  style={{ top: execEventTop }}
+                  style={{ top: execEventTop, animationDelay: exitingRun ? "60ms" : undefined }}
                 >
                   <EventRow />
                 </div>
               ) : null}
-
-              {/* Glides to its slot rather than snapping: the container
-                  offset above is already transitioning, so a hard `top`
-                  change fought it and the dock lurched. */}
-              <div
-                className={`absolute inset-x-0 transition-[top] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  exitingRun ? "hg-exit" : "hg-enter"
-                }`}
-                style={{ top: execDockTop, animationDelay: exitingRun ? "60ms" : undefined }}
-              >
-                <ExecDock triggered={stacked} />
-              </div>
 
               {running ? (
                 <div
@@ -1508,7 +1932,10 @@ export default function HeroGraph({
                 >
                   <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[11px] text-cyan-200 backdrop-blur-md">
                     <span className="h-[5px] w-[5px] rounded-full bg-cyan-400" />
-                    2.4s · $0.31 · 5/5 steps · gates passed
+                    {/* Not "gates passed": this run took the branch
+                        that has no gate. What it did clear is the
+                        credit authority it was given. */}
+                    2.4s · $0.31 · 5/5 steps · inside authority
                   </span>
                 </div>
               ) : null}
@@ -1559,6 +1986,51 @@ export default function HeroGraph({
                     // which is what turns the lookup from spinning to done.
                     <CallLine line={line} done={idx < callLines.length - 1} />
                   )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {/* ── What it remembers ── */}
+        {phase === "memory" || exitingMem ? (
+          <div className="hg-viewport absolute inset-x-0 top-0 overflow-hidden" style={{ height: STREAM_H }}>
+            <div
+              className="absolute inset-x-0 top-0 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{ transform: `translateY(${memOffset}px)` }}
+            >
+              <div className={`absolute inset-x-0 ${exitingMem ? "hg-exit" : "hg-enter"}`} style={{ top: 0 }}>
+                <MemoryCard shown={memShown} />
+              </div>
+              {memChip ? (
+                <div
+                  className={`absolute inset-x-0 ${exitingMem ? "hg-exit" : "hg-enter"}`}
+                  style={{ top: MEM_CHIP_Y, animationDelay: exitingMem ? "90ms" : undefined }}
+                >
+                  <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[11px] text-cyan-200 backdrop-blur-md">
+                    <span className="h-[5px] w-[5px] rounded-full bg-cyan-400" />
+                    Used on every future contact
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+
+        {/* ── Six weeks later ── */}
+        {phase === "sms" || exitingSms ? (
+          <div className="hg-viewport absolute inset-x-0 top-0 overflow-hidden" style={{ height: STREAM_H }}>
+            <div
+              className="absolute inset-x-0 top-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{ transform: `translateY(${smsOffset}px)` }}
+            >
+              {smsLines.map((line, idx) => (
+                <div
+                  key={`${line.kind}-${idx}`}
+                  className={`absolute inset-x-0 ${exitingSms ? "hg-exit" : "hg-enter"}`}
+                  style={{ top: smsTops[idx], animationDelay: exitingSms ? `${idx * 70}ms` : undefined }}
+                >
+                  <SmsLine line={line} />
                 </div>
               ))}
             </div>
@@ -1665,9 +2137,15 @@ export default function HeroGraph({
               const anchor = open ? 1 + TL_PAD + TL_DOT / 2 : TL_DOT / 2;
 
               return (
-                <div
+                <button
                   key={a.name}
-                  className="relative shrink-0 transition-[width] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  type="button"
+                  onClick={() => jump(idx)}
+                  aria-label={`Play the ${a.name} act — ${a.does}`}
+                  // The frame around it is pointer-events-none, so
+                  // interactivity is switched back on here and nowhere
+                  // else: these four marks are the only controls.
+                  className="group pointer-events-auto relative shrink-0 cursor-pointer text-left transition-[width] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
                     width: open
                       ? `calc(100% - ${(ACTS.length - 1) * (TL_DOT + TL_GAP)}px)`
@@ -1676,6 +2154,21 @@ export default function HeroGraph({
                         : TL_DOT,
                   }}
                 >
+                  {/* The name, on hover — a closed mark is a glyph and
+                      nothing else, so without this a visitor has to
+                      click to find out what they are clicking. Sits
+                      above the rail, where there is always room; the
+                      open act already carries its name, so it is the
+                      one that never shows a label. */}
+                  {open ? null : (
+                    <span
+                      className="pointer-events-none absolute z-20 -translate-x-1/2 whitespace-nowrap rounded-[4px] border border-white/20 bg-[#0d1013]/90 px-2 py-1 text-[10px] font-medium tracking-[0.14em] text-white opacity-0 backdrop-blur-md transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      style={{ left: anchor, top: -TL_STEM - 34 }}
+                    >
+                      {a.name.toUpperCase()}
+                    </span>
+                  )}
+
                   {/* The dot on the rail, and the stem down from it. The
                       stem is 1px at `anchor`, so its centre is anchor +
                       0.5; the 5px dot is offset by 2 to match. */}
@@ -1703,7 +2196,7 @@ export default function HeroGraph({
                       edge was cut, which is what made the border blink
                       out partway through the collapse. */}
                   <div
-                    className="flex items-center gap-3 overflow-hidden border-solid backdrop-blur-sm transition-[height,border-radius,padding,background-color,border-color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    className="flex items-center gap-3 overflow-hidden border-solid backdrop-blur-md transition-[height,border-radius,padding,background-color,border-color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                     style={{
                       width: open ? "100%" : TL_DOT,
                       height: open ? OV_ROW_H : TL_DOT,
@@ -1712,10 +2205,10 @@ export default function HeroGraph({
                       paddingLeft: open ? TL_PAD : 0,
                       paddingRight: open ? TL_PAD : 0,
                       borderColor: open
-                        ? "rgba(255,255,255,0.07)"
+                        ? "rgba(255,255,255,0.10)"
                         : lit
                           ? "rgba(34,211,238,0.40)"
-                          : "rgba(255,255,255,0.12)",
+                          : "rgba(255,255,255,0.14)",
                       backgroundColor: open
                         ? "rgba(13,16,19,0.55)"
                         : lit
@@ -1728,7 +2221,9 @@ export default function HeroGraph({
                     <span
                       className={`grid shrink-0 place-items-center border-solid transition-[width,height,border-radius,border-width,border-color,background-color,color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
                         open ? "text-cyan-400" : lit ? "text-cyan-400/60" : "text-white/25"
-                      } ${open && working ? "hg-mark-pulse" : ""}`}
+                      } ${open ? "" : "group-hover:text-cyan-300"} ${
+                        open && working ? "hg-mark-pulse" : ""
+                      }`}
                       style={{
                         height: open ? TL_DOT : TL_DOT - 2,
                         width: open ? TL_DOT : TL_DOT - 2,
@@ -1748,7 +2243,7 @@ export default function HeroGraph({
                       style={{ opacity: open ? 1 : 0 }}
                     >
                       <div className="whitespace-nowrap text-[11px] font-medium tracking-[0.14em] text-white">
-                        {a.name}
+                        {a.name.toUpperCase()}
                       </div>
 
                       {/* What the part does, and only that. A live
@@ -1761,12 +2256,12 @@ export default function HeroGraph({
                           0.14em the name carries is for caps, and on a
                           mixed-case line of this length it reads as a
                           gap between every letter. */}
-                      <p className="mt-1.5 whitespace-nowrap text-[10.5px] text-white/55">
+                      <p className="mt-1.5 whitespace-nowrap text-[11px] text-white/55">
                         {a.does}
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>

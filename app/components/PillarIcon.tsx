@@ -67,6 +67,13 @@ export default function PillarIcon({ index, className = "h-6 w-6" }: { index: nu
       <path d="M7.6 12h8.8" {...s} strokeWidth="1.7" />
       <circle cx="12" cy="12" r="2.3" {...s} strokeWidth="1.7" />
     </g>,
+    // 05 Memory — the frame keeps something: a mark held inside it.
+    // A bookmark rather than a disk or a clock, because what is kept
+    // here is chosen, not logged.
+    <g key="memory">
+      <path d={frame} {...s} />
+      <path d="M9.2 7.4h5.6v9.4L12 14.3l-2.8 2.5z" {...s} />
+    </g>,
   ];
 
   return (

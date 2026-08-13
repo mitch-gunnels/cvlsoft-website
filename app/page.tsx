@@ -83,21 +83,17 @@ function RailV({ tone = "light", nodeTop = 8 }: { tone?: "light" | "dark" | "acc
   );
 }
 
-/**
- * Act marker for the end-to-end flow section — a numbered rule that separates
- * the four beats without turning each into its own <section>.
- */
-function FlowAct({ num, label }: { num: string; label: string }) {
+/** Uppercase eyebrow: node + wide-tracked label. */
+/** The one control glyph on the page that means "bigger". Two strokes,
+    so it reads at 16px and cannot be mistaken for a close mark. */
+function Plus({ className = "h-4 w-4" }: { className?: string }) {
   return (
-    <div className="reveal-up mb-10 mt-20 flex items-center gap-5 border-t border-slate-200 pt-8 md:mt-24">
-      <span className="font-mono text-[13px] text-cyan-700">{num}</span>
-      <span className="text-[13px] font-medium uppercase tracking-[0.14em] text-[#0f1419]">{label}</span>
-      <span className="h-px flex-1 bg-slate-200" />
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className} aria-hidden="true">
+      <path strokeLinecap="round" d="M12 5v14M5 12h14" />
+    </svg>
   );
 }
 
-/** Uppercase eyebrow: node + wide-tracked label. */
 function Eyebrow({ children, tone = "light" }: { children: React.ReactNode; tone?: "light" | "dark" }) {
   return (
     <p className="flex items-center gap-4">
@@ -230,6 +226,13 @@ const HERO_VIDEO: { webm: string; mp4: string } | null = {
 };
 const HERO_IMAGE: string | null = "/header_image.png";
 
+/* The architecture diagram, beside the cognitive-core claim. It is a
+   1672×941 export of dense small type: readable full-bleed, not readable
+   at half a column, which is the whole reason it opens. */
+const ARCH_IMAGE = "/aios_arch.png";
+const ARCH_ALT =
+  "The AIOS platform architecture: trust, governance and observability over configuration and orchestration, agentic execution and connectors, the surfaces and triggers work arrives on, and the platform infrastructure underneath.";
+
 /* Second background, for the call act of the hero animation: the customer
    on the phone rather than the expert at her desk. HeroGraph reports which
    act is on screen (see its `onAct` prop) and the two crossfade.
@@ -243,6 +246,16 @@ const HERO_VIDEO_CALL: { webm: string; mp4: string } | null = {
   mp4: "/videos/hero-call.mp4",
 };
 
+/* Third background, for the Customer Memory act: the same customer, six
+   weeks later, on a text thread rather than a call. Encoded from the
+   supplied `customer_text.mp4` on exactly the recipe the call plate uses
+   — 1600×900, 24fps, last second crossfaded into the opening frame — so
+   the three plates cut together. Null holds whichever plate is up. */
+const HERO_VIDEO_TEXT: { webm: string; mp4: string } | null = {
+  webm: "/videos/hero-text.webm",
+  mp4: "/videos/hero-text.mp4",
+};
+
 /* Risk reversal, not social proof. `kind` states the question the buyer is
    actually asking; the stat answers it. */
 const TRUST_STATS = [
@@ -251,86 +264,42 @@ const TRUST_STATS = [
   { kind: "What you maintain", stat: "1 core", label: "One cognitive core — not a hundred brittle bots" },
 ];
 
-/* ── Section 03: one claim, end to end ──────────────────────
-   An illustrative walkthrough, not a case study — roles only, no names, and
-   the panel is labelled as such. The point of the before/after is that the
-   physical inspection still takes two days: only the human and system time
-   collapses. Claiming end-to-end minutes would be the kind of lie a claims
-   buyer spots on sight.
-   ──────────────────────────────────────────────────────────── */
+/* The parts of the core, in the order the hero animates them.
 
-const FLOW_BEFORE = [
-  { t: "DAY 1", text: "Claim filed, lands in the intake queue" },
-  { t: "DAY 1", text: "Adjuster pulls the policy and checks coverage", meta: "12 min · 3 systems" },
-  { t: "DAY 2", text: "Inspection ordered — then waiting" },
-  { t: "DAY 4", text: "Estimate returns; adjuster keys it in and compares to the schedule" },
-  { t: "DAY 4", text: "Over threshold — emailed to the manager, then waiting" },
-  { t: "DAY 5", text: "Manager approves, buried in an email thread" },
-  { t: "DAY 6", text: "Payment posted, file noted, customer emailed" },
-];
-
-const FLOW_AFTER = [
-  { t: "00:00", text: "Policy pulled, coverage checked, duplicate check run" },
-  { t: "00:02", text: "Inspection ordered automatically" },
-  { t: "", text: "2 days — the inspection is physical. That part doesn't change.", pause: true },
-  { t: "00:03", text: "Estimate ingested and compared; over threshold, routed to the manager" },
-  { t: "00:03", text: "Manager approves in one click", gate: true },
-  { t: "00:04", text: "Payment posted · file documented · customer notified, unprompted" },
-];
-
-const FLOW_DELTAS = [
-  { label: "Handoffs", before: "11", after: "1" },
-  { label: "Adjuster time on this claim", before: "47 min", after: "0" },
-  { label: "Customer calls chasing status", before: "2", after: "0" },
-  { label: "Manager touch", before: "1 day", after: "90 sec" },
-];
-
-const FLOW_CHAT = [
-  { who: "Policyholder", text: "Any update on claim 88-4471? It's been a week.", agent: false },
-  {
-    who: "AIOS",
-    text: "Your inspection cleared Tuesday. The repair estimate came in at $12,400 — above the auto-approve limit, so it routed to a manager for review. That was approved this morning. Payment is scheduled for Friday, and I've just texted you the confirmation.",
-    agent: true,
-  },
-];
-
-/* The line under the transcript that makes the whole section land: the answer
-   the customer just got is traceable to a specific person and a specific gate. */
-const FLOW_PROVENANCE = [
-  { k: "Judgment", v: "Captured from a senior adjuster" },
-  { k: "Gate", v: "Claims ops manager · policy #4" },
-  { k: "Run", v: "2.4s · $0.31 · logged" },
-];
-
-const FLOW_ALSO = ["AP invoice exceptions", "Vendor onboarding", "Order status", "Tier-1 support"];
-
-
-
+   `icon` indexes PillarIcon and is carried explicitly rather than taken
+   from array position: the glyph set still holds the Controller mark at
+   4, which nothing on this page shows any more, so Customer Memory's 5
+   would come out as a gate if position picked the glyph. */
 const PILLARS = [
   {
+    icon: 0,
     label: "OBSERVER",
-    title: "Lorem ipsum dolor sit",
-    body: "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.",
+    title: "It learns the job by watching someone do it",
+    body: "AIOS sits with your expert and records the work as it happens: the systems opened, the records pulled, the call read, the decision made. Then it asks why she did it that way. That answer is the part no process document ever captured, and it is the part that makes the work repeatable by anything other than her.",
   },
   {
+    icon: 1,
     label: "BLUEPRINT",
-    title: "Ut enim ad minim veniam",
-    body: "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor.",
+    title: "What she knows becomes a procedure you can read",
+    body: "Each session compiles into an explicit workflow: the steps, the systems they touch, the decision points, and the reasoning behind each one written out in plain language. Nothing is buried in a prompt. Your team reviews it before it runs and edits it after, the way they would any standard operating procedure.",
   },
   {
+    icon: 2,
     label: "EXECUTOR",
-    title: "Duis aute irure dolor in reprehenderit",
-    body: "In voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident.",
+    title: "It runs on its own, inside the authority you set",
+    body: "The workflow sits armed on the systems it was drawn from and starts when something happens, not when somebody remembers. It acts within limits you define, in dollars and in scope. Anything past those limits stops and routes to a person with the case already assembled and the recommendation already made.",
   },
   {
+    icon: 3,
     label: "COMMUNICATOR",
-    title: "Excepteur sint occaecat",
-    body: "Cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis.",
+    title: "The same skill answers on every channel",
+    body: "Voice, chat, SMS, and inside ChatGPT and Claude. Putting a workflow on a channel is a checkbox, not a project, and the customer gets the resolution rather than a status page: identity verified, the work done while they are still on the line, no transfer and no callback.",
   },
   {
-    label: "CONTROLLER",
-    title: "Sed ut perspiciatis unde omnis iste natus error",
-    body: "Sit voluptatem accusantium doloremque laudantium totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+    icon: 5,
+    label: "CUSTOMER MEMORY",
+    title: "Every contact starts where the last one ended",
+    body: "Runs and conversations write back to the customer record: what was decided, what was promised, how they prefer to be reached, what to raise next time. The note left in March is what opens the conversation in May, which is the difference between a company that knows a customer and one that answers the phone quickly.",
   },
 ];
 
@@ -438,9 +407,29 @@ export default function Home() {
      change with it. HeroGraph reports it; see HERO_VIDEO_CALL. */
   const [heroAct, setHeroAct] = useState<HeroAct>("build");
   const callVideoRef = useRef<HTMLVideoElement>(null);
+  const textVideoRef = useRef<HTMLVideoElement>(null);
+  /** The architecture diagram, opened full size. */
+  const [archOpen, setArchOpen] = useState(false);
 
-  /* The call plate has to start at its first frame every time the story
-     reaches the call — otherwise it dissolves in at whatever point its
+  /* Escape closes it and the page underneath stops scrolling while it is
+     open — a full-screen overlay that lets the page move behind it reads
+     as broken the first time anyone touches a trackpad. */
+  useEffect(() => {
+    if (!archOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setArchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [archOpen]);
+
+  /* A customer plate has to start at its first frame every time the story
+     reaches its act — otherwise it dissolves in at whatever point its
      own loop happens to be at, and the man is mid-sentence before the
      phone has rung.
 
@@ -451,8 +440,12 @@ export default function Home() {
      fully buffered is instant, and the first ~150ms of the dissolve is
      under 10% opacity anyway, which covers any hitch. */
   useEffect(() => {
-    if (heroAct !== "call") return;
-    const video = callVideoRef.current;
+    const video =
+      heroAct === "call"
+        ? callVideoRef.current
+        : heroAct === "text"
+          ? textVideoRef.current
+          : null;
     if (!video) return;
     video.currentTime = 0;
     void video.play();
@@ -548,7 +541,10 @@ export default function Home() {
             {HERO_VIDEO ? (
               <video
                 className={`absolute inset-0 h-full w-full object-cover object-right transition-opacity duration-[1500ms] ease-in-out motion-reduce:hidden ${
-                  heroAct === "call" && HERO_VIDEO_CALL ? "opacity-0" : "opacity-100"
+                  (heroAct === "call" && HERO_VIDEO_CALL) ||
+                  (heroAct === "text" && HERO_VIDEO_TEXT)
+                    ? "opacity-0"
+                    : "opacity-100"
                 }`}
                 autoPlay
                 loop
@@ -586,6 +582,26 @@ export default function Home() {
                 <source src={HERO_VIDEO_CALL.mp4} type="video/mp4" />
               </video>
             ) : null}
+            {/* Customer Memory act: the same customer on a text thread.
+                Same treatment as the call plate — stacked, always
+                playing, crossfaded in when HeroGraph reaches the act. */}
+            {HERO_VIDEO_TEXT ? (
+              <video
+                ref={textVideoRef}
+                className={`absolute inset-0 h-full w-full object-cover object-right transition-opacity duration-[1500ms] ease-in-out motion-reduce:hidden ${
+                  heroAct === "text" ? "opacity-100" : "opacity-0"
+                }`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                aria-hidden="true"
+              >
+                <source src={HERO_VIDEO_TEXT.webm} type="video/webm" />
+                <source src={HERO_VIDEO_TEXT.mp4} type="video/mp4" />
+              </video>
+            ) : null}
             {/* Still fallback: the only media when there's no video, and the
                 motion-reduce substitute when there is. */}
             {HERO_IMAGE ? (
@@ -618,7 +634,7 @@ export default function Home() {
               on narrow screens it buries the copy. */}
           <HeroGraph
             onAct={setHeroAct}
-            className="absolute bottom-[calc(8%-40px)] right-[3%] hidden w-[380px] lg:block xl:right-[5%] xl:w-[400px]"
+            className="absolute bottom-[calc(8%-55px)] right-[calc(3%+130px)] hidden w-[400px] lg:block xl:right-[calc(5%+130px)]"
           />
 
           <div className={`relative z-10 w-full ${GUTTER} py-24`}>
@@ -635,8 +651,7 @@ export default function Home() {
 
             <p className="hero-fade-up mt-8 max-w-[46ch] text-[17px] leading-[1.6] text-white/70 [animation-delay:160ms]">
               AIOS learns how your experts actually work, turns it into workflows that run
-              themselves, and interacts with your customers via voice, SMS, and inside ChatGPT —
-              where they&rsquo;re already asking about you, with or without you.
+              themselves, and interacts with your customers via voice, SMS, and inside ChatGPT.
             </p>
 
             <div className="hero-fade-up mt-10 flex flex-wrap items-center gap-4 [animation-delay:300ms]">
@@ -691,207 +706,57 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══ 03 · ONE CLAIM, END TO END ══
-            Four acts: an expert's judgment is captured, the clerical work around
-            it is automated, a manager keeps the gate, and the customer gets the
-            answer. The whole argument is provenance — the reply at the end
-            traces back to a named role and a specific approval. */}
+        {/* ══ 03 · ONE CORE, END TO END ══
+            The claim, stated and left to stand: knowledge is captured once into
+            a single core, and channels are doors into it rather than copies of
+            it. This used to carry a five-act walkthrough of one insurance claim
+            as proof — removed 2026-08-12, kept in docs/archive/. If evidence
+            goes back in here, it belongs after this intro. */}
         <section id="problem" data-tone="light" className="bg-white pt-24 md:pt-32">
           <div className={GUTTER}>
-            <Eyebrow>One claim, end to end</Eyebrow>
+            <Eyebrow>One cognitive core, end to end</Eyebrow>
 
-            <h2 className="reveal-up mt-12 max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-[#0f1419]">
-              <span className="block">Your customer talks to an agent.</span>
-              <span className="mt-1 block text-slate-400">
-                They&rsquo;re really talking to your best people.
-              </span>
-            </h2>
-
-            <p className="reveal-up mt-8 max-w-[70ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
-              Every process has one person who knows how it really works, and a stack of clerical
-              work wrapped around them. AIOS separates the two: it learns the judgment, automates
-              everything else, and puts the result in front of the customer.
-            </p>
-
-            {/* ── 01 · LEARN ── */}
-            <FlowAct num="01" label="Learn" />
-            <div className="reveal-up grid gap-8 md:grid-cols-[160px_1fr] md:gap-12">
-              <Ph label="Adjuster at work" ratio="1 / 1" className="max-w-[160px]" />
+            {/* The claim on the left, the thing itself on the right. The
+                diagram is far too dense to read at column width, which is
+                what the modal is for — so the card is a control, not a
+                figure, and says so with the plus. */}
+            <div className="mt-12 grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
-                <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
-                  Senior claims adjuster · 18 years
-                </p>
-                <blockquote className="mt-4 max-w-[34ch] text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-[1.25] text-[#0f1419]">
-                  &ldquo;Anything over $10k goes to a manager — and the policyholder gets told why.&rdquo;
-                </blockquote>
-                <p className="mt-5 text-[15px] leading-[1.6] text-slate-600">
-                  One rule out of hundreds, captured from four interviews and thirty days of
-                  observed work. It was never written down anywhere.
-                </p>
-              </div>
-            </div>
+                <h2 className="reveal-up max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-[#0f1419]">
+                  <span className="block">One cognitive core</span>
+                  <span className="mt-1 block text-slate-400">
+                    Every channel and every process draws on it.
+                  </span>
+                </h2>
 
-            {/* ── 02 · AUTOMATE — the before/after, the centre of the section ── */}
-            <FlowAct num="02" label="Automate" />
-            <div className="grid gap-4 lg:grid-cols-2">
-              {/* Before: desaturated on a flat grey field — it should feel drab */}
-              <div className="reveal-up bg-[#f1f2f1] p-7 md:p-9">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                  <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">Before AIOS</p>
-                  <p className="text-[12px] text-slate-500">6 days · 11 handoffs · 4 people</p>
-                </div>
-                <ol className="mt-7 space-y-4">
-                  {FLOW_BEFORE.map((row, i) => (
-                    <li key={i} className="grid grid-cols-[46px_1fr] gap-4">
-                      <span className="pt-[3px] font-mono text-[11px] tracking-[0.06em] text-slate-400">
-                        {row.t}
-                      </span>
-                      <span className="relative border-l border-slate-300 pb-1 pl-5">
-                        <span className="absolute -left-[3.5px] top-[7px] h-[5px] w-[5px] rounded-full bg-slate-300" />
-                        <span className="block text-[14px] leading-[1.5] text-slate-600">{row.text}</span>
-                        {row.meta ? (
-                          <span className="mt-1 block font-mono text-[11px] text-slate-400">{row.meta}</span>
-                        ) : null}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-                <p className="mt-6 border-t border-slate-300 pt-4 text-[14px] italic leading-[1.5] text-slate-500">
-                  The customer called twice. Both times: &ldquo;still processing.&rdquo;
+                <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
+                  Most enterprise AI gets built one agent at a time. A phone bot. A chat bot. One for
+                  invoices, one for claims. Each has its own rules, its own tools, its own memory, and
+                  each one is another thing to keep alive. AIOS works the other way around. What your
+                  people know is captured once and kept in a single cognitive core, and every channel
+                  is just a door into it.{" "}
+                  <span className="font-medium text-[#0f1419]">
+                    Add a channel and every process is already there. Add a process and it already
+                    works on every channel.
+                  </span>
                 </p>
               </div>
 
-              {/* After: full contrast, live nodes, cyan rail */}
-              <div className="reveal-up border border-slate-200 bg-white p-7 [animation-delay:80ms] md:p-9">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                  <p className="flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-cyan-700">
-                    <Node />
-                    With AIOS
-                  </p>
-                  <p className="text-[12px] text-slate-600">4 min of work · 1 human decision</p>
-                </div>
-                <ol className="mt-7 space-y-4">
-                  {FLOW_AFTER.map((row, i) => (
-                    <li key={i} className="grid grid-cols-[46px_1fr] gap-4">
-                      <span className="pt-[3px] font-mono text-[11px] tracking-[0.06em] text-slate-400">
-                        {row.t}
-                      </span>
-                      {row.pause ? (
-                        /* The physical wait: rail goes dashed and grey. Keeping this
-                           visible is what makes the rest of the track believable. */
-                        <span className="relative border-l border-dashed border-slate-300 pb-1 pl-5">
-                          <span className="block text-[14px] leading-[1.5] text-slate-400">{row.text}</span>
-                        </span>
-                      ) : (
-                        <span className="relative border-l border-cyan-600/30 pb-1 pl-5">
-                          <span className="absolute -left-[4px] top-[6px] h-[7px] w-[7px] rounded-full bg-cyan-600" />
-                          <span className="block text-[14px] leading-[1.5] text-slate-800">{row.text}</span>
-                          {row.gate ? (
-                            <span className="mt-1 block font-mono text-[11px] text-cyan-700">
-                              HUMAN GATE — the one step that stayed manual
-                            </span>
-                          ) : null}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-                <p className="mt-6 border-t border-slate-200 pt-4 text-[14px] italic leading-[1.5] text-slate-600">
-                  The customer texted a follow-up. Answered in 2.4 seconds.
-                </p>
-              </div>
-            </div>
-
-            {/* Deltas */}
-            <div className="reveal-up mt-4 grid gap-px border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
-              {FLOW_DELTAS.map((d) => (
-                <div key={d.label} className="bg-white px-6 py-6">
-                  <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">{d.label}</p>
-                  <p className="mt-3 flex items-baseline gap-3">
-                    <span className="text-[22px] font-normal leading-none text-slate-400 line-through decoration-slate-300">
-                      {d.before}
-                    </span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="h-3.5 w-3.5 shrink-0 text-slate-400">
-                      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-[26px] font-normal leading-none text-[#0f1419]">{d.after}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600">
-              The adjuster spent that day on the{" "}
-              <span className="text-[#0f1419]">3% of claims that are genuinely ambiguous</span> — the
-              ones eighteen years of judgment are actually for.
-            </p>
-
-            {/* ── 03 · GOVERN ── */}
-            <FlowAct num="03" label="Govern" />
-            <div className="reveal-up grid gap-8 md:grid-cols-[160px_1fr] md:gap-12">
-              <Ph label="Claims manager" ratio="1 / 1" className="max-w-[160px]" />
-              <div>
-                <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
-                  Claims operations manager
-                </p>
-                <p className="mt-4 max-w-[30ch] text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-[1.25] text-[#0f1419]">
-                  He wasn&rsquo;t automated away. He was handed the gate.
-                </p>
-                <p className="mt-5 max-w-[52ch] text-[15px] leading-[1.6] text-slate-600">
-                  He reviewed the drafted workflow, certified it, and kept an approval on the exact
-                  step the adjuster flagged. Every run that trips it waits for him — and every one
-                  that doesn&rsquo;t is logged where he can audit it later.
-                </p>
-              </div>
-            </div>
-
-            {/* ── 04 · ANSWER — the payoff ── */}
-            <FlowAct num="04" label="Answer" />
-            <div className="reveal-up border border-slate-200">
-              <div className="space-y-4 bg-[#f7f8f7] p-7 md:p-10">
-                {FLOW_CHAT.map((m) => (
-                  <div
-                    key={m.who}
-                    className={`max-w-[62ch] border p-5 ${
-                      m.agent ? "ml-auto border-cyan-600/25 bg-white" : "border-slate-200 bg-white"
-                    }`}
-                  >
-                    <p className="flex items-center gap-2.5 text-[12px] uppercase tracking-[0.14em] text-slate-500">
-                      {m.agent ? <Node /> : null}
-                      {m.who}
-                    </p>
-                    <p className="mt-2.5 text-[16px] leading-[1.55] text-[#0f1419]">{m.text}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Provenance — the actual argument of the section */}
-              <div className="grid gap-px border-t border-slate-200 bg-slate-200 sm:grid-cols-3">
-                {FLOW_PROVENANCE.map((p) => (
-                  <div key={p.k} className="bg-white px-6 py-5">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-700">{p.k}</p>
-                    <p className="mt-1.5 text-[14px] text-slate-700">{p.v}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600">
-              That answer wasn&rsquo;t improvised. It came from one adjuster&rsquo;s rule, ran through
-              one manager&rsquo;s gate, and can be traced back to both.
-            </p>
-
-            {/* Breadth — four labels, no detail. Platform, not point solution. */}
-            <div className="reveal-up mt-20 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-slate-200 pt-8">
-              <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">
-                The same loop is running on
-              </p>
-              {FLOW_ALSO.map((item) => (
-                <span key={item} className="flex items-center gap-2.5 text-[15px] text-[#0f1419]">
-                  <Node />
-                  {item}
+              <button
+                type="button"
+                onClick={() => setArchOpen(true)}
+                aria-label="Open the AIOS platform architecture at full size"
+                className="reveal-up group relative block w-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white p-2 transition-shadow duration-300 hover:shadow-[0_10px_40px_rgba(15,20,25,0.12)] [animation-delay:160ms]"
+              >
+                <img src={ARCH_IMAGE} alt={ARCH_ALT} className="w-full" />
+                {/* The affordance. Sits on the image rather than under it
+                    so it is impossible to read the card as a static
+                    figure, and grows on hover so the whole card reads as
+                    one target. */}
+                <span className="pointer-events-none absolute bottom-4 right-4 grid h-10 w-10 place-items-center rounded-full border border-slate-300 bg-white/95 text-slate-700 shadow-sm backdrop-blur transition-all duration-200 group-hover:scale-110 group-hover:border-cyan-500 group-hover:text-cyan-600">
+                  <Plus />
                 </span>
-              ))}
+              </button>
             </div>
           </div>
         </section>
@@ -901,7 +766,7 @@ export default function Home() {
           <div className={GUTTER}>
           <div className="flex flex-wrap items-center justify-between gap-6">
             <h2 className="reveal-up text-[clamp(2rem,4vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-              The lorem ipsum platform
+              Five parts, one core
             </h2>
             <a href="/platform" className={`reveal-up ${BTN_LIGHT}`}>
               <Node />
@@ -913,11 +778,17 @@ export default function Home() {
             {PILLARS.map((pillar, i) => (
               <div
                 key={pillar.label}
-                className={`reveal-up bg-[#e6ebe8] p-10 md:p-12 ${i === PILLARS.length - 1 ? "md:col-span-2" : ""}`}
+                // A lone last card spans the row rather than sitting
+                // half-width beside a gap. With an even count nothing
+                // spans, which is why this asks the length rather than
+                // hard-coding the widow.
+                className={`reveal-up bg-[#e6ebe8] p-10 md:p-12 ${
+                  i === PILLARS.length - 1 && PILLARS.length % 2 === 1 ? "md:col-span-2" : ""
+                }`}
                 style={{ animationDelay: `${i * 70}ms` }}
               >
                 <div className="flex items-center gap-4 text-cyan-600">
-                  <PillarIcon index={i} className="h-7 w-7" />
+                  <PillarIcon index={pillar.icon} className="h-7 w-7" />
                   <span className="text-[13px] font-medium uppercase tracking-[0.06em] text-[#0f1419]">
                     {pillar.label}
                   </span>
@@ -1230,6 +1101,38 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* ══ The architecture, full size ══
+          Backdrop closes; the sheet stops the click so a drag across the
+          diagram never dismisses it. The image is capped by viewport
+          height rather than width, since the thing that makes it legible
+          is height on screen. */}
+      {archOpen ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="AIOS platform architecture"
+          onClick={() => setArchOpen(false)}
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0f1419]/85 p-4 backdrop-blur-sm md:p-10"
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className="relative max-h-full w-full max-w-[1500px] overflow-auto rounded-lg bg-white p-3 shadow-[0_30px_120px_rgba(0,0,0,0.5)] md:p-4"
+          >
+            <img src={ARCH_IMAGE} alt={ARCH_ALT} className="mx-auto w-full" />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setArchOpen(false)}
+            aria-label="Close"
+            autoFocus
+            className="absolute right-5 top-5 grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur transition-colors hover:border-white/60 hover:bg-white/20"
+          >
+            <Plus className="h-4 w-4 rotate-45" />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
