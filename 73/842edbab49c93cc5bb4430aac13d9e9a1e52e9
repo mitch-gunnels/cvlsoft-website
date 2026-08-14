@@ -1,0 +1,36 @@
+app/about/page.tsx
+  s_9cb0c36d5e7213::t_0e31269b658ba0 30
+app/components/SiteFooter.tsx
+  s_9cb0c36d5e7213::t_b15a0882cbe55a 29,31,33
+app/page.tsx
+  s_9cb0c36d5e7213::t_d89317f971c1fb 965-974
+  s_9cb0c36d5e7213::t_8ea2b361d87ba1 992-994,997-998,1000-1049,1192-1193
+  s_9cb0c36d5e7213::t_4b093570b71946 995-996,999
+  s_9cb0c36d5e7213::t_aff769627a2a9f 964
+  s_9cb0c36d5e7213::t_f7f3801cfdb555 105,115,119,121,297,309,319,329
+  s_9cb0c36d5e7213::t_0e31269b658ba0 846-897,1140-1191
+  s_9cb0c36d5e7213::t_f9d6ba622321dd 1194
+app/components/SiteHeader.tsx
+  s_9cb0c36d5e7213::t_b15a0882cbe55a 12,84,105,123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "73842edbab49c93cc5bb4430aac13d9e9a1e52e9",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_9cb0c36d5e7213": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a000b2-776c-7ef3-b1e6-d8a83cbf06da",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
