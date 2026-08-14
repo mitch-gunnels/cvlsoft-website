@@ -57,7 +57,7 @@ type Line =
    Watching the clicks gets you "pulled six months of invoices"; only
    asking gets you why six and what the second one means. */
 const SCRIPT: Line[] = [
-  { kind: "start", text: "Activated · capturing" },
+  { kind: "start", text: "Capturing" },
   { kind: "action", at: "01:24", app: "CRM", text: "Opened account — Northline Freight" },
   { kind: "action", at: "02:36", app: "Billing", text: "Pulled six months of invoices" },
   { kind: "ask", text: "Why six months and not the one bill in question?" },
@@ -121,53 +121,53 @@ type BpNode = {
 };
 
 const BP_NODES: BpNode[] = [
-  { id: "t", kind: "trigger", y: 0, h: 28, label: "Bill overage detected", meta: "TRIGGER" },
-  { id: "s1", kind: "step", y: 44, h: 36, lead: "01", label: "Pull billing history", meta: "BILLING" },
+  { id: "t", kind: "trigger", y: 0, h: 28, label: "Bill overage detected", meta: "Trigger" },
+  { id: "s1", kind: "step", y: 44, h: 36, lead: "01", label: "Pull billing history", meta: "Billing" },
   {
     id: "r",
     kind: "reason",
     y: 96,
-    // Sized for a one-line rule: 4 (pt) + 15 (header row) + 6 + 17 (one
-    // line of 13px/17) + 8 (pb). The card clips its overflow, so a rule
-    // long enough to wrap at this column width loses its second line —
-    // keep it under ~50 characters.
-    h: 50,
-    label: "AI REASONING",
+    // Sized for a one-line rule: 4 (pt) + 16 (label row, now 13px) + 6 +
+    // 17 (one line of 13px/17) + 12 (pb). The card clips its overflow, so
+    // a rule long enough to wrap at this column width loses its second
+    // line — keep it under ~50 characters.
+    h: 56,
+    label: "AI reasoning",
     // The whole act turns on this sentence being read, so it is the one
     // string on the sheet worth spending words on — and it earns them by
     // being short enough to take in at a glance. Two clauses, parallel,
     // no qualifiers. The six-month window lived here for a draft; it is
     // detail, and detail is what stops the line landing.
     sub: "One overage is a mistake. Two is the wrong plan.",
-    meta: "FROM RATIONALE",
+    meta: "From rationale",
   },
-  { id: "d", kind: "decision", y: 162, h: 40, label: "Second overage?" },
+  { id: "d", kind: "decision", y: 168, h: 40, label: "Second overage?" },
   // The two branches are the two halves of the rule, and the loop shows
   // both: the Executor takes YES, the customer on the phone takes NO.
   {
     id: "b1",
     kind: "branch",
-    y: 228,
+    y: 234,
     h: 48,
     x: "0%",
     w: "47%",
-    lead: "YES",
+    lead: "Yes",
     label: "Plan change offer",
   },
   {
     id: "b2",
     kind: "branch",
-    y: 228,
+    y: 234,
     h: 48,
     x: "53%",
     w: "47%",
-    lead: "NO",
+    lead: "No",
     label: "Auto-credit ≤ $100",
   },
   // Numbered 2, not 3: the branches are the gate, not a step of their
   // own, which is what the footer's "2 actions · 1 decision · 1 gate"
   // is counting.
-  { id: "m", kind: "merge", y: 300, h: 36, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
+  { id: "m", kind: "merge", y: 306, h: 36, lead: "02", label: "Post decision · notify customer", meta: "Billing" },
 ];
 
 /** Overall height of the routed graph. The nodes are drawn a few pixels
@@ -175,7 +175,7 @@ const BP_NODES: BpNode[] = [
     spent on the runs between them: an arrowhead on a ten-pixel line is
     mostly arrowhead, and a column of boxes an arrowhead apart does not
     read as a flow — it reads as a stack with marks between it. */
-const BP_H = 336;
+const BP_H = 342;
 
 /* The sheet the graph is drawn on. A workflow with a document's header
    above it reads as the standard operating procedure it is replacing —
@@ -188,7 +188,7 @@ const BP_H = 336;
    them, borders included. An earlier version left the header's own
    margin and the 1px borders out of the total, and the missing 10px is
    precisely what put the bottom of the sheet under the timeline. */
-const BP_HEAD_H = 32;
+const BP_HEAD_H = 40;
 const BP_HEAD_GAP = 6;
 const BP_PAD_T = 6;
 const BP_PAD_B = 6;
@@ -215,21 +215,21 @@ const BP_PAN = 56;
 const BP_LINKS: { x: string; y: number; len?: number; w?: string; head?: boolean }[] = [
   { x: "50%", y: 28, len: 16, head: true },
   { x: "50%", y: 80, len: 16, head: true },
-  { x: "50%", y: 146, len: 16, head: true },
-  { x: "50%", y: 202, len: 12 }, // stem below the decision
-  { x: "23.5%", y: 214, w: "53%" }, // fork rail
-  { x: "23.5%", y: 214, len: 14, head: true },
-  { x: "76.5%", y: 214, len: 14, head: true },
-  { x: "23.5%", y: 276, len: 12 },
-  { x: "76.5%", y: 276, len: 12 },
-  { x: "23.5%", y: 288, w: "53%" }, // merge rail
-  { x: "50%", y: 288, len: 12, head: true },
+  { x: "50%", y: 152, len: 16, head: true },
+  { x: "50%", y: 208, len: 12 }, // stem below the decision
+  { x: "23.5%", y: 220, w: "53%" }, // fork rail
+  { x: "23.5%", y: 220, len: 14, head: true },
+  { x: "76.5%", y: 220, len: 14, head: true },
+  { x: "23.5%", y: 282, len: 12 },
+  { x: "76.5%", y: 282, len: 12 },
+  { x: "23.5%", y: 294, w: "53%" }, // merge rail
+  { x: "50%", y: 294, len: 12, head: true },
 ];
 
 /** Junction dots where the spine meets the fork and merge rails —
     without them the two rails plus their drops read as a stray
     rectangle around the branch pair rather than as routing. */
-const BP_JOINTS: { y: number }[] = [{ y: 214 }, { y: 288 }];
+const BP_JOINTS: { y: number }[] = [{ y: 220 }, { y: 294 }];
 
 /* ══ Phase 9 · the run ═════════════════════════════════════ */
 
@@ -267,11 +267,11 @@ const EXPOSE_CHANNELS = [
 ];
 
 /* Geometry, so the cursor can be told exactly where each checkbox is.
-   Card: py-4 (16) + title 14 + mt-1.5 (6) + subtitle 16 + mt-4 (16),
+   Card: py-4 (16) + title 16 + mt-1.5 (6) + subtitle 16 + mt-4 (16),
    then three 40px rows on a 48px pitch. */
 const EX_ROW_H = 40;
 const EX_ROW_PITCH = 48;
-const EX_ROWS_Y = 68;
+const EX_ROWS_Y = 70;
 const EX_CARD_H =
   EX_ROWS_Y + EX_ROW_H * EXPOSE_CHANNELS.length + 8 * (EXPOSE_CHANNELS.length - 1) + 16;
 const EX_CTA_Y = EX_CARD_H + 22;
@@ -355,16 +355,16 @@ const CALL: { kind: CallKind; text?: string; h: number; gap: number }[] = [
    which is the difference between claiming memory and showing it. */
 
 const MEM_ROWS: { text: string; src: string }[] = [
-  { text: "Credited $92 overage · 14 Mar", src: "FROM CALL" },
-  { text: "Upsell if an overage recurs in 6 months", src: "FROM RUN" },
-  { text: "Prefers SMS · calls before 10am", src: "LEARNED" },
-  { text: "Wants the short version — no small talk", src: "LEARNED" },
+  { text: "Credited $92 overage · 14 Mar", src: "From call" },
+  { text: "Upsell if an overage recurs in 6 months", src: "From run" },
+  { text: "Prefers SMS · calls before 10am", src: "Learned" },
+  { text: "Wants the short version — no small talk", src: "Learned" },
 ];
 
-/* Same card arithmetic as the channel panel: py-4 (16) + title 14 +
+/* Same card arithmetic as the channel panel: py-4 (16) + title 16 +
    mt-1.5 (6) + subtitle 16 + mt-4 (16), then rows on a 48px pitch. */
 const MEM_ROW_H = 40;
-const MEM_ROWS_Y = 68;
+const MEM_ROWS_Y = 70;
 const MEM_CARD_H = MEM_ROWS_Y + MEM_ROW_H * MEM_ROWS.length + 8 * (MEM_ROWS.length - 1) + 16;
 const MEM_CHIP_Y = MEM_CARD_H + 22;
 const MEM_TOTAL = MEM_CHIP_Y + 30;
@@ -625,8 +625,9 @@ const SEQUENCE: Beat[] = [
    it was and `does` has to be shorter to match: the line is on one row
    or it is wrong. Roughly thirty characters is the ceiling. */
 const ACTS: { icon: number; name: string; does: string }[] = [
-  // Stored as sentences. Every label in this file that shouts does the
-  // shouting in the view, so the data never encodes a type decision.
+  // Stored as sentences, and now rendered that way too — the views used
+  // to push these through toUpperCase(). Nothing in this animation shouts
+  // any more, so the data and the label finally read the same.
   { icon: 0, name: "Observer", does: "Watches, Learns, & Interviews" },
   { icon: 1, name: "Blueprint", does: "Builds an executable workflow" },
   { icon: 2, name: "Executor", does: "Detects, decides, & executes" },
@@ -642,10 +643,11 @@ const ACTS: { icon: number; name: string; does: string }[] = [
    62/14 the rows floated in the middle of their own slots. */
 const OV_ROW_H = 46;
 const OV_GAP = 16;
-/** The title above the stack, and the room it takes: one 14px line plus
-    the air under it. It carried a progress bar as well until the rail at
-    the bottom took that job over. */
-const OV_HEAD_H = 26;
+/** The title above the stack, and the room it takes: one 13px line (16) +
+    mt-2 (8) + the hairline (1), then 9px of air before the first row. It
+    carried a progress bar as well until the rail at the bottom took that
+    job over. */
+const OV_HEAD_H = 34;
 /** Each row lands after the one above it — a stagger, not a block. */
 const OV_STAGGER = 320;
 /** The rows travel slower than an act does; this is the one place the
@@ -785,11 +787,16 @@ function LineRow({ line }: { line: Line }) {
     return (
       <div className="flex h-[44px] items-center gap-3 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 backdrop-blur-md">
         <WorkingMark working small />
-        <span className="shrink-0 text-[11px] font-medium tracking-[0.14em] text-white">
-          AIOS OBSERVER
+        <span className="shrink-0 text-[13px] font-medium text-white">
+          AIOS Observer
         </span>
-        <span className="hg-pulse-text truncate text-[11px] tracking-[0.14em] text-cyan-300">
-          {line.text.toUpperCase()}
+        {/* The same chip the Executor and the run card wear, at the
+            same right edge: one status treatment across every act, so
+            the three panels read as one system reporting on itself.
+            "Activated · capturing" said the same thing twice — the row
+            appearing at all is the activation. */}
+        <span className="hg-pulse-text ml-auto shrink-0 rounded-[4px] border border-cyan-400/45 px-1.5 py-0.5 text-[10px] text-cyan-300">
+          {line.text}
         </span>
       </div>
     );
@@ -798,7 +805,7 @@ function LineRow({ line }: { line: Line }) {
   if (line.kind === "action") {
     return (
       <div className="flex h-[44px] items-center gap-3 rounded-md border border-white/[0.10] bg-[#0d1013]/55 px-3.5 backdrop-blur-md">
-        <span className="font-mono text-[11px] text-white/40">{line.at}</span>
+        <span className="font-mono text-[13px] text-white/40">{line.at}</span>
         <AppChip app={line.app ?? ""} />
         <span className="truncate text-[13px] leading-[19px] text-white/75">{line.text}</span>
       </div>
@@ -876,8 +883,8 @@ function DoneChip({ label }: { label: string }) {
   return (
     <div className="flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3 backdrop-blur-md">
       <Check />
-      <span className="whitespace-nowrap text-[11px] tracking-[0.10em] text-cyan-200">
-        {label.toUpperCase()}
+      <span className="whitespace-nowrap text-[13px] text-cyan-200">
+        {label}
       </span>
     </div>
   );
@@ -955,10 +962,10 @@ function ExposeCard({ checked }: { checked: number }) {
       className="rounded-lg border border-white/[0.14] bg-[#0d1013]/82 px-4 py-4 backdrop-blur-md"
       style={{ height: EX_CARD_H }}
     >
-      <p className="h-[14px] text-[11px] font-medium leading-[14px] tracking-[0.14em] text-white">
-        EXPOSE TO CUSTOMERS
+      <p className="h-[16px] text-[13px] font-medium leading-[16px] text-white">
+        Expose to customers
       </p>
-      <p className="mt-1.5 h-[16px] text-[11px] leading-[16px] text-white/50">
+      <p className="mt-1.5 h-[16px] text-[13px] leading-[16px] text-white/50">
         Which channels should this skill be exposed on?
       </p>
 
@@ -981,7 +988,7 @@ function ExposeCard({ checked }: { checked: number }) {
                 {on ? <Check className="h-3 w-3 text-cyan-200" /> : null}
               </span>
               <span className={`text-[13px] ${on ? "text-white" : "text-white/70"}`}>{c.label}</span>
-              <span className="ml-auto shrink-0 text-[11px] text-white/40">{c.meta}</span>
+              <span className="ml-auto shrink-0 text-[10px] text-white/40">{c.meta}</span>
             </div>
           );
         })}
@@ -1006,8 +1013,8 @@ function BpBox({ node }: { node: BpNode }) {
           className={`${BP_CARD} flex h-full w-fit items-center gap-2.5 border-white/[0.14] bg-[#0d1013]/72 px-3`}
         >
           <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-white/45" />
-          <span className="whitespace-nowrap text-[13px] text-white/75">{node.label}</span>
-          <span className="shrink-0 text-[9px] tracking-[0.14em] text-white/35">{node.meta}</span>
+          <span className="whitespace-nowrap text-[13px] text-white">{node.label}</span>
+          <span className="shrink-0 text-[10px] text-white/35">{node.meta}</span>
         </div>
       </div>
     );
@@ -1026,13 +1033,13 @@ function BpBox({ node }: { node: BpNode }) {
         // Deeper below than above: the rule needs air under it or it sits
         // on the card's bottom edge, where the label row above already
         // has the header rule holding it off the top.
-        className={`${BP_CARD} relative h-full overflow-hidden border-white/[0.14] bg-[#0d1013]/72 pb-2 pl-4 pr-3.5 pt-1`}
+        className={`${BP_CARD} relative h-full overflow-hidden border-white/[0.14] bg-[#0d1013]/72 pb-3 pl-4 pr-3.5 pt-1`}
       >
         <span className="absolute inset-y-0 left-0 w-[2px] bg-cyan-400/70" />
         <div className="flex items-center gap-2">
           <Sparkle />
-          <span className="text-[10px] font-medium tracking-[0.14em] text-cyan-300">{node.label}</span>
-          <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/40">{node.meta}</span>
+          <span className="text-[13px] font-medium text-cyan-300">{node.label}</span>
+          <span className="ml-auto shrink-0 text-[10px] text-white/40">{node.meta}</span>
         </div>
         {/* Centred under the label row rather than ranged left with it.
             The rule is the one line on the sheet meant to be read as a
@@ -1048,14 +1055,14 @@ function BpBox({ node }: { node: BpNode }) {
       <div className="flex h-full items-center justify-center">
         <div className={`${BP_CARD} flex h-[40px] items-center gap-2.5 border-white/25 bg-[#0d1013]/72 px-4`}>
           <span className="h-2.5 w-2.5 rotate-45 border border-cyan-400" />
-          <span className="whitespace-nowrap text-[13px] text-white">{node.label}</span>
+          <span className="whitespace-nowrap text-[13px] text-white/90">{node.label}</span>
         </div>
       </div>
     );
   }
 
   if (node.kind === "branch") {
-    const yes = node.lead === "YES";
+    const yes = node.lead === "Yes";
     // Line heights are explicit: the stacked lines have to total the box
     // height exactly, or the last one hangs out of the bottom. The meta
     // line is optional, so the stack centres itself rather than sitting
@@ -1066,7 +1073,7 @@ function BpBox({ node }: { node: BpNode }) {
         className={`${BP_CARD} flex h-full flex-col justify-center border-white/[0.14] bg-[#0d1013]/72 px-3 py-1`}
       >
         <p
-          className={`h-[12px] text-[9px] font-medium leading-[12px] tracking-[0.14em] ${
+          className={`h-[12px] text-[10px] font-medium leading-[12px] ${
             yes ? "text-cyan-400" : "text-white/35"
           }`}
         >
@@ -1074,7 +1081,7 @@ function BpBox({ node }: { node: BpNode }) {
         </p>
         <p className="h-[16px] truncate text-[13px] leading-[16px] text-white/85">{node.label}</p>
         {node.meta ? (
-          <p className="h-[12px] truncate text-[9px] leading-[12px] tracking-[0.14em] text-white/40">{node.meta}</p>
+          <p className="h-[12px] truncate text-[10px] leading-[12px] text-white/40">{node.meta}</p>
         ) : null}
       </div>
     );
@@ -1083,9 +1090,9 @@ function BpBox({ node }: { node: BpNode }) {
   // step / merge — the plain executable rows
   return (
     <div className={`${BP_CARD} flex h-full items-center gap-3 border-white/[0.14] bg-[#0d1013]/72 px-3.5`}>
-      <span className="font-mono text-[11px] text-white/30">{node.lead}</span>
+      <span className="font-mono text-[13px] text-white/30">{node.lead}</span>
       <span className="truncate text-[13px] text-white/90">{node.label}</span>
-      <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/40">{node.meta}</span>
+      <span className="ml-auto shrink-0 text-[10px] text-white/40">{node.meta}</span>
     </div>
   );
 }
@@ -1113,16 +1120,17 @@ function ExecDock({ triggered }: { triggered: boolean }) {
 
       <div className="min-w-0 flex-1">
       <div className="flex items-center gap-2.5">
-        <span className="text-[11px] font-medium tracking-[0.14em] text-white">EXECUTOR</span>
+        <span className="text-[13px] font-medium text-white">Executor</span>
+        {/* Out at the right edge, where the clock used to sit. The time
+            was the one thing on this card nobody needed to read, and the
+            status is what the row is actually reporting — every other
+            status in this animation hangs off the right of its row. */}
         <span
-          className={`shrink-0 rounded-[4px] border px-1.5 py-0.5 text-[9px] tracking-[0.14em] transition-colors duration-300 ${
+          className={`ml-auto shrink-0 rounded-[4px] border px-1.5 py-0.5 text-[10px] transition-colors duration-300 ${
             triggered ? "border-cyan-400/45 text-cyan-300" : "border-white/25 text-white/50"
           }`}
         >
-          {triggered ? "MATCHED" : "ON WATCH"}
-        </span>
-        <span className="ml-auto shrink-0 font-mono text-[11px] text-white/45">
-          {triggered ? TRIGGER.at : "09:41:58"}
+          {triggered ? "Matched" : "On watch"}
         </span>
       </div>
       <div className="mt-2">
@@ -1138,14 +1146,21 @@ function ExecDock({ triggered }: { triggered: boolean }) {
 }
 
 /** The inbound event. Also rides at the top of the run, so the run
-    always shows what caused it. */
+    always shows what caused it.
+
+    On the house dark plate, not a cyan one. Filled cyan it was the
+    brightest thing in the act and pulled the eye off the run it starts;
+    on the standard plate the accent is carried by the chip alone, the
+    same way every other row in the animation does it. */
 function EventRow() {
   return (
-    <div className="flex h-[44px] items-center gap-3 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 backdrop-blur-md">
-      <span className="font-mono text-[11px] text-white/40">{TRIGGER.at}</span>
+    <div className="flex h-[44px] items-center gap-3 rounded-md border border-white/[0.14] bg-[#0d1013]/82 px-3.5 backdrop-blur-md">
+      <span className="font-mono text-[13px] text-white/40">{TRIGGER.at}</span>
       <AppChip app={TRIGGER.app} />
       <span className="truncate text-[13px] text-white/85">{TRIGGER.text}</span>
-      <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300">TRIGGER</span>
+      <span className="ml-auto shrink-0 rounded-[4px] border border-cyan-400/45 px-1.5 py-0.5 text-[10px] text-cyan-300">
+        Trigger
+      </span>
     </div>
   );
 }
@@ -1225,7 +1240,6 @@ function SwapLine({ text, className = "" }: { text: string; className?: string }
 /** One box for the whole run. `cursor` is the zero-based index of the
     step in flight; -1 means the run has been matched but not started. */
 function WorkCard({ cursor, done }: { cursor: number; done: boolean }) {
-  const complete = Math.min(RUN_STEPS.length, Math.max(0, done ? RUN_STEPS.length : cursor));
   const detail = done
     ? "Credited · customer told before they called"
     : cursor < 0
@@ -1239,12 +1253,18 @@ function WorkCard({ cursor, done }: { cursor: number; done: boolean }) {
     >
       <div className="flex items-center gap-3">
         <WorkingMark working={!done} />
-        <span className="text-[11px] font-medium tracking-[0.14em] text-white">AIOS</span>
-        <span className={`text-[11px] tracking-[0.14em] text-cyan-400 ${done ? "" : "hg-pulse-text"}`}>
-          {done ? "DONE" : "WORKING"}
-        </span>
-        <span className="ml-auto font-mono text-[11px] text-white/45">
-          {complete} / {RUN_STEPS.length}
+        <span className="text-[13px] font-medium tracking-[0.14em] text-white">AIOS</span>
+        {/* Boxed, and out at the right edge where the step count used to
+            be — the same chip the Executor wears one act earlier, so the
+            two cards read as one agent in two states rather than two
+            different panels. The pips below already say how far in it
+            is, which is all the count was doing. */}
+        <span
+          className={`ml-auto shrink-0 rounded-[4px] border border-cyan-400/45 px-1.5 py-0.5 text-[10px] text-cyan-300 ${
+            done ? "" : "hg-pulse-text"
+          }`}
+        >
+          {done ? "Done" : "Working"}
         </span>
       </div>
 
@@ -1296,10 +1316,10 @@ function CallHead({ answered }: { answered: boolean }) {
         <p className="truncate text-[13px] font-medium text-white">
           {answered ? "AIOS answered" : "Inbound call"}
         </p>
-        <p className="truncate text-[11px] text-white/45">Halton Logistics · billing</p>
+        <p className="truncate text-[13px] text-white/45">Halton Logistics · billing</p>
       </div>
-      <span className={`ml-auto shrink-0 text-[10px] tracking-[0.14em] ${answered ? "text-cyan-300" : "hg-pulse-text text-white/55"}`}>
-        {answered ? "LIVE · 0:04" : "RINGING"}
+      <span className={`ml-auto shrink-0 text-[10px] ${answered ? "text-cyan-300" : "hg-pulse-text text-white/55"}`}>
+        {answered ? "Live · 0:04" : "Ringing"}
       </span>
     </div>
   );
@@ -1326,8 +1346,8 @@ function CallLine({ line, done }: { line: (typeof CALL)[number]; done: boolean }
             <Check className="h-3 w-3 text-cyan-400" />
           </span>
         ) : (
-          <span className="hg-pulse-text ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300">
-            RUNNING
+          <span className="hg-pulse-text ml-auto shrink-0 text-[10px] text-cyan-300">
+            Running
           </span>
         )}
       </div>
@@ -1416,10 +1436,10 @@ function MemoryCard({ shown }: { shown: number }) {
       className="rounded-lg border border-white/[0.14] bg-[#0d1013]/82 px-4 py-4 backdrop-blur-md"
       style={{ height: MEM_CARD_H }}
     >
-      <p className="h-[14px] text-[11px] font-medium leading-[14px] tracking-[0.14em] text-white">
-        CUSTOMER MEMORY
+      <p className="h-[16px] text-[13px] font-medium leading-[16px] text-white">
+        Customer Memory
       </p>
-      <p className="mt-1.5 h-[16px] text-[11px] leading-[16px] text-white/50">
+      <p className="mt-1.5 h-[16px] text-[13px] leading-[16px] text-white/50">
         Marcus · Halton Logistics
       </p>
 
@@ -1439,8 +1459,8 @@ function MemoryCard({ shown }: { shown: number }) {
               }`}
               style={{ height: MEM_ROW_H }}
             >
-              <span className="truncate text-[12px] text-white/85">{r.text}</span>
-              <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300/80">
+              <span className="truncate text-[13px] text-white/85">{r.text}</span>
+              <span className="ml-auto shrink-0 text-[10px] text-cyan-300/80">
                 {r.src}
               </span>
             </div>
@@ -1465,10 +1485,10 @@ function SmsHead() {
       </span>
       <div className="min-w-0">
         <p className="truncate text-[13px] font-medium text-white">Outbound SMS</p>
-        <p className="truncate text-[11px] text-white/45">Marcus · Halton Logistics</p>
+        <p className="truncate text-[13px] text-white/45">Marcus · Halton Logistics</p>
       </div>
-      <span className="ml-auto shrink-0 text-[10px] tracking-[0.14em] text-cyan-300">
-        6 WEEKS LATER
+      <span className="ml-auto shrink-0 text-[10px] text-cyan-300">
+        6 weeks later
       </span>
     </div>
   );
@@ -1769,9 +1789,14 @@ export default function HeroGraph({
                   : { animationDuration: `${OV_TRAVEL}ms` }),
               }}
             >
-              <span className="block text-[11px] font-medium tracking-[0.14em] text-white">
-                PLATFORM OVERVIEW
+              <span className="block text-[13px] font-medium text-white">
+                Platform overview
               </span>
+              {/* A hairline is all this needs: the title sits at the same
+                  size and weight as the five names under it, so without
+                  something between them it reads as a sixth row. The rule
+                  separates it without adding a mark or a box. */}
+              <span className="mt-2 block h-px w-full bg-white/[0.14]" />
             </div>
 
             {ACTS.map((a, idx) => (
@@ -1826,10 +1851,10 @@ export default function HeroGraph({
                   <PillarIcon index={a.icon} className="h-[17px] w-[17px]" />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-medium tracking-[0.14em] text-white">
-                    {a.name.toUpperCase()}
+                  <div className="text-[13px] font-medium text-white">
+                    {a.name}
                   </div>
-                  <p className="mt-1.5 text-[11px] text-white/55">{a.does}</p>
+                  <p className="mt-1.5 text-[13px] text-white/55">{a.does}</p>
                 </div>
               </div>
             ))}
@@ -1928,12 +1953,12 @@ export default function HeroGraph({
                   className="-mx-3.5 flex items-center gap-2.5 rounded-t-[5px] border-b border-white/[0.10] bg-black/50 px-3.5"
                   style={{ height: BP_HEAD_H, marginBottom: BP_HEAD_GAP }}
                 >
-                  <span className="shrink-0 rounded-[4px] border border-white/25 px-1.5 py-0.5 text-[9px] tracking-[0.14em] text-white/70">
-                    BLUEPRINT
+                  <span className="shrink-0 rounded-[4px] border border-white/25 px-1.5 py-0.5 text-[10px] text-white/70">
+                    Blueprint
                   </span>
-                  <span className="truncate text-[12px] text-white">Billing Overage Review</span>
-                  <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/35">
-                    v1 · DRAFT
+                  <span className="truncate text-[13px] text-white">Billing Overage Review</span>
+                  <span className="ml-auto shrink-0 text-[10px] text-white/35">
+                    v1 · Draft
                   </span>
                 </div>
 
@@ -2078,7 +2103,7 @@ export default function HeroGraph({
                   className={`absolute inset-x-0 ${exitingRun ? "hg-exit" : "hg-enter"}`}
                   style={{ top: execReceiptTop, animationDelay: exitingRun ? "180ms" : undefined }}
                 >
-                  <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[11px] text-cyan-200 backdrop-blur-md">
+                  <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[13px] text-cyan-200 backdrop-blur-md">
                     <span className="h-[5px] w-[5px] rounded-full bg-cyan-400" />
                     {/* Not "gates passed": this run took the branch
                         that has no gate. What it did clear is the
@@ -2155,7 +2180,7 @@ export default function HeroGraph({
                   className={`absolute inset-x-0 ${exitingMem ? "hg-exit" : "hg-enter"}`}
                   style={{ top: MEM_CHIP_Y, animationDelay: exitingMem ? "90ms" : undefined }}
                 >
-                  <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[11px] text-cyan-200 backdrop-blur-md">
+                  <span className="mx-auto flex h-[30px] w-fit items-center gap-2 rounded-md border border-cyan-400/50 bg-cyan-400/[0.16] px-3.5 text-[13px] text-cyan-200 backdrop-blur-md">
                     <span className="h-[5px] w-[5px] rounded-full bg-cyan-400" />
                     Used on every future contact
                   </span>
@@ -2362,10 +2387,10 @@ export default function HeroGraph({
                       one that never shows a label. */}
                   {open ? null : (
                     <span
-                      className="pointer-events-none absolute z-20 -translate-x-1/2 whitespace-nowrap rounded-[4px] border border-white/20 bg-[#0d1013]/90 px-2 py-1 text-[10px] font-medium tracking-[0.14em] text-white opacity-0 backdrop-blur-md transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      className="pointer-events-none absolute z-20 -translate-x-1/2 whitespace-nowrap rounded-[4px] border border-white/20 bg-[#0d1013]/90 px-2 py-1 text-[13px] font-medium text-white opacity-0 backdrop-blur-md transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
                       style={{ left: anchor, top: -TL_STEM - 34 }}
                     >
-                      {a.name.toUpperCase()}
+                      {a.name}
                     </span>
                   )}
 
@@ -2478,8 +2503,8 @@ export default function HeroGraph({
                       className="min-w-0 flex-1 transition-opacity duration-300"
                       style={{ opacity: open ? 1 : 0 }}
                     >
-                      <div className="whitespace-nowrap text-[11px] font-medium tracking-[0.14em] text-white">
-                        {a.name.toUpperCase()}
+                      <div className="whitespace-nowrap text-[13px] font-medium text-white">
+                        {a.name}
                       </div>
 
                       {/* What the part does, and only that. A live
@@ -2488,11 +2513,11 @@ export default function HeroGraph({
                           the same job — the animation is already
                           showing what is happening.
 
-                          Sentence case, so no letter-spacing: the
-                          0.14em the name carries is for caps, and on a
-                          mixed-case line of this length it reads as a
-                          gap between every letter. */}
-                      <p className="mt-1.5 whitespace-nowrap text-[11px] text-white/55">
+                          Sentence case and no letter-spacing — the
+                          0.14em this line used to carry was for the
+                          caps it used to be set in, and on a mixed-case
+                          line it only gaps the letters apart. */}
+                      <p className="mt-1.5 whitespace-nowrap text-[13px] text-white/55">
                         {a.does}
                       </p>
                     </div>
