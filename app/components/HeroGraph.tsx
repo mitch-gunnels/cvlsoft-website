@@ -122,45 +122,52 @@ type BpNode = {
 
 const BP_NODES: BpNode[] = [
   { id: "t", kind: "trigger", y: 0, h: 28, label: "Bill overage detected", meta: "TRIGGER" },
-  { id: "s1", kind: "step", y: 44, h: 36, lead: "01", label: "Pull six months of billing", meta: "BILLING" },
+  { id: "s1", kind: "step", y: 44, h: 36, lead: "01", label: "Pull billing history", meta: "BILLING" },
   {
     id: "r",
     kind: "reason",
     y: 96,
-    h: 64,
+    // Sized for a one-line rule: 4 (pt) + 15 (header row) + 6 + 17 (one
+    // line of 13px/17) + 8 (pb). The card clips its overflow, so a rule
+    // long enough to wrap at this column width loses its second line —
+    // keep it under ~50 characters.
+    h: 50,
     label: "AI REASONING",
-    sub: "One overage in six months is a mistake. A second one is the wrong plan.",
+    // The whole act turns on this sentence being read, so it is the one
+    // string on the sheet worth spending words on — and it earns them by
+    // being short enough to take in at a glance. Two clauses, parallel,
+    // no qualifiers. The six-month window lived here for a draft; it is
+    // detail, and detail is what stops the line landing.
+    sub: "One overage is a mistake. Two is the wrong plan.",
     meta: "FROM RATIONALE",
   },
-  { id: "d", kind: "decision", y: 176, h: 40, label: "Second overage in 6 months?" },
+  { id: "d", kind: "decision", y: 162, h: 40, label: "Second overage?" },
   // The two branches are the two halves of the rule, and the loop shows
   // both: the Executor takes YES, the customer on the phone takes NO.
   {
     id: "b1",
     kind: "branch",
-    y: 242,
+    y: 228,
     h: 48,
     x: "0%",
     w: "47%",
     lead: "YES",
     label: "Plan change offer",
-    meta: "RETENTION GATE",
   },
   {
     id: "b2",
     kind: "branch",
-    y: 242,
+    y: 228,
     h: 48,
     x: "53%",
     w: "47%",
     lead: "NO",
     label: "Auto-credit ≤ $100",
-    meta: "NOTE FOR UPSELL",
   },
   // Numbered 2, not 3: the branches are the gate, not a step of their
   // own, which is what the footer's "2 actions · 1 decision · 1 gate"
   // is counting.
-  { id: "m", kind: "merge", y: 314, h: 36, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
+  { id: "m", kind: "merge", y: 300, h: 36, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
 ];
 
 /** Overall height of the routed graph. The nodes are drawn a few pixels
@@ -168,7 +175,7 @@ const BP_NODES: BpNode[] = [
     spent on the runs between them: an arrowhead on a ten-pixel line is
     mostly arrowhead, and a column of boxes an arrowhead apart does not
     read as a flow — it reads as a stack with marks between it. */
-const BP_H = 350;
+const BP_H = 336;
 
 /* The sheet the graph is drawn on. A workflow with a document's header
    above it reads as the standard operating procedure it is replacing —
@@ -208,21 +215,21 @@ const BP_PAN = 56;
 const BP_LINKS: { x: string; y: number; len?: number; w?: string; head?: boolean }[] = [
   { x: "50%", y: 28, len: 16, head: true },
   { x: "50%", y: 80, len: 16, head: true },
-  { x: "50%", y: 160, len: 16, head: true },
-  { x: "50%", y: 216, len: 12 }, // stem below the decision
-  { x: "23.5%", y: 228, w: "53%" }, // fork rail
-  { x: "23.5%", y: 228, len: 14, head: true },
-  { x: "76.5%", y: 228, len: 14, head: true },
-  { x: "23.5%", y: 290, len: 12 },
-  { x: "76.5%", y: 290, len: 12 },
-  { x: "23.5%", y: 302, w: "53%" }, // merge rail
-  { x: "50%", y: 302, len: 12, head: true },
+  { x: "50%", y: 146, len: 16, head: true },
+  { x: "50%", y: 202, len: 12 }, // stem below the decision
+  { x: "23.5%", y: 214, w: "53%" }, // fork rail
+  { x: "23.5%", y: 214, len: 14, head: true },
+  { x: "76.5%", y: 214, len: 14, head: true },
+  { x: "23.5%", y: 276, len: 12 },
+  { x: "76.5%", y: 276, len: 12 },
+  { x: "23.5%", y: 288, w: "53%" }, // merge rail
+  { x: "50%", y: 288, len: 12, head: true },
 ];
 
 /** Junction dots where the spine meets the fork and merge rails —
     without them the two rails plus their drops read as a stray
     rectangle around the branch pair rather than as routing. */
-const BP_JOINTS: { y: number }[] = [{ y: 228 }, { y: 302 }];
+const BP_JOINTS: { y: number }[] = [{ y: 214 }, { y: 288 }];
 
 /* ══ Phase 9 · the run ═════════════════════════════════════ */
 
@@ -989,11 +996,19 @@ const BP_CARD = "rounded-md border backdrop-blur-md";
 
 function BpBox({ node }: { node: BpNode }) {
   if (node.kind === "trigger") {
+    // Hugs its label and centres on the spine, the same shape the
+    // decision node takes. Full-column, it read as the first step of the
+    // procedure; the event that starts the procedure is not a step, and
+    // at this width it doesn't look like one.
     return (
-      <div className={`${BP_CARD} flex h-full items-center gap-2.5 border-white/[0.14] bg-[#0d1013]/72 px-3`}>
-        <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-white/45" />
-        <span className="truncate text-[13px] text-white/75">{node.label}</span>
-        <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/35">{node.meta}</span>
+      <div className="flex h-full items-center justify-center">
+        <div
+          className={`${BP_CARD} flex h-full w-fit items-center gap-2.5 border-white/[0.14] bg-[#0d1013]/72 px-3`}
+        >
+          <span className="h-[5px] w-[5px] shrink-0 rounded-full bg-white/45" />
+          <span className="whitespace-nowrap text-[13px] text-white/75">{node.label}</span>
+          <span className="shrink-0 text-[9px] tracking-[0.14em] text-white/35">{node.meta}</span>
+        </div>
       </div>
     );
   }
@@ -1008,7 +1023,10 @@ function BpBox({ node }: { node: BpNode }) {
     // standard procedure without competing with the flow it sits in.
     return (
       <div
-        className={`${BP_CARD} relative h-full overflow-hidden border-white/[0.14] bg-[#0d1013]/72 py-1 pl-4 pr-3.5`}
+        // Deeper below than above: the rule needs air under it or it sits
+        // on the card's bottom edge, where the label row above already
+        // has the header rule holding it off the top.
+        className={`${BP_CARD} relative h-full overflow-hidden border-white/[0.14] bg-[#0d1013]/72 pb-2 pl-4 pr-3.5 pt-1`}
       >
         <span className="absolute inset-y-0 left-0 w-[2px] bg-cyan-400/70" />
         <div className="flex items-center gap-2">
@@ -1016,7 +1034,11 @@ function BpBox({ node }: { node: BpNode }) {
           <span className="text-[10px] font-medium tracking-[0.14em] text-cyan-300">{node.label}</span>
           <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/40">{node.meta}</span>
         </div>
-        <p className="mt-1.5 text-[13px] leading-[17px] text-white/80">{node.sub}</p>
+        {/* Centred under the label row rather than ranged left with it.
+            The rule is the one line on the sheet meant to be read as a
+            sentence, and centring sets it apart from the label above and
+            the procedure rows around it. */}
+        <p className="mt-1.5 text-center text-[13px] leading-[17px] text-white/80">{node.sub}</p>
       </div>
     );
   }
@@ -1034,10 +1056,15 @@ function BpBox({ node }: { node: BpNode }) {
 
   if (node.kind === "branch") {
     const yes = node.lead === "YES";
-    // Line heights are explicit: three stacked lines have to total the
-    // box height exactly, or the last one hangs out of the bottom.
+    // Line heights are explicit: the stacked lines have to total the box
+    // height exactly, or the last one hangs out of the bottom. The meta
+    // line is optional, so the stack centres itself rather than sitting
+    // on the top padding — otherwise a branch without one leaves 12px of
+    // dead air under it and stops matching its pair.
     return (
-      <div className={`${BP_CARD} h-full border-white/[0.14] bg-[#0d1013]/72 px-3 py-1`}>
+      <div
+        className={`${BP_CARD} flex h-full flex-col justify-center border-white/[0.14] bg-[#0d1013]/72 px-3 py-1`}
+      >
         <p
           className={`h-[12px] text-[9px] font-medium leading-[12px] tracking-[0.14em] ${
             yes ? "text-cyan-400" : "text-white/35"
@@ -1046,7 +1073,9 @@ function BpBox({ node }: { node: BpNode }) {
           {node.lead}
         </p>
         <p className="h-[16px] truncate text-[13px] leading-[16px] text-white/85">{node.label}</p>
-        <p className="h-[12px] truncate text-[9px] leading-[12px] tracking-[0.14em] text-white/40">{node.meta}</p>
+        {node.meta ? (
+          <p className="h-[12px] truncate text-[9px] leading-[12px] tracking-[0.14em] text-white/40">{node.meta}</p>
+        ) : null}
       </div>
     );
   }
