@@ -1,0 +1,31 @@
+app/components/HeroGraph.tsx
+  s_c667c7ded2a71a::t_94a1450239a54d 130-134
+  s_c667c7ded2a71a::t_606e380ac36c8b 1059-1063,1065-1067,1076-1078
+  s_c667c7ded2a71a::t_20edd30f84543a 1026-1029
+  s_c667c7ded2a71a::t_b9e674d1063f1a 136-141
+  s_c667c7ded2a71a::t_11e7ec61ae8c85 125
+  s_c667c7ded2a71a::t_943297ddb16765 999-1002,1004-1011
+  s_c667c7ded2a71a::t_9a93ef15aec260 1037-1041
+  s_c667c7ded2a71a::t_1aabb925e92146 144,150,160,170,178,218-226,232
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9c9603ebcc13a0217f7276d071d73b479d68b749",
+  "prompts": {},
+  "humans": {
+    "h_8127955b097824": {
+      "author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_c667c7ded2a71a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "806d9772-6e37-4dda-a371-cf57b14febdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Mitch Gunnels <77034336+mitch-gunnels@users.noreply.github.com>"
+    }
+  }
+}
