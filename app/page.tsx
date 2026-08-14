@@ -469,7 +469,17 @@ export default function Home() {
      paints nothing, so the dissolve would come up from black instead of
      between two live frames. Seeking a video that is already playing and
      fully buffered is instant, and the first ~150ms of the dissolve is
-     under 10% opacity anyway, which covers any hitch. */
+     under 10% opacity anyway, which covers any hitch.
+
+     Chrome power-saves "video-only background media": a muted, audio-less
+     video that isn't visible gets paused on its own, so the plate we cut to
+     is usually paused by the time its act arrives, and the play() we fire on
+     the cut can be interrupted by that same power-save pause — an
+     unhandled rejection in the console. So: swallow the rejection, and
+     re-arm on pause while this act is on screen. Once the plate is actually
+     visible the browser stops pausing it, so the retry settles after a beat
+     rather than looping; the counter is the backstop for the case where it
+     doesn't (a hidden tab), and the listener is torn down on act change. */
   useEffect(() => {
     const video =
       heroAct === "call"
@@ -479,7 +489,20 @@ export default function Home() {
           : null;
     if (!video) return;
     video.currentTime = 0;
-    void video.play();
+
+    let retries = 0;
+    const start = () => {
+      video.play().catch(() => {});
+    };
+    const onPause = () => {
+      if (document.hidden || retries >= 3) return;
+      retries += 1;
+      start();
+    };
+
+    start();
+    video.addEventListener("pause", onPause);
+    return () => video.removeEventListener("pause", onPause);
   }, [heroAct]);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -661,11 +684,16 @@ export default function Home() {
               launched, armed, and run by an inbound event → then a customer
               phones about the same case and the same workflow answers them.
               See HeroGraph.tsx for the timeline. Sits over the subject's
-              torso — the darkest, quietest part of the frame. Desktop only:
-              on narrow screens it buries the copy. */}
+              torso — the darkest, quietest part of the frame.
+
+              Desktop only: the column is a fixed 400px, so below 1074px it
+              has nowhere to sit that isn't on top of the copy, and it goes
+              away entirely. Above that it is pinned 20px off the right edge
+              at every width — being trialled against the older behaviour,
+              where it eased inboard as the viewport grew. */}
           <HeroGraph
             onAct={setHeroAct}
-            className="absolute bottom-[calc(8%-55px)] right-[calc(3%+130px)] hidden w-[400px] lg:block xl:right-[calc(5%+130px)]"
+            className="absolute bottom-[calc(8%-55px)] right-5 hidden w-[400px] min-[1074px]:block"
           />
 
           <div className={`relative z-10 w-full ${GUTTER} py-24`}>
