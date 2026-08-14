@@ -102,6 +102,7 @@ function Ph({
   src,
   className = "",
   quiet = false,
+  overlay,
 }: {
   label: string;
   ratio?: string;
@@ -111,11 +112,13 @@ function Ph({
   /** Corner-anchored label instead of a centered one — for full-bleed backdrops
       where a centered caption would collide with the copy sitting on top. */
   quiet?: boolean;
+  overlay?: React.ReactNode;
 }) {
   if (src) {
     return (
-      <div className={`overflow-hidden ${className}`} style={{ aspectRatio: ratio }}>
+      <div className={`relative overflow-hidden ${className}`} style={{ aspectRatio: ratio }}>
         <img src={src} alt={label} className="h-full w-full object-cover" />
+        {overlay}
       </div>
     );
   }
@@ -291,6 +294,7 @@ const STEPS = [
     body: "This is how a loan team actually chases post-approval conditions: pull the open items from Encompass, decide which ones belong to the borrower, open the Salesforce task, send the text, and follow up at the right time. AIOS captures the steps and the judgment behind them in a graph the team can read. No prompt engineering. No code.",
     image: "/product-tour/01-captured-v3.webp",
     alt: "The AIOS Workflow Studio showing the Post-Approval Stips Chase graph: an Encompass pull, a classify step, a fork into a Salesforce task and an SMS to the borrower, then a 24-hour timed gate.",
+    focus: { x: "50%", y: "53%" },
   },
   {
     key: "approved",
@@ -302,6 +306,7 @@ const STEPS = [
     body: "Before anything is written back, the work pauses with the person you named. They see what AIOS has done, what it wants to do next, and the evidence behind the decision.",
     alt: "The AIOS approval drawer, paused on \"Loan officer approves the write-back — awaiting approval\", with completed steps above it and two steps queued up next.",
     image: "/product-tour/02-approved-v4.webp",
+    focus: { x: "72%", y: "50%" },
   },
   {
     key: "run",
@@ -311,6 +316,7 @@ const STEPS = [
     body: "Once approved, the same knowledge runs the process across the systems already in place. Every step, decision, connector call, and result stays attached to the graph. Six months later, when someone asks why a condition was cleared, the answer is there. Nobody has to reconstruct it from logs or memory.",
     image: "/product-tour/03-run-v2.webp",
     alt: "The AIOS run monitor trace: the workflow's steps in order, each with its node type, duration, and the connector calls made underneath it.",
+    focus: { x: "58%", y: "57%" },
   },
   {
     key: "answered",
@@ -320,6 +326,7 @@ const STEPS = [
     body: "With one click, the loan team can make this approved process available to borrowers by phone or text. It is not a second agent with a copied prompt. It is the same knowledge, rules, context, and audit trail, so the customer gets an answer without a transfer, a callback, or another explanation.",
     image: "/product-tour/04-answered-v7.webp",
     alt: "An AIOS conversation transcript: the stips assistant and the borrower on a voice call, with both the voice and SMS threads listed behind it.",
+    focus: { x: "78%", y: "48%" },
   },
 ];
 
@@ -836,6 +843,58 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ══ INTELLIGENCE THAT COMPOUNDS ══ */}
+        <section id="learning" data-tone="light" className="bg-white py-24 md:py-28">
+          <div className={GUTTER}>
+            <div className="grid gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+              <div>
+                <Eyebrow className="reveal-up">Intelligence that compounds</Eyebrow>
+                <h2 className="reveal-up mt-6 max-w-[18ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em] text-[#0f1419] [animation-delay:40ms]">
+                  Every run makes the next one better.
+                </h2>
+                <p className="reveal-up mt-7 max-w-[56ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
+                  AIOS turns execution outcomes into a governed playbook of strategies, error patterns,
+                  resolutions, and constraints. The next plan starts with what the system has already learned.
+                </p>
+              </div>
+
+              <div className="border-t border-slate-200">
+                {[
+                  {
+                    num: "01",
+                    title: "Recall what matters",
+                    body: "Before planning, AIOS retrieves the lessons relevant to the task at hand.",
+                  },
+                  {
+                    num: "02",
+                    title: "Reflect on the outcome",
+                    body: "After each run, it records what helped, what failed, and what resolved the issue.",
+                  },
+                  {
+                    num: "03",
+                    title: "Curate with evidence",
+                    body: "Useful lessons rise. Harmful ones are pruned. Human edits remain protected.",
+                  },
+                ].map((item, i) => (
+                  <div
+                    key={item.num}
+                    className="reveal-up grid grid-cols-[42px_1fr] gap-5 border-b border-slate-200 py-8"
+                    style={{ animationDelay: `${i * 80}ms` }}
+                  >
+                    <span className="font-mono text-[12px] tracking-[0.14em] text-cyan-700">{item.num}</span>
+                    <div>
+                      <h3 className="text-[clamp(1.25rem,2vw,1.6rem)] font-normal leading-[1.2] tracking-[-0.01em] text-[#0f1419]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 max-w-[44ch] text-[16px] leading-[1.6] text-slate-600">{item.body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ══ 05 · HOW IT WORKS — dark, sticky step tabs ══ */}
         <section id="how-it-works" data-tone="dark" className="relative bg-[#15181b] text-white">
           {/* Sticky tab bar */}
@@ -902,7 +961,17 @@ export default function Home() {
                   label={s.alt}
                   ratio="16 / 10"
                   tone="dark"
-                  className="reveal-up rounded-lg border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
+                  className="reveal-up rounded-lg bg-white shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
+                  overlay={
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0"
+                      style={{
+                        background: `radial-gradient(circle at ${s.focus.x} ${s.focus.y}, rgba(34,211,238,0.14) 0%, rgba(34,211,238,0.055) 18%, transparent 40%), radial-gradient(ellipse 92% 88% at ${s.focus.x} ${s.focus.y}, transparent 48%, rgba(7,12,16,0.08) 74%, rgba(7,12,16,0.28) 100%)`,
+                        boxShadow: "inset 0 0 70px rgba(7,12,16,0.16)",
+                      }}
+                    />
+                  }
                 />
                 <div className="reveal-up lg:pt-6 [animation-delay:80ms]">
                   <h3 className="max-w-[24ch] text-[clamp(1.5rem,2.6vw,2rem)] font-normal leading-[1.2] tracking-[-0.01em] text-white">
@@ -918,6 +987,64 @@ export default function Home() {
             </div>
           ))}
           <div className="h-16" />
+        </section>
+
+        {/* ══ PRODUCTION GOVERNANCE ══ */}
+        <section id="validation" data-tone="light" className="bg-[#f7f6f3] py-24 md:py-28">
+          <div className={GUTTER}>
+            <div>
+              <h2 className="reveal-up max-w-[28ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em] text-[#0f1419] [animation-delay:40ms]">
+                Nothing reaches production on confidence alone.
+              </h2>
+              <p className="reveal-up mt-7 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
+                Every release is versioned, evaluated against expected behavior, reviewed by a person, and
+                kept separate from the working draft.
+              </p>
+            </div>
+
+            <div className="mt-14 grid border-y border-slate-200 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  num: "01",
+                  title: "Version.",
+                  body: "Capture an immutable snapshot of the workflow and its configuration.",
+                },
+                {
+                  num: "02",
+                  title: "Evaluate.",
+                  body: "Test expected paths, correctness, and policy compliance in Draft.",
+                },
+                {
+                  num: "03",
+                  title: "Approve.",
+                  body: "A reviewer other than the requester decides what moves forward.",
+                },
+                {
+                  num: "04",
+                  title: "Promote.",
+                  body: "Run with Production connections and return to a previous release when needed.",
+                },
+              ].map((item, i) => (
+                <div
+                  key={item.num}
+                  className={`reveal-up py-9 md:px-8 lg:py-10 ${
+                    i % 2 === 1 ? "md:border-l md:border-slate-200" : ""
+                  } ${i > 0 ? "border-t border-slate-200 md:border-t-0" : ""} ${
+                    i > 1 ? "md:border-t md:border-slate-200 lg:border-t-0" : ""
+                  } ${
+                    i > 0 ? "lg:border-l lg:border-slate-200" : "lg:pl-0"
+                  }`}
+                  style={{ animationDelay: `${i * 70}ms` }}
+                >
+                  <p className="font-mono text-[12px] tracking-[0.14em] text-cyan-700">{item.num}</p>
+                  <h3 className="mt-6 text-[clamp(1.4rem,2.4vw,1.85rem)] font-normal leading-[1.2] tracking-[-0.01em] text-[#0f1419]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 max-w-[30ch] text-[16px] leading-[1.6] text-slate-600">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* ══ 07 · TRUST & SECURITY ══
@@ -1007,6 +1134,61 @@ export default function Home() {
               ))}
             </div>
           </div>
+          </div>
+        </section>
+
+        {/* ══ PATH TO PRODUCTION ══ */}
+        <section id="rollout" data-tone="light" className="bg-[#f7f6f3] py-24 md:py-28">
+          <div className={GUTTER}>
+            <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+              <div>
+                <Eyebrow className="reveal-up">From observation to production</Eyebrow>
+                <h2 className="reveal-up mt-6 max-w-[17ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em] text-[#0f1419] [animation-delay:40ms]">
+                  What four weeks contains.
+                </h2>
+                <p className="reveal-up mt-7 max-w-[54ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
+                  cvlSoft engineers work with your experts, systems, and controls until the first process is
+                  running in production. Then your team takes ownership.
+                </p>
+              </div>
+
+              <ol className="grid gap-x-10 border-t border-slate-200 sm:grid-cols-2">
+                {[
+                  {
+                    num: "01",
+                    title: "Observe and scope",
+                    body: "Choose the process, capture the work, and define the outcome.",
+                  },
+                  {
+                    num: "02",
+                    title: "Build and connect",
+                    body: "Turn the process into a workflow and connect the systems it uses.",
+                  },
+                  {
+                    num: "03",
+                    title: "Validate and approve",
+                    body: "Test expected behavior, tune policies, and secure signoff.",
+                  },
+                  {
+                    num: "04",
+                    title: "Go live and improve",
+                    body: "Promote the release, monitor outcomes, and compound what the system learns.",
+                  },
+                ].map((item, i) => (
+                  <li
+                    key={item.num}
+                    className="reveal-up border-b border-slate-200 py-8"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  >
+                    <p className="font-mono text-[12px] tracking-[0.14em] text-cyan-700">{item.num}</p>
+                    <h3 className="mt-5 text-[clamp(1.25rem,2vw,1.6rem)] font-normal leading-[1.2] tracking-[-0.01em] text-[#0f1419]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 max-w-[31ch] text-[16px] leading-[1.6] text-slate-600">{item.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 

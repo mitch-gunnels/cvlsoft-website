@@ -27,7 +27,7 @@ export default function About() {
           <section className="reveal-up">
             <h2 className="text-lg font-medium text-white">The Problem We Solve</h2>
             <p className="mt-3">
-              96% of enterprise AI never reaches production. The industry builds a separate agent for every
+              95% of enterprise AI never reaches production. The industry builds a separate agent for every
               task, creating an ever-growing maintenance burden that collapses under its own weight.
               Meanwhile, the most valuable operational knowledge lives in the heads of experts who are
               one resignation away from walking out the door.

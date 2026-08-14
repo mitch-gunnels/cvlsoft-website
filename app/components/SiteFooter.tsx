@@ -26,8 +26,11 @@ export default function SiteFooter() {
               <li><Link href="/#commitments" className="text-sm text-slate-500 transition hover:text-white">Commitments</Link></li>
               <li><Link href="/#problem" className="text-sm text-slate-500 transition hover:text-white">One Core</Link></li>
               <li><Link href="/#platform" className="text-sm text-slate-500 transition hover:text-white">Operating System</Link></li>
+              <li><Link href="/#learning" className="text-sm text-slate-500 transition hover:text-white">Self-Evolving Intelligence</Link></li>
               <li><Link href="/#how-it-works" className="text-sm text-slate-500 transition hover:text-white">Process</Link></li>
+              <li><Link href="/#validation" className="text-sm text-slate-500 transition hover:text-white">Production Governance</Link></li>
               <li><Link href="/#security" className="text-sm text-slate-500 transition hover:text-white">Trust &amp; Security</Link></li>
+              <li><Link href="/#rollout" className="text-sm text-slate-500 transition hover:text-white">Rollout</Link></li>
             </ul>
           </div>
 
@@ -37,7 +40,6 @@ export default function SiteFooter() {
             <ul className="mt-4 space-y-2.5">
               <li><a href="/about" className="text-sm text-slate-500 transition hover:text-white">About</a></li>
               <li><a href="/contact" className="text-sm text-slate-500 transition hover:text-white">Contact</a></li>
-              <li><Link href="/#demo" className="text-sm text-slate-500 transition hover:text-white">Request Demo</Link></li>
             </ul>
           </div>
 

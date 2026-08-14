@@ -9,6 +9,7 @@ const NAV_ITEMS: [string, string][] = [
   ["/#commitments", "Commitments"],
   ["/#problem", "Core"],
   ["/#platform", "Operating System"],
+  ["/#learning", "Self-Evolving"],
   ["/#how-it-works", "Process"],
   ["/#security", "Trust & Security"],
 ];
@@ -80,7 +81,7 @@ export default function SiteHeader() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 xl:flex">
           {NAV_ITEMS.map(([href, label]) => (
             <a
               key={href}
@@ -101,7 +102,7 @@ export default function SiteHeader() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            className={`md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors ${
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors xl:hidden ${
               isDark ? "text-white hover:bg-white/[0.06]" : "text-slate-950 hover:bg-slate-950/[0.06]"
             }`}
           >
@@ -119,7 +120,7 @@ export default function SiteHeader() {
       {/* Mobile menu panel */}
       {mobileOpen && (
         <div
-          className={`md:hidden border-t ${
+          className={`border-t xl:hidden ${
             isDark ? "border-white/[0.08] bg-[#15181b]" : "border-slate-950/10 bg-[var(--bg-page)]"
           }`}
         >
