@@ -1,28 +1,28 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// Every nav item is a home-page anchor, in page order — there are no standalone
+// marketing routes left to link, so none of these ever match a pathname.
 const NAV_ITEMS: [string, string][] = [
-  ["/platform", "Platform"],
-  ["/solutions", "Solutions"],
-  ["/team", "Team"],
-  ["/pricing", "Pricing"],
+  ["/#commitments", "Commitments"],
+  ["/#problem", "Core"],
+  ["/#platform", "Operating System"],
+  ["/#how-it-works", "Process"],
+  ["/#security", "Trust & Security"],
 ];
 
 /* Past this scroll depth the bar slides up out of view; above it, back down. */
 const HIDE_AFTER_Y = 75;
 
-const DARK_ROUTES = new Set(["/rollout", "/platform", "/team"]);
-
-function isDarkPath(pathname: string): boolean {
-  return DARK_ROUTES.has(pathname);
-}
+/* Tone when no [data-tone] section sits under the probe — every remaining route
+   opens on a light background, so the scroll listener is the only thing that
+   ever flips this to "dark". */
+const DEFAULT_TONE = "light" as const;
 
 export default function SiteHeader() {
-  const pathname = usePathname();
-  const defaultTone: "dark" | "light" = isDarkPath(pathname) ? "dark" : "light";
-  const [tone, setTone] = useState<"dark" | "light">(defaultTone);
+  const [tone, setTone] = useState<"dark" | "light">(DEFAULT_TONE);
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -40,7 +40,7 @@ export default function SiteHeader() {
           if (t === "light" || t === "dark") active = t;
         }
       });
-      setTone(active ?? defaultTone);
+      setTone(active ?? DEFAULT_TONE);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -49,13 +49,10 @@ export default function SiteHeader() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [defaultTone]);
+  }, []);
 
-  // Close mobile menu when navigating to a different route
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
+  // The mobile menu closes from each link's own onClick — every nav target is a
+  // same-page anchor, so there is no route change left to watch for.
   const isDark = tone === "dark";
 
   return (
@@ -74,32 +71,27 @@ export default function SiteHeader() {
           only the CTA to the far right — hence gap-10 + ml-auto, not
           justify-between. */}
       <nav className="mx-auto flex w-full max-w-[1320px] items-center gap-10 px-6 py-4.5 sm:px-10 lg:px-[60px]">
-        <a href="/" className="flex min-w-0 shrink-0 items-center gap-3">
+        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
           <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-13 w-13 shrink-0" />
           <span className={`truncate text-[19px] font-medium tracking-tight ${isDark ? "text-white" : "text-slate-950"}`}>
             {/* "by cvlSoft" is dropped on the narrowest screens so the brand
                 never runs under the Request Demo button. */}
             AIOS <span className="hidden font-normal text-slate-500 min-[420px]:inline">by cvlSoft</span>
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {NAV_ITEMS.map(([href, label]) => {
-            const isActive = !href.includes("#") && pathname === href;
-            const activeClass = isDark ? "text-cyan-400" : "text-cyan-700";
-            const inactiveClass = isDark
-              ? "text-white/85 hover:text-white"
-              : "text-slate-800 hover:text-slate-950";
-            return (
-              <a
-                key={href}
-                href={href}
-                className={`whitespace-nowrap text-[15px] transition-colors ${isActive ? activeClass : inactiveClass}`}
-              >
-                {label}
-              </a>
-            );
-          })}
+          {NAV_ITEMS.map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className={`whitespace-nowrap text-[15px] transition-colors ${
+                isDark ? "text-white/85 hover:text-white" : "text-slate-800 hover:text-slate-950"
+              }`}
+            >
+              {label}
+            </a>
+          ))}
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-3">
@@ -128,31 +120,22 @@ export default function SiteHeader() {
       {mobileOpen && (
         <div
           className={`md:hidden border-t ${
-            isDark ? "border-white/[0.08] bg-[#050a14]" : "border-slate-950/10 bg-[var(--bg-page)]"
+            isDark ? "border-white/[0.08] bg-[#15181b]" : "border-slate-950/10 bg-[var(--bg-page)]"
           }`}
         >
           <nav className="flex flex-col px-6 py-4">
-            {NAV_ITEMS.map(([href, label]) => {
-              const isActive = !href.includes("#") && pathname === href;
-              return (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`py-3 text-[15px] transition-colors ${
-                    isActive
-                      ? isDark
-                        ? "font-medium text-cyan-400"
-                        : "font-medium text-cyan-700"
-                      : isDark
-                        ? "text-slate-300 hover:text-white"
-                        : "text-slate-700 hover:text-slate-950"
-                  }`}
-                >
-                  {label}
-                </a>
-              );
-            })}
+            {NAV_ITEMS.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className={`py-3 text-[15px] transition-colors ${
+                  isDark ? "text-slate-300 hover:text-white" : "text-slate-700 hover:text-slate-950"
+                }`}
+              >
+                {label}
+              </a>
+            ))}
           </nav>
         </div>
       )}

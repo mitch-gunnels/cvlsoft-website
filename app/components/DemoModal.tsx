@@ -12,8 +12,9 @@ import {
 import { trackEvent } from "@/app/lib/analytics";
 import { useLeadForm, REQUIRED_FIELDS } from "@/app/lib/useLeadForm";
 import { LeadFields } from "./LeadFields";
+import { FormStatusDialog, type FormStatus } from "./FormStatusDialog";
 
-type DemoStatus = "idle" | "loading" | "success" | "error";
+type DemoStatus = FormStatus;
 
 type DemoModalContextValue = {
   open: () => void;
@@ -55,14 +56,16 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      // While the status dialog is up it owns Escape — otherwise one press
+      // would dismiss an error and the filled-in form behind it at once.
+      if (e.key === "Escape" && formStatus === "idle") close();
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
     };
-  }, [isOpen, close]);
+  }, [isOpen, close, formStatus]);
 
   function handleCtaClick(location: string) {
     trackEvent("bold_claim_cta_click", { location });
@@ -75,7 +78,9 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
     const errs = form.validateAll();
     const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
     if (firstInvalid) {
-      setFormStatus("error");
+      // Field-level problems stay on the fields — the dialog is only for a
+      // submit that reached the API or failed to.
+      setFormStatus("idle");
       event.currentTarget
         .querySelector<HTMLElement>(`[name="${firstInvalid}"]`)
         ?.focus();
@@ -163,15 +168,24 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
               >
                 {formStatus === "loading" ? "Submitting..." : "Start the conversation"}
               </button>
-              {formMessage ? (
-                <p className={`text-center text-sm ${formStatus === "error" ? "text-slate-300" : "text-cyan-400"}`}>
-                  {formMessage}
-                </p>
-              ) : null}
+              {/* The result is a dialog over this one — see FormStatusDialog.
+                  Nothing here changes the panel's height. */}
             </form>
           </div>
         </div>
       ) : null}
+
+      {/* Dismissing a success also closes the request modal underneath: the
+          form behind it is already reset and there is nothing left to do. */}
+      <FormStatusDialog
+        status={formStatus}
+        message={formMessage}
+        onClose={() => {
+          if (formStatus === "success") close();
+          setFormStatus("idle");
+          setFormMessage("");
+        }}
+      />
     </DemoModalContext.Provider>
   );
 }

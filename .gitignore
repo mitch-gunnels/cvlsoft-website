@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# retired pages, assets and one-off production artifacts. Kept on disk so a
+# page or cut can be restored, but out of the repo — see _archive/README.md.
+/_archive/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

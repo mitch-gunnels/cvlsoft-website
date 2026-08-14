@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import DemoButton from "../components/DemoButton";
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-[var(--bg-deep)] text-slate-300">
       <div className="mx-auto max-w-3xl px-6 py-24 sm:px-10">
-        <a href="/" className="reveal-up mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</a>
+        <Link href="/" className="reveal-up mb-12 inline-block text-sm text-slate-500 transition hover:text-white">&larr; Back to home</Link>
         <h1 className="reveal-up text-4xl font-light tracking-[-0.03em] text-white [animation-delay:60ms]">Contact Us</h1>
 
         <div className="mt-12 space-y-10 text-base leading-relaxed text-slate-400">

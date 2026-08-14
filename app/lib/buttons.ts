@@ -10,9 +10,6 @@
 export const BTN_BASE =
   "inline-flex items-center gap-2.5 rounded-[6px] border px-4 py-2.5 text-[15px] font-medium transition-colors";
 
-/** Outlined, on light surfaces — cream, white, tinted. */
-export const BTN_LIGHT = `${BTN_BASE} border-[#0f1419]/25 text-[#0f1419] hover:border-[#0f1419] hover:bg-[#0f1419]/[0.04]`;
-
 /** Outlined, on dark surfaces — hero, step section, closing CTA. */
 export const BTN_DARK = `${BTN_BASE} border-white/30 text-white hover:border-white hover:bg-white/[0.07]`;
 

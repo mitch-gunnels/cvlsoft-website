@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Retired pages and components, kept on disk but out of the repo.
+    "_archive/**",
     // The shop is a self-contained sub-app (its own package.json / Vercel
     // project at Root Directory "shop"); keep it out of the website's lint.
     "shop/**",

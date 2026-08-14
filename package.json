@@ -9,14 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@remotion/player": "^4.0.441",
     "@vercel/analytics": "^2.0.1",
     "mongodb": "^7.1.0",
     "next": "16.1.6",
     "nodemailer": "^8.0.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "remotion": "^4.0.441"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",

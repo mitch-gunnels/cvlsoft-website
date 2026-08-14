@@ -1,14 +1,27 @@
 # CLAUDE.md
 
-## Coming-soon gate (REMOVED 2026-06-27)
+## `_archive/` — retired pages and assets (2026-08-13)
 
-The site is **live** — the coming-soon gate has been removed: `middleware.ts` is
-deleted and `app/components/ConditionalFooter.tsx` no longer lists `"/"` in
-`NO_FOOTER_ROUTES`. `/` serves the real home page (`app/page.tsx`) with the global
-footer. The `/coming-soon` page still exists but is no longer the default.
+Dead routes, unreferenced images/video and one-off production artifacts live in
+`_archive/`, which is **gitignored**. See `_archive/README.md` for the full
+manifest, what was deliberately *kept* in `public/`, and how to restore a page.
 
-To re-gate, re-add a root-path rewrite middleware to `/coming-soon` and put `"/"`
-back in `NO_FOOTER_ROUTES`.
+Before archiving anything else, grep for template-literal asset paths — e.g.
+`app/page.tsx:251` loads partner logos as `` `/partners/${brand.file}` ``, which a
+literal-path grep will not find.
+
+Routes are now: `/`, `/about`, `/contact`, `/privacy`, `/terms` and the
+`/api/demo-request` handler. Nothing else.
+
+## Coming-soon gate (REMOVED 2026-06-27, page archived 2026-08-13)
+
+The site is **live**. `middleware.ts` is deleted, `ConditionalFooter` is gone
+(`app/layout.tsx` renders `SiteFooter` directly), and the `/coming-soon` page has
+been moved to `_archive/app/coming-soon/`. `/` serves the real home page
+(`app/page.tsx`) with the global footer.
+
+To re-gate: restore `_archive/app/coming-soon/`, re-add a root-path rewrite
+middleware pointing at it, and reintroduce a footer guard for that route.
 
 ## Monorepo: demo sub-apps (`shop/`, `telecom/`, `insurance/`, `paper/`)
 

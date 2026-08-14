@@ -16,6 +16,22 @@ function ErrorText({ id, message }: { id: string; message?: string }) {
   );
 }
 
+/* The per-field error line is always in the layout, empty or not. If it were
+   conditional the form would grow the moment anything failed validation, and
+   the panel — plus the video plate sized behind it — would resize under the
+   user mid-typing. `truncate` keeps a message to the one reserved line. */
+function ErrorSlot({ id, message }: { id: string; message?: string }) {
+  return (
+    <p
+      id={id}
+      role="alert"
+      className="mt-1.5 h-4 truncate text-xs leading-4 text-red-400"
+    >
+      {message ?? ""}
+    </p>
+  );
+}
+
 /** All lead-capture fields + inline errors, driven by the useLeadForm hook. */
 export function LeadFields({ form }: { form: LeadFormApi }) {
   const { values, errors, setValue, handleBlur } = form;
@@ -41,7 +57,7 @@ export function LeadFields({ form }: { form: LeadFormApi }) {
           className={`${inputBase} ${err ? inputErr : inputOk}`}
           placeholder={placeholder}
         />
-        <ErrorText id={`${field}-error`} message={err} />
+        <ErrorSlot id={`${field}-error`} message={err} />
       </div>
     );
   };
@@ -56,6 +72,15 @@ export function LeadFields({ form }: { form: LeadFormApi }) {
       {text("phone", "Work mobile phone", "tel", "tel")}
       {text("company", "Company", "text", "organization")}
 
+      {/* Both consents live in one inset box. It is a lot of legal copy to sit
+          loose under the inputs; the border makes it read as fine print rather
+          than as more of the form, and scrolls it out of the way on small
+          screens without hiding anything either policy requires be visible.
+
+          Its height is fixed, not capped: the consent error appears inside it,
+          and at wide panel widths the copy is short enough that a cap would
+          still let that error grow the box. */}
+      <div className="mt-1 grid h-48 content-start gap-4 overflow-y-auto rounded-md border border-white/10 bg-white/[0.03] p-4">
       {/* SMS marketing consent — optional (Twilio requires this to never gate submit) */}
       <label className="flex items-start gap-3 text-left text-xs leading-relaxed text-slate-400">
         <input
@@ -97,6 +122,7 @@ export function LeadFields({ form }: { form: LeadFormApi }) {
           </span>
         </label>
         <ErrorText id="termsAccepted-error" message={errors.termsAccepted} />
+      </div>
       </div>
     </>
   );

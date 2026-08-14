@@ -1,18 +1,20 @@
+import Link from "next/link";
+
 export default function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/[0.06] bg-[#050a14]">
+    <footer className="border-t border-white/[0.06] bg-[#15181b]">
       <div className="px-6 pb-10 pt-16 sm:px-20 lg:px-[112px]">
         {/* Footer columns */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3">
               <img src="/logo-mark-256.svg" alt="" aria-hidden="true" className="h-6 w-6" />
               <span className="text-sm font-medium text-white">AIOS <span className="font-normal text-slate-500">by cvlSoft</span></span>
             </div>
-            <p className="mt-4 text-[13px] leading-relaxed text-slate-600 whitespace-nowrap">
+            <p className="mt-1 text-[13px] leading-tight text-slate-600 whitespace-nowrap">
               Autonomous Intelligence Operating System
             </p>
           </div>
@@ -21,13 +23,11 @@ export default function SiteFooter() {
           <div>
             <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">PRODUCT</p>
             <ul className="mt-4 space-y-2.5">
-              <li><a href="/#problem" className="text-sm text-slate-500 transition hover:text-white">The Problem</a></li>
-              <li><a href="/#platform" className="text-sm text-slate-500 transition hover:text-white">Five Parts</a></li>
-              <li><a href="/#how-it-works" className="text-sm text-slate-500 transition hover:text-white">How It Works</a></li>
-              <li><a href="/#security" className="text-sm text-slate-500 transition hover:text-white">Trust &amp; Security</a></li>
-              <li><a href="/rollout" className="text-sm text-slate-500 transition hover:text-white">Rollout</a></li>
-              <li><a href="/platform" className="text-sm text-slate-500 transition hover:text-white">Platform</a></li>
-              <li><a href="/team" className="text-sm text-slate-500 transition hover:text-white">Team</a></li>
+              <li><Link href="/#commitments" className="text-sm text-slate-500 transition hover:text-white">Commitments</Link></li>
+              <li><Link href="/#problem" className="text-sm text-slate-500 transition hover:text-white">One Core</Link></li>
+              <li><Link href="/#platform" className="text-sm text-slate-500 transition hover:text-white">Operating System</Link></li>
+              <li><Link href="/#how-it-works" className="text-sm text-slate-500 transition hover:text-white">Process</Link></li>
+              <li><Link href="/#security" className="text-sm text-slate-500 transition hover:text-white">Trust &amp; Security</Link></li>
             </ul>
           </div>
 
@@ -37,15 +37,7 @@ export default function SiteFooter() {
             <ul className="mt-4 space-y-2.5">
               <li><a href="/about" className="text-sm text-slate-500 transition hover:text-white">About</a></li>
               <li><a href="/contact" className="text-sm text-slate-500 transition hover:text-white">Contact</a></li>
-              <li><a href="/#demo" className="text-sm text-slate-500 transition hover:text-white">Request Demo</a></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500">RESOURCES</p>
-            <ul className="mt-4 space-y-2.5">
-              <li><a href="/#proof" className="text-sm text-slate-500 transition hover:text-white">Customer Stories</a></li>
+              <li><Link href="/#demo" className="text-sm text-slate-500 transition hover:text-white">Request Demo</Link></li>
             </ul>
           </div>
 

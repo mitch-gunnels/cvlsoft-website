@@ -121,13 +121,13 @@ type BpNode = {
 };
 
 const BP_NODES: BpNode[] = [
-  { id: "t", kind: "trigger", y: 0, h: 30, label: "Bill overage detected", meta: "TRIGGER" },
-  { id: "s1", kind: "step", y: 42, h: 40, lead: "01", label: "Pull six months of billing", meta: "BILLING" },
+  { id: "t", kind: "trigger", y: 0, h: 28, label: "Bill overage detected", meta: "TRIGGER" },
+  { id: "s1", kind: "step", y: 44, h: 36, lead: "01", label: "Pull six months of billing", meta: "BILLING" },
   {
     id: "r",
     kind: "reason",
-    y: 94,
-    h: 70,
+    y: 96,
+    h: 64,
     label: "AI REASONING",
     sub: "One overage in six months is a mistake. A second one is the wrong plan.",
     meta: "FROM RATIONALE",
@@ -138,8 +138,8 @@ const BP_NODES: BpNode[] = [
   {
     id: "b1",
     kind: "branch",
-    y: 236,
-    h: 52,
+    y: 242,
+    h: 48,
     x: "0%",
     w: "47%",
     lead: "YES",
@@ -149,8 +149,8 @@ const BP_NODES: BpNode[] = [
   {
     id: "b2",
     kind: "branch",
-    y: 236,
-    h: 52,
+    y: 242,
+    h: 48,
     x: "53%",
     w: "47%",
     lead: "NO",
@@ -160,11 +160,15 @@ const BP_NODES: BpNode[] = [
   // Numbered 2, not 3: the branches are the gate, not a step of their
   // own, which is what the footer's "2 actions · 1 decision · 1 gate"
   // is counting.
-  { id: "m", kind: "merge", y: 306, h: 40, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
+  { id: "m", kind: "merge", y: 314, h: 36, lead: "02", label: "Post decision · notify customer", meta: "BILLING" },
 ];
 
-/** Overall height of the routed graph. */
-const BP_H = 346;
+/** Overall height of the routed graph. The nodes are drawn a few pixels
+    shorter than they look like they need to be, and every pixel of it is
+    spent on the runs between them: an arrowhead on a ten-pixel line is
+    mostly arrowhead, and a column of boxes an arrowhead apart does not
+    read as a flow — it reads as a stack with marks between it. */
+const BP_H = 350;
 
 /* The sheet the graph is drawn on. A workflow with a document's header
    above it reads as the standard operating procedure it is replacing —
@@ -178,9 +182,9 @@ const BP_H = 346;
    margin and the 1px borders out of the total, and the missing 10px is
    precisely what put the bottom of the sheet under the timeline. */
 const BP_HEAD_H = 32;
-const BP_HEAD_GAP = 8;
-const BP_PAD_T = 8;
-const BP_PAD_B = 8;
+const BP_HEAD_GAP = 6;
+const BP_PAD_T = 6;
+const BP_PAD_B = 6;
 const BP_BORDER = 2;
 const BP_SHEET_H = BP_PAD_T + BP_HEAD_H + BP_HEAD_GAP + BP_H + BP_PAD_B + BP_BORDER;
 
@@ -189,7 +193,7 @@ const BP_CTA_Y = BP_SHEET_H + 22;
 /** Resting offset. The viewport feathers its top edge over 3%, so the
     sheet starts below that feather rather than inside it — and, with
     the height above, lands clear of the timeline at the bottom. */
-const BP_REST = 14;
+const BP_REST = 12;
 /** How far the sheet pans up to clear room for the Launch button. Its
     header and first node slide under the feather as it goes. */
 const BP_PAN = 56;
@@ -197,24 +201,28 @@ const BP_PAN = 56;
 /** Orthogonal hairlines between the nodes above. `len` is a vertical
     run from `y`; `w` is a horizontal run from `x`. Branch centres are
     23.5% and 76.5% — the midpoints of the two 47%-wide boxes. */
-const BP_LINKS: { x: string; y: number; len?: number; w?: string }[] = [
-  { x: "50%", y: 30, len: 12 },
-  { x: "50%", y: 82, len: 12 },
-  { x: "50%", y: 164, len: 12 },
-  { x: "50%", y: 216, len: 10 }, // stem below the decision
-  { x: "23.5%", y: 226, w: "53%" }, // fork rail
-  { x: "23.5%", y: 226, len: 10 },
-  { x: "76.5%", y: 226, len: 10 },
-  { x: "23.5%", y: 288, len: 10 },
-  { x: "76.5%", y: 288, len: 10 },
-  { x: "23.5%", y: 298, w: "53%" }, // merge rail
-  { x: "50%", y: 298, len: 8 },
+/** `head` hangs an arrowhead off the end of a run. Only the runs that
+    arrive at a node get one: a chevron pointing at a rail is noise, and
+    without any of them a column of boxes joined by hairlines is a list
+    with lines between it rather than something that flows. */
+const BP_LINKS: { x: string; y: number; len?: number; w?: string; head?: boolean }[] = [
+  { x: "50%", y: 28, len: 16, head: true },
+  { x: "50%", y: 80, len: 16, head: true },
+  { x: "50%", y: 160, len: 16, head: true },
+  { x: "50%", y: 216, len: 12 }, // stem below the decision
+  { x: "23.5%", y: 228, w: "53%" }, // fork rail
+  { x: "23.5%", y: 228, len: 14, head: true },
+  { x: "76.5%", y: 228, len: 14, head: true },
+  { x: "23.5%", y: 290, len: 12 },
+  { x: "76.5%", y: 290, len: 12 },
+  { x: "23.5%", y: 302, w: "53%" }, // merge rail
+  { x: "50%", y: 302, len: 12, head: true },
 ];
 
 /** Junction dots where the spine meets the fork and merge rails —
     without them the two rails plus their drops read as a stray
     rectangle around the branch pair rather than as routing. */
-const BP_JOINTS: { y: number }[] = [{ y: 226 }, { y: 298 }];
+const BP_JOINTS: { y: number }[] = [{ y: 228 }, { y: 302 }];
 
 /* ══ Phase 9 · the run ═════════════════════════════════════ */
 
@@ -429,9 +437,18 @@ const TL_GAP = 8;
     slot's left edge, which is the distance the mark travels when the
     box collapses onto it. */
 const TL_PAD = 14;
+/** Height of the open box. It used to borrow the overview row's height,
+    on the grounds that the row becomes this card — but the overview
+    rows lost their box and their height with it, and the footer card
+    still needs its own. */
+const TL_CARD_H = 62;
 /* One leg of the morph — collapse, reposition, expand — runs 520ms.
    That number lives in the Tailwind duration classes on the timeline;
    the handoff beat below must stay longer than it. */
+/** …and here, for the one thing that has to wait the morph out rather
+    than run alongside it: the tile's glint. Kept as a number because a
+    delay is arithmetic, not a class. */
+const TL_MORPH = 520;
 /** How far the rail overruns the animation column, each side. */
 const TL_BLEED = 44;
 
@@ -486,12 +503,12 @@ const SEQUENCE: Beat[] = [
   // The contents page. Title then four rows, in series over ~2.2s,
   // then the set holds for a full five seconds — long enough to read
   // all four and see that they are one chain, not four products.
-  { phase: "overview", step: 0, hold: 8200 },
+  { phase: "overview", step: 0, hold: 6200 },
   // 4 × the exit stagger + the 520ms travel, so the title — which
   // trails the stack out — has cleared.
   { phase: "ovexit", step: 0, hold: 1200 },
 
-  { phase: "intro", step: 0, hold: 4000 }, // OBSERVER
+  { phase: "intro", step: 0, hold: 2000 }, // OBSERVER
   { phase: "observe", step: 0, hold: 2500 }, // listening, nothing captured yet
   { phase: "observe", step: 1, hold: 2300 },
   { phase: "observe", step: 2, hold: 2300 },
@@ -507,7 +524,7 @@ const SEQUENCE: Beat[] = [
   { phase: "exit", step: 0, hold: 1400 }, // session slides off in series
   { phase: "handoff", step: 0, hold: 620 }, // …then, on an empty canvas, its marker
 
-  { phase: "intro", step: 1, hold: 4000 }, // BLUEPRINT
+  { phase: "intro", step: 1, hold: 2000 }, // BLUEPRINT
   { phase: "blueprint", step: 0, hold: 3800 }, // the workflow draws in
   { phase: "blueprint", step: 1, hold: 3600 }, // read it
 
@@ -516,7 +533,7 @@ const SEQUENCE: Beat[] = [
   { phase: "bpexit", step: 0, hold: 1500 }, // the workflow slides off
   { phase: "handoff", step: 1, hold: 620 },
 
-  { phase: "intro", step: 2, hold: 4000 }, // EXECUTOR
+  { phase: "intro", step: 2, hold: 2000 }, // EXECUTOR
   { phase: "armed", step: 0, hold: 5900 }, // listening — nobody presses run
   { phase: "armed", step: 1, hold: 2500 }, // an inbound event wakes it
 
@@ -533,7 +550,7 @@ const SEQUENCE: Beat[] = [
   { phase: "runexit", step: 0, hold: 1100 }, // the run slides off
   { phase: "handoff", step: 2, hold: 620 },
 
-  { phase: "intro", step: 3, hold: 4000 }, // COMMUNICATOR
+  { phase: "intro", step: 3, hold: 2000 }, // COMMUNICATOR
   // Running it internally is automation; putting it on the channels
   // customers already use is the product. The cursor makes that choice
   // on screen rather than it happening off camera.
@@ -568,7 +585,7 @@ const SEQUENCE: Beat[] = [
   { phase: "callexit", step: 0, hold: 1100 }, // the call slides off
   { phase: "handoff", step: 3, hold: 620 },
 
-  { phase: "intro", step: 4, hold: 4000 }, // MEMORY
+  { phase: "intro", step: 4, hold: 2000 }, // MEMORY
   { phase: "memory", step: 0, hold: 2200 }, // the card, still empty
   { phase: "memory", step: 1, hold: 2200 }, // what the call did
   { phase: "memory", step: 2, hold: 2600 }, // the note the run left
@@ -603,20 +620,25 @@ const SEQUENCE: Beat[] = [
 const ACTS: { icon: number; name: string; does: string }[] = [
   // Stored as sentences. Every label in this file that shouts does the
   // shouting in the view, so the data never encodes a type decision.
-  { icon: 0, name: "Observer", does: "Watches experts & asks why" },
-  { icon: 1, name: "Blueprint", does: "Turns it into a workflow" },
+  { icon: 0, name: "Observer", does: "Watches, Learns, & Interviews" },
+  { icon: 1, name: "Blueprint", does: "Builds an executable workflow" },
   { icon: 2, name: "Executor", does: "Detects, decides, & executes" },
-  { icon: 3, name: "Communicator", does: "Answers & resolves, live" },
+  { icon: 3, name: "Communicator", does: "Engages, Markets, & Answers" },
   { icon: 5, name: "Customer Memory", does: "Hyper-personalization" },
 ];
 
 /* The overview stack, up front: the same four cards the acts announce
    themselves with, shown together so the loop opens on the whole shape
    before it starts spending a minute on the parts. */
-const OV_ROW_H = 62;
-const OV_GAP = 14;
-/** The title above the stack, and the room it takes. */
-const OV_HEAD_H = 38;
+/* Without a box to fill, a row is only as tall as its two lines of type,
+   and the air between rows has to come from the gap instead — at the old
+   62/14 the rows floated in the middle of their own slots. */
+const OV_ROW_H = 46;
+const OV_GAP = 16;
+/** The title above the stack, and the room it takes: one 14px line plus
+    the air under it. It carried a progress bar as well until the rail at
+    the bottom took that job over. */
+const OV_HEAD_H = 26;
 /** Each row lands after the one above it — a stagger, not a block. */
 const OV_STAGGER = 320;
 /** The rows travel slower than an act does; this is the one place the
@@ -624,6 +646,13 @@ const OV_STAGGER = 320;
 const OV_TRAVEL = 900;
 /** Leaving is not reading, so the exit keeps the house pace. */
 const OV_OUT_STAGGER = 150;
+/** The light runs down the tiles once, after the whole stack has landed
+    — a highlight on a row still travelling reads as a rendering
+    artefact, and a tile lighting up before its neighbours exist is not a
+    pass down a column. So: the beat after the last row arrives, then one
+    tile every SHINE_STEP. */
+const OV_SHINE_LAG = 260;
+const OV_SHINE_STEP = 240;
 
 /* Subscribed rather than read in an effect, so the server snapshot is
    simply `false` and hydration never disagrees with itself. */
@@ -651,6 +680,24 @@ const FROZEN = SEQUENCE.map((b) => b.phase).lastIndexOf("call");
    The four marks on the timeline are controls: click one and the story
    goes there. Which is also why the loop can afford to be two minutes
    long — nobody has to sit through act three to see act four. */
+
+/** How long the overview is on screen, its exit included. Read off the
+    beats themselves so retiming the overview retimes the cue with it. */
+const OV_ARM = SEQUENCE.filter((b) => b.phase === "overview" || b.phase === "ovexit").reduce(
+  (total, b) => total + b.hold,
+  0,
+);
+
+/** When the last row has landed: its stagger plus its travel. Nothing
+    else in the overview moves after this, which is why it is where the
+    playhead sets off — the stack finishes assembling, then the thing
+    that starts the story starts moving. */
+const OV_ROWS_IN = ACTS.length * OV_STAGGER + OV_TRAVEL;
+
+/** So the run fills the gap exactly: it leaves as the last row lands and
+    arrives on the first mark as that act opens. Both ends are derived,
+    so retiming the overview or the stagger keeps them tied. */
+const RAIL_RUN = Math.max(600, OV_ARM - OV_ROWS_IN);
 
 /** Where each act starts: its title card, so a jump plays the act from
     the top rather than dropping into the middle of one. */
@@ -952,15 +999,22 @@ function BpBox({ node }: { node: BpNode }) {
   }
 
   if (node.kind === "reason") {
-    // The rationale captured up in OBSERVE, now doing work. The one
-    // block on the page that is not standard procedure — so it is the
-    // one block that keeps the accent.
+    // The rationale captured up in OBSERVE, now doing work. It was a
+    // filled cyan panel, which made it the subject of the frame rather
+    // than a step in it: the eye went to the glowing box and stopped,
+    // and the chain around it — the thing this act exists to show — was
+    // what got lost. The accent moves to a rule down its edge and to
+    // the label, so it is still unmistakably the one node that is not
+    // standard procedure without competing with the flow it sits in.
     return (
-      <div className={`${BP_CARD} h-full border-cyan-400/55 bg-cyan-400/[0.16] px-3.5 py-2`}>
+      <div
+        className={`${BP_CARD} relative h-full overflow-hidden border-white/[0.14] bg-[#0d1013]/72 py-1 pl-4 pr-3.5`}
+      >
+        <span className="absolute inset-y-0 left-0 w-[2px] bg-cyan-400/70" />
         <div className="flex items-center gap-2">
           <Sparkle />
           <span className="text-[10px] font-medium tracking-[0.14em] text-cyan-300">{node.label}</span>
-          <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-cyan-300/90">{node.meta}</span>
+          <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/40">{node.meta}</span>
         </div>
         <p className="mt-1.5 text-[13px] leading-[17px] text-white/80">{node.sub}</p>
       </div>
@@ -983,7 +1037,7 @@ function BpBox({ node }: { node: BpNode }) {
     // Line heights are explicit: three stacked lines have to total the
     // box height exactly, or the last one hangs out of the bottom.
     return (
-      <div className={`${BP_CARD} h-full border-white/[0.14] bg-[#0d1013]/72 px-3 py-1.5`}>
+      <div className={`${BP_CARD} h-full border-white/[0.14] bg-[#0d1013]/72 px-3 py-1`}>
         <p
           className={`h-[12px] text-[9px] font-medium leading-[12px] tracking-[0.14em] ${
             yes ? "text-cyan-400" : "text-white/35"
@@ -1420,6 +1474,10 @@ export default function HeroGraph({
       nothing advances on its own, so a click is the only thing that
       moves the story. Null until they click. */
   const [pinned, setPinned] = useState<number | null>(null);
+  /** Which mark the pointer is on. Held in state rather than done with
+      group-hover because the marks colour themselves from inline style,
+      which a hover class cannot reach. */
+  const [hovered, setHovered] = useState<number | null>(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -1600,6 +1658,10 @@ export default function HeroGraph({
             : phase === "memory" || phase === "memexit" || phase === "sms" || phase === "smsexit"
               ? 4
               : 2;
+  /** The overview, including its exit: the stretch where the timeline is
+      on screen with nothing playing yet and is arming itself instead. */
+  const arming = phase === "overview" || phase === "ovexit";
+
   /* The act boundaries: whatever is on screen rides out to the left
      before the next act rides in. */
   const exiting =
@@ -1653,15 +1715,24 @@ export default function HeroGraph({
             // overview) or on the frame's own bottom edge (which pushed
             // the stack into the space the timeline is about to take).
             style={{
-              bottom: FOOTER_H,
+              // +12 so the last card clears the rail rather than resting
+              // its border on it, now that the rail is drawn under it.
+              bottom: FOOTER_H + 12,
               height: OV_HEAD_H + ACTS.length * OV_ROW_H + (ACTS.length - 1) * OV_GAP,
             }}
           >
-            {/* Names the stack before it builds, so the four rows read
-                as one product's parts rather than as four features. It
-                leads the stagger in and trails it out. */}
+            {/* Names the stack before it builds, so the rows read as one
+                product's parts rather than as five features. It leads the
+                stagger in and trails it out.
+
+                It also has to say that this is about to play: a still
+                list of five cards is something a visitor reads once and
+                looks away from, and everything the animation is for
+                happens after that. Hence the running clock on the right
+                — a label that says WATCH would be a claim, a timer that
+                is visibly counting is evidence. */}
             <div
-              className={`flex items-center gap-3 ${phase === "ovexit" ? "hg-exit" : "hg-slide-in"}`}
+              className={phase === "ovexit" ? "hg-exit" : "hg-slide-in"}
               style={{
                 height: OV_HEAD_H,
                 ...(phase === "ovexit"
@@ -1669,9 +1740,8 @@ export default function HeroGraph({
                   : { animationDuration: `${OV_TRAVEL}ms` }),
               }}
             >
-              <span className="h-[7px] w-[7px] rounded-full bg-cyan-400" />
-              <span className="text-[11px] font-medium tracking-[0.14em] text-white">
-                PLATFORM COMPONENTS
+              <span className="block text-[11px] font-medium tracking-[0.14em] text-white">
+                PLATFORM OVERVIEW
               </span>
             </div>
 
@@ -1681,7 +1751,11 @@ export default function HeroGraph({
                 // Right to left, like everything else in the loop — the
                 // overview is the first leg of the same line of travel,
                 // not a separate opening title.
-                className={`absolute inset-x-0 flex items-center gap-3 rounded-[10px] border border-white/[0.10] bg-[#0d1013]/55 px-3.5 backdrop-blur-md ${
+                // No box. Five cards stacked in a column read as five
+                // products; the same five as bare rows under one title
+                // read as one thing with five parts, which is what the
+                // whole minute after this is about to demonstrate.
+                className={`absolute inset-x-0 flex items-center gap-3 ${
                   phase === "ovexit" ? "hg-exit" : "hg-slide-in"
                 }`}
                 style={{
@@ -1697,11 +1771,28 @@ export default function HeroGraph({
                       }),
                 }}
               >
+                {/* Numbered, because five cards in a column are a list
+                    and five numbered cards are an order — and an order
+                    is a thing a viewer expects to be walked through. */}
+                <span className="w-[16px] shrink-0 font-mono text-[10px] text-white/35">
+                  {`0${idx + 1}`}
+                </span>
                 {/* Same tile, same glyph, same type as the timeline
-                    card this row becomes twenty seconds later. */}
+                    card this row becomes twenty seconds later.
+
+                    hg-shine runs a light across it once, after the last
+                    row has landed, one tile after another down the
+                    column — the stack finishing assembling and then
+                    powering on. */}
                 <span
-                  className="grid shrink-0 place-items-center rounded-md border border-cyan-400/45 bg-cyan-400/[0.13] text-cyan-400"
-                  style={{ height: TL_DOT, width: TL_DOT }}
+                  className="hg-shine hg-shine-run grid shrink-0 place-items-center rounded-md border border-cyan-400/45 bg-cyan-400/[0.13] text-cyan-400"
+                  style={{
+                    height: TL_DOT,
+                    width: TL_DOT,
+                    ["--shine-delay" as string]: `${
+                      OV_ROWS_IN + OV_SHINE_LAG + idx * OV_SHINE_STEP
+                    }ms`,
+                  }}
                 >
                   <PillarIcon index={a.icon} className="h-[17px] w-[17px]" />
                 </span>
@@ -1801,13 +1892,15 @@ export default function HeroGraph({
                 {/* The document's header: what this is, and which
                     procedure it is. Negative margins so the rule under
                     it runs the full width of the sheet rather than
-                    stopping inside its padding. */}
+                    stopping inside its padding. A translucent black wash
+                    sits it a shade below the sheet — a title bar, not
+                    part of the drawing area. */}
                 <div
-                  className="-mx-3.5 flex items-center gap-2.5 border-b border-white/[0.10] px-3.5"
+                  className="-mx-3.5 flex items-center gap-2.5 rounded-t-[5px] border-b border-white/[0.10] bg-black/50 px-3.5"
                   style={{ height: BP_HEAD_H, marginBottom: BP_HEAD_GAP }}
                 >
                   <span className="shrink-0 rounded-[4px] border border-white/25 px-1.5 py-0.5 text-[9px] tracking-[0.14em] text-white/70">
-                    SOP
+                    BLUEPRINT
                   </span>
                   <span className="truncate text-[12px] text-white">Billing Overage Review</span>
                   <span className="ml-auto shrink-0 text-[9px] tracking-[0.14em] text-white/35">
@@ -1817,25 +1910,51 @@ export default function HeroGraph({
 
                 <div className="relative" style={{ height: BP_H }}>
                 <div className="absolute inset-0">
-                  {BP_LINKS.map((link, idx) => (
-                    <span
-                      key={idx}
-                      className={`${link.w ? "hg-line-h h-px" : "hg-line w-px"} absolute bg-white/25 ${
-                        exitingBp ? "hg-exit" : ""
-                      }`}
-                      style={{
-                        left: link.x,
-                        top: link.y,
-                        height: link.len,
-                        width: link.w,
-                        // Links draw just behind the node they lead into,
-                        // and the whole graph waits on the sheet landing.
-                        animationDelay: exitingBp
-                          ? `${BP_EXIT_LEAD + idx * 45}ms`
-                          : `${480 + idx * 90}ms`,
-                      }}
-                    />
-                  ))}
+                  {BP_LINKS.map((link, idx) => {
+                    // Links draw just behind the node they lead into, and
+                    // the whole graph waits on the sheet landing.
+                    const delay = exitingBp
+                      ? `${BP_EXIT_LEAD + idx * 45}ms`
+                      : `${480 + idx * 90}ms`;
+                    return (
+                      <span key={idx}>
+                        <span
+                          className={`${link.w ? "hg-line-h h-px" : "hg-line w-px"} absolute bg-white/40 ${
+                            exitingBp ? "hg-exit" : ""
+                          }`}
+                          style={{
+                            left: link.x,
+                            top: link.y,
+                            height: link.len,
+                            width: link.w,
+                            animationDelay: delay,
+                          }}
+                        />
+                        {link.head ? (
+                          <span
+                            className={`absolute ${exitingBp ? "hg-exit" : "hg-enter"}`}
+                            style={{
+                              left: link.x,
+                              top: link.y + (link.len ?? 0) - 4,
+                              animationDelay: delay,
+                            }}
+                          >
+                            <svg
+                              viewBox="0 0 10 6"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="h-[5px] w-[9px] -translate-x-1/2 text-white/45"
+                            >
+                              <path d="M1 1 5 5 9 1" />
+                            </svg>
+                          </span>
+                        ) : null}
+                      </span>
+                    );
+                  })}
                   {BP_JOINTS.map((joint) => (
                     <span
                       key={joint.y}
@@ -2086,8 +2205,14 @@ export default function HeroGraph({
             from the right was the earlier attempt; it read as two
             unrelated objects rather than as one timeline advancing. */}
         <div
+          // On screen for the overview too, unlit and evenly spread. It
+          // is the one element that tells a visitor this is a player
+          // rather than a diagram — five stops on a track, none of them
+          // reached yet — and it is where the clickable marks live, so
+          // hiding it until the story had already started meant the
+          // controls appeared only after they were needed.
           className={`absolute bottom-0 transition-opacity duration-500 ${
-            phase === "boot" || phase === "overview" || phase === "ovexit" ? "opacity-0" : ""
+            phase === "boot" ? "opacity-0" : ""
           }`}
           // The rail overruns the animation on both sides, so it reads
           // as a track the four steps sit on rather than as the bottom
@@ -2097,22 +2222,55 @@ export default function HeroGraph({
           {/* Both ends of the rail fade out rather than stopping dead —
               a hard terminus reads as the edge of a panel, a fade reads
               as a track that carries on past the frame. Masked as one
-              layer so the progress fill fades with it. */}
+              layer so the progress fill fades with it.
+
+              36px, not the 64 it was: the fill has to travel from the
+              left end to the first mark during the overview, and at 64
+              nearly all of that travel happened inside the fade. */}
           <div
             className="absolute inset-x-0 top-0 h-px"
             style={{
               maskImage:
-                "linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)",
+                "linear-gradient(to right, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%)",
               WebkitMaskImage:
-                "linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)",
+                "linear-gradient(to right, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%)",
             }}
           >
             <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
             {/* How far through the four parts the loop has got. */}
             <div
-              className="absolute left-0 top-0 h-px bg-cyan-400/50 transition-[width] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{ width: `${(Math.max(actIndex, -1) + 1) / ACTS.length * 100}%` }}
-            />
+              // Through the story it steps, one act at a time. At the end
+              // of the overview it runs: the same fill on the same rail,
+              // travelling to the first mark and landing on it exactly as
+              // that act opens — so the story does not start, it is
+              // started, by something the viewer watched arrive.
+              //
+              // The target is the mark's own centre in pixels, not a
+              // fraction of the rail: it has to touch the icon, and the
+              // icon sits at a fixed offset whatever the column is doing.
+              className={`absolute left-0 top-0 h-px ${
+                arming
+                  ? "hg-rail-arm bg-cyan-400"
+                  : "bg-cyan-400/50 transition-[width] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              }`}
+              style={
+                arming
+                  ? ({
+                      animationDuration: `${RAIL_RUN}ms`,
+                      animationDelay: `${OV_ROWS_IN}ms`,
+                      "--rail-to": `${TL_BLEED + TL_DOT / 2}px`,
+                    } as React.CSSProperties)
+                  : { width: `${((Math.max(actIndex, -1) + 1) / ACTS.length) * 100}%` }
+              }
+            >
+              {/* A node riding the head of the fill. A 1px line growing
+                  over nine seconds is not motion anyone will notice; the
+                  same line with the site's own node on the end of it is
+                  a playhead travelling to the first stop. */}
+              {arming ? (
+                <span className="absolute right-0 top-1/2 h-[6px] w-[6px] -translate-y-1/2 translate-x-1/2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
+              ) : null}
+            </div>
           </div>
 
           {/* The markers stay inside the animation's own column; only
@@ -2128,6 +2286,12 @@ export default function HeroGraph({
               const closedRow = actIndex < 0 || phase === "handoff";
               const open = !closedRow && idx === actIndex;
               const lit = idx <= actIndex;
+              /** The stop the creeping fill is heading for. */
+              const next = arming && idx === 0;
+              /** Pointer or keyboard focus is on this mark. The open act
+                  is already the brightest thing on the rail, so only the
+                  closed ones take a hover state. */
+              const hot = hovered === idx && !open;
 
               // Anchor: the centre of this step's mark. It sits at the
               // slot's left edge when closed and behind the box's
@@ -2141,11 +2305,18 @@ export default function HeroGraph({
                   key={a.name}
                   type="button"
                   onClick={() => jump(idx)}
+                  onMouseEnter={() => setHovered(idx)}
+                  onMouseLeave={() => setHovered((v) => (v === idx ? null : v))}
+                  onFocus={() => setHovered(idx)}
+                  onBlur={() => setHovered((v) => (v === idx ? null : v))}
                   aria-label={`Play the ${a.name} act — ${a.does}`}
                   // The frame around it is pointer-events-none, so
                   // interactivity is switched back on here and nowhere
                   // else: these four marks are the only controls.
-                  className="group pointer-events-auto relative shrink-0 cursor-pointer text-left transition-[width] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  // hg-mark is what the tile's hover glint hangs off —
+                  // the hover is on the whole control, the band is on the
+                  // 24px tile inside it.
+                  className="hg-mark group pointer-events-auto relative shrink-0 cursor-pointer text-left transition-[width] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
                     width: open
                       ? `calc(100% - ${(ACTS.length - 1) * (TL_DOT + TL_GAP)}px)`
@@ -2172,15 +2343,23 @@ export default function HeroGraph({
                   {/* The dot on the rail, and the stem down from it. The
                       stem is 1px at `anchor`, so its centre is anchor +
                       0.5; the 5px dot is offset by 2 to match. */}
+                  {/* The stop being approached pulses, so the eye has
+                      somewhere to land while the fill travels. */}
                   <span
                     className={`absolute h-[5px] w-[5px] rounded-full transition-[left,background-color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      lit ? "bg-cyan-400" : "bg-white/30"
+                      hot
+                        ? "bg-cyan-300"
+                        : lit
+                          ? "bg-cyan-400"
+                          : next
+                            ? "hg-pulse-text bg-cyan-400/70"
+                            : "bg-white/30"
                     }`}
                     style={{ left: anchor - 2, top: -TL_STEM - 2 }}
                   />
                   <span
                     className={`absolute w-px transition-[left,background-color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                      lit ? "bg-cyan-400/40" : "bg-white/[0.12]"
+                      hot ? "bg-cyan-300/60" : lit ? "bg-cyan-400/40" : "bg-white/[0.12]"
                     }`}
                     style={{ left: anchor, top: -TL_STEM, height: TL_STEM }}
                   />
@@ -2196,35 +2375,63 @@ export default function HeroGraph({
                       edge was cut, which is what made the border blink
                       out partway through the collapse. */}
                   <div
-                    className="flex items-center gap-3 overflow-hidden border-solid backdrop-blur-md transition-[height,border-radius,padding,background-color,border-color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    className="flex items-center gap-3 overflow-hidden border-solid backdrop-blur-md transition-[height,border-radius,padding,background-color,border-color,transform] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                     style={{
                       width: open ? "100%" : TL_DOT,
-                      height: open ? OV_ROW_H : TL_DOT,
+                      height: open ? TL_CARD_H : TL_DOT,
                       borderRadius: open ? 10 : 999,
                       borderWidth: 1,
                       paddingLeft: open ? TL_PAD : 0,
                       paddingRight: open ? TL_PAD : 0,
+                      // Hover outranks everything a closed mark can be:
+                      // an act already played and an act about to play
+                      // both carry the accent, so a hover state that only
+                      // matched them would be invisible on half the rail.
                       borderColor: open
                         ? "rgba(255,255,255,0.10)"
-                        : lit
-                          ? "rgba(34,211,238,0.40)"
-                          : "rgba(255,255,255,0.14)",
+                        : hot
+                          ? "rgba(34,211,238,0.95)"
+                          : lit || next
+                            ? "rgba(34,211,238,0.40)"
+                            : "rgba(255,255,255,0.14)",
                       backgroundColor: open
                         ? "rgba(13,16,19,0.55)"
-                        : lit
-                          ? "rgba(34,211,238,0.10)"
-                          : "rgba(13,16,19,0.55)",
+                        : hot
+                          ? "rgba(34,211,238,0.26)"
+                          : lit || next
+                            ? "rgba(34,211,238,0.10)"
+                            : "rgba(13,16,19,0.55)",
+                      // A closed mark is 24px of glyph; a colour change
+                      // alone at that size is easy to miss, so it also
+                      // grows. 160ms, not the 520 the morph runs at —
+                      // a hover that eases in over half a second reads
+                      // as lag rather than as response.
+                      transform: hot ? "scale(1.16)" : "scale(1)",
+                      transitionDuration: hot ? "160ms" : undefined,
                     }}
                   >
                     {/* 2px narrower when closed, so it always fits the
                         card's content box exactly. */}
+                    {/* hg-shine-run is added on open and taken away on
+                        close, which is the whole trigger: applying the
+                        animation is what starts it, so the act's glint
+                        fires once each time that act comes round. The
+                        delay is the morph — a light crossing a tile that
+                        is still growing into a card reads as a smear. */}
                     <span
-                      className={`grid shrink-0 place-items-center border-solid transition-[width,height,border-radius,border-width,border-color,background-color,color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        open ? "text-cyan-400" : lit ? "text-cyan-400/60" : "text-white/25"
-                      } ${open ? "" : "group-hover:text-cyan-300"} ${
+                      className={`hg-shine ${open ? "hg-shine-run" : ""} grid shrink-0 place-items-center border-solid transition-[width,height,border-radius,border-width,border-color,background-color,color] duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        open
+                          ? "text-cyan-400"
+                          : hot
+                            ? "text-cyan-200"
+                            : lit || next
+                              ? "text-cyan-400/60"
+                              : "text-white/25"
+                      } ${
                         open && working ? "hg-mark-pulse" : ""
                       }`}
                       style={{
+                        ["--shine-delay" as string]: `${TL_MORPH + 60}ms`,
                         height: open ? TL_DOT : TL_DOT - 2,
                         width: open ? TL_DOT : TL_DOT - 2,
                         borderRadius: open ? 6 : 999,

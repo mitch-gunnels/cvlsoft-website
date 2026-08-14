@@ -22,12 +22,13 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/app/lib/analytics";
 import { useLeadForm, REQUIRED_FIELDS } from "@/app/lib/useLeadForm";
 import { LeadFields } from "@/app/components/LeadFields";
+import { FormStatusDialog, type FormStatus } from "@/app/components/FormStatusDialog";
 import SiteHeader from "@/app/components/SiteHeader";
 import HeroGraph, { type HeroAct } from "@/app/components/HeroGraph";
 import PillarIcon from "@/app/components/PillarIcon";
-import { BTN_DARK, BTN_LIGHT, BTN_SOLID } from "@/app/lib/buttons";
+import { BTN_DARK, BTN_SOLID } from "@/app/lib/buttons";
 
-type DemoStatus = "idle" | "loading" | "success" | "error";
+type DemoStatus = FormStatus;
 
 /* ────────────────────────────────────────────────────────────
    Primitives
@@ -52,38 +53,62 @@ function Node({ tone = "light", className = "" }: { tone?: "light" | "dark" | "a
   return <span className={`inline-block h-[7px] w-[7px] shrink-0 rounded-full ${fill} ${className}`} />;
 }
 
-const RAIL_LINE = {
-  light: "bg-slate-300",
-  dark: "bg-white/20",
-  accent: "bg-[#0f1419]/30",
+/** Nodes and the edges between them — the smallest thing that is a graph
+    rather than a bullet. Same mark the Blueprint pillar icon is built
+    from, so the eyebrow says what the product is instead of just marking
+    a spot.
+
+    Three nodes by default: two is a link, three is a path, and a path is
+    what a workflow is. The nodes are 5px, not the 7px of a lone `Node` —
+    in a row at 7px they read as an ellipsis — and the edges are 6px so
+    the whole mark stays under 30px and does not become a rule with dots
+    on it. Only the trailing node glows: the eye travels along the path
+    into the label, and three lit dots at this size are a smear rather
+    than three points. */
+const LINK_EDGE = {
+  light: "bg-cyan-600/45",
+  dark: "bg-cyan-400/40",
+  accent: "bg-[#0f1419]/40",
 } as const;
 
-/** Horizontal rail: node at the left end, hairline running right. */
-function RailH({ tone = "light", className = "" }: { tone?: "light" | "dark" | "accent"; className?: string }) {
+const LINK_DOT = 5;
+const LINK_GAP = 6;
+
+function LinkMark({
+  tone = "light",
+  nodes = 3,
+  className = "",
+}: {
+  tone?: "light" | "dark" | "accent";
+  nodes?: number;
+  className?: string;
+}) {
+  const dot = tone === "dark" ? "bg-cyan-400" : tone === "accent" ? "bg-[#0f1419]" : "bg-cyan-600";
+  const glow =
+    tone === "dark"
+      ? "shadow-[0_0_9px_rgba(34,211,238,0.65)]"
+      : tone === "accent"
+        ? ""
+        : "shadow-[0_0_7px_rgba(8,145,178,0.45)]";
   return (
-    <span className={`flex items-center ${className}`}>
-      <Node tone={tone} />
-      <span className={`h-px flex-1 ${RAIL_LINE[tone]}`} />
+    <span className={`inline-flex shrink-0 items-center ${className}`} aria-hidden="true">
+      {Array.from({ length: nodes }, (_, i) => (
+        <span key={i} className="contents">
+          {i > 0 ? <span className={`h-px ${LINK_EDGE[tone]}`} style={{ width: LINK_GAP }} /> : null}
+          <span
+            className={`rounded-full ${dot} ${i === nodes - 1 ? glow : ""}`}
+            style={{ height: LINK_DOT, width: LINK_DOT }}
+          />
+        </span>
+      ))}
     </span>
   );
 }
 
-/**
- * Vertical rail pinned to the left of a `relative` parent, with the node
- * sitting near the top. Used to flag headings and framed media.
- */
-function RailV({ tone = "light", nodeTop = 8 }: { tone?: "light" | "dark" | "accent"; nodeTop?: number }) {
-  return (
-    <>
-      <span className={`pointer-events-none absolute bottom-0 left-0 top-0 w-px ${RAIL_LINE[tone]}`} />
-      <span className="pointer-events-none absolute left-0 -translate-x-1/2" style={{ top: nodeTop }}>
-        <Node tone={tone} />
-      </span>
-    </>
-  );
-}
-
-/** Uppercase eyebrow: node + wide-tracked label. */
+/** Section eyebrow: node + label. Sentence case — the label is a short
+    phrase, and set in caps it read as a system status rather than the
+    start of a thought. Letter-spacing goes with the caps: 0.06em is for
+    uppercase, and on a mixed-case line it only pulls the words apart. */
 /** The one control glyph on the page that means "bigger". Two strokes,
     so it reads at 16px and cannot be mistaken for a close mark. */
 function Plus({ className = "h-4 w-4" }: { className?: string }) {
@@ -94,12 +119,20 @@ function Plus({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-function Eyebrow({ children, tone = "light" }: { children: React.ReactNode; tone?: "light" | "dark" }) {
+function Eyebrow({
+  children,
+  tone = "light",
+  className = "",
+}: {
+  children: React.ReactNode;
+  tone?: "light" | "dark";
+  className?: string;
+}) {
   return (
-    <p className="flex items-center gap-4">
-      <Node tone={tone} />
+    <p className={`flex items-center gap-3.5 ${className}`}>
+      <LinkMark tone={tone} />
       <span
-        className={`text-[13px] font-medium uppercase tracking-[0.06em] ${
+        className={`text-[14px] font-medium tracking-[0] ${
           tone === "dark" ? "text-slate-300" : "text-slate-900"
         }`}
       >
@@ -176,40 +209,26 @@ function Ph({
   );
 }
 
-/** Prev/next arrows ringed by the ○ from the AIOS mark. */
-function ArrowPair({
-  onPrev,
-  onNext,
-  tone = "light",
-}: {
-  onPrev: () => void;
-  onNext: () => void;
-  tone?: "light" | "dark";
-}) {
-  const stroke = tone === "dark" ? "text-slate-300" : "text-slate-900";
-  const ring = tone === "dark" ? "border-white/25 hover:border-cyan-400" : "border-slate-300 hover:border-cyan-600";
+
+
+/** A partner mark plus its wordmark. The brand SVGs carry their own colors;
+    `grayscale` flattens them so the row reads as one list rather than seven
+    competing logos, and hover returns the color for anyone who looks twice. */
+function PartnerLogo({ brand }: { brand: { name: string; file: string } }) {
   return (
-    <div className="flex items-center gap-4">
-      {[
-        { dir: "prev" as const, onClick: onPrev, d: "M19 12H5M11 6l-6 6 6 6", label: "Previous" },
-        { dir: "next" as const, onClick: onNext, d: "M5 12h14M13 6l6 6-6 6", label: "Next" },
-      ].map((btn) => (
-        <button
-          key={btn.dir}
-          type="button"
-          onClick={btn.onClick}
-          aria-label={btn.label}
-          className={`grid h-14 w-14 place-items-center rounded-full border transition-colors ${ring}`}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className={`h-5 w-5 ${stroke}`}>
-            <path d={btn.d} />
-          </svg>
-        </button>
-      ))}
-    </div>
+    <span className="group flex shrink-0 items-center gap-2.5">
+      <img
+        src={`/partners/${brand.file}`}
+        alt=""
+        aria-hidden="true"
+        className="h-5 w-5 shrink-0 opacity-70 grayscale transition duration-200 group-hover:opacity-100 group-hover:grayscale-0"
+      />
+      <span className="whitespace-nowrap text-[15px] font-medium tracking-tight text-slate-700">
+        {brand.name}
+      </span>
+    </span>
   );
 }
-
 
 /* ────────────────────────────────────────────────────────────
    Content — lorem ipsum stand-in copy
@@ -256,12 +275,22 @@ const HERO_VIDEO_TEXT: { webm: string; mp4: string } | null = {
   mp4: "/videos/hero-text.mp4",
 };
 
+/* Closing-CTA background — "the floor after". Encoded from the supplied
+   `aios_helps.mp4` on the same recipe as the hero plates: 24fps, no audio
+   track at all, and the last second crossfaded into the opening frame so
+   the loop has no seam. Brief: docs/demo-cta-video-brief.md. Null holds
+   the flat #15181b the section paints underneath. */
+const CTA_VIDEO: { webm: string; mp4: string } | null = {
+  webm: "/videos/cta.webm",
+  mp4: "/videos/cta.mp4",
+};
+
 /* Risk reversal, not social proof. `kind` states the question the buyer is
    actually asking; the stat answers it. */
 const TRUST_STATS = [
-  { kind: "If it fails", stat: "$0", label: "You never pay for failed agentic workflow executions" },
+  { kind: "If it fails", stat: "$0", label: "You never pay for failed agentic executions" },
   { kind: "Time to production", stat: "4 weeks", label: "From first observation to production deployment" },
-  { kind: "What you maintain", stat: "1 core", label: "One cognitive core — not a hundred brittle bots" },
+  { kind: "What you maintain", stat: "1 core", label: "One cognitive core, not a hundred brittle agents" },
 ];
 
 /* The parts of the core, in the order the hero animates them.
@@ -274,115 +303,120 @@ const PILLARS = [
   {
     icon: 0,
     label: "OBSERVER",
-    title: "It learns the job by watching someone do it",
-    body: "AIOS sits with your expert and records the work as it happens: the systems opened, the records pulled, the call read, the decision made. Then it asks why she did it that way. That answer is the part no process document ever captured, and it is the part that makes the work repeatable by anything other than her.",
+    title: "Capture what process documents miss",
+    body: "AIOS watches your experts work, records what they open, decide, and do, then asks why. It captures the judgment that makes the work repeatable.",
   },
   {
     icon: 1,
     label: "BLUEPRINT",
-    title: "What she knows becomes a procedure you can read",
-    body: "Each session compiles into an explicit workflow: the steps, the systems they touch, the decision points, and the reasoning behind each one written out in plain language. Nothing is buried in a prompt. Your team reviews it before it runs and edits it after, the way they would any standard operating procedure.",
+    title: "Turn expertise into an approved workflow",
+    body: "Each session becomes a plain-language workflow: steps, systems, decisions, and reasoning. Nothing is hidden in a prompt. Your team reviews it before execution.",
   },
   {
     icon: 2,
     label: "EXECUTOR",
-    title: "It runs on its own, inside the authority you set",
-    body: "The workflow sits armed on the systems it was drawn from and starts when something happens, not when somebody remembers. It acts within limits you define, in dollars and in scope. Anything past those limits stops and routes to a person with the case already assembled and the recommendation already made.",
+    title: "Run autonomously within your rules",
+    body: "Workflows trigger automatically and operate within the limits you set. Exceptions route to a person with the full case and a recommended action.",
   },
   {
     icon: 3,
     label: "COMMUNICATOR",
-    title: "The same skill answers on every channel",
-    body: "Voice, chat, SMS, and inside ChatGPT and Claude. Putting a workflow on a channel is a checkbox, not a project, and the customer gets the resolution rather than a status page: identity verified, the work done while they are still on the line, no transfer and no callback.",
+    title: "Deliver resolution on every channel",
+    body: "Deploy the same approved workflow across voice, chat, SMS, ChatGPT, and Claude. Customers get resolution without a transfer, callback, or status update.",
   },
   {
     icon: 5,
     label: "CUSTOMER MEMORY",
-    title: "Every contact starts where the last one ended",
-    body: "Runs and conversations write back to the customer record: what was decided, what was promised, how they prefer to be reached, what to raise next time. The note left in March is what opens the conversation in May, which is the difference between a company that knows a customer and one that answers the phone quickly.",
+    title: "Continue every conversation without restarting",
+    body: "Every interaction records decisions, commitments, preferences, and next steps. The next conversation starts with context, not repetition.",
   },
 ];
 
-const BAND_STATS = [
-  { stat: "30%+", label: "Lorem ipsum dolor sit" },
-  { stat: "$500M", label: "Consectetur adipiscing" },
-  { stat: "6 weeks or less", label: "Sed do eiusmod tempor" },
-];
 
 const STEPS = [
   {
-    key: "lorem",
-    tab: "Lorem.",
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed",
-    caption: "Tempor incididunt ut labore et dolore",
-    body: "Magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute.",
-    image: "Step one product view",
+    key: "captured",
+    tab: "Captured.",
+    icon: 1,
+    caption: "We learn the work, not a prompt",
+    body: "This is how a loan team actually chases post-approval conditions: pull the open items from Encompass, decide which ones belong to the borrower, open the Salesforce task, send the text, and follow up at the right time. AIOS captures the steps and the judgment behind them in a graph the team can read. No prompt engineering. No code.",
+    image: "/product-tour/01-captured-v3.webp",
+    alt: "The AIOS Workflow Studio showing the Post-Approval Stips Chase graph: an Encompass pull, a classify step, a fork into a Salesforce task and an SMS to the borrower, then a 24-hour timed gate.",
   },
   {
-    key: "ipsum",
-    tab: "Ipsum.",
-    title: "Irure dolor in reprehenderit in voluptate velit esse cillum",
-    caption: "Dolore eu fugiat nulla pariatur excepteur",
-    body: "Sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis unde omnis.",
-    image: "Step two product view",
+    key: "approved",
+    tab: "Approved.",
+    /* 04 is the gate glyph — the only pillar mark that means "nothing
+       passes without permission", and nothing else on the page uses it. */
+    icon: 4,
+    caption: "Your rules stay in charge",
+    body: "Before anything is written back, the work pauses with the person you named. They see what AIOS has done, what it wants to do next, and the evidence behind the decision.",
+    alt: "The AIOS approval drawer, paused on \"Loan officer approves the write-back — awaiting approval\", with completed steps above it and two steps queued up next.",
+    image: "/product-tour/02-approved-v4.webp",
   },
   {
-    key: "dolor",
-    tab: "Dolor.",
-    title: "Iste natus error sit voluptatem accusantium doloremque",
-    caption: "Laudantium totam rem aperiam eaque ipsa",
-    body: "Quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo nemo enim ipsam voluptatem quia voluptas.",
-    image: "Step three product view",
+    key: "run",
+    tab: "Run.",
+    icon: 2,
+    caption: "Automation leaves a record",
+    body: "Once approved, the same knowledge runs the process across the systems already in place. Every step, decision, connector call, and result stays attached to the graph. Six months later, when someone asks why a condition was cleared, the answer is there. Nobody has to reconstruct it from logs or memory.",
+    image: "/product-tour/03-run-v2.webp",
+    alt: "The AIOS run monitor trace: the workflow's steps in order, each with its node type, duration, and the connector calls made underneath it.",
+  },
+  {
+    key: "answered",
+    tab: "Answered.",
+    icon: 3,
+    caption: "Now the customer can use it too",
+    body: "With one click, the loan team can make this approved process available to borrowers by phone or text. It is not a second agent with a copied prompt. It is the same knowledge, rules, context, and audit trail, so the customer gets an answer without a transfer, a callback, or another explanation.",
+    image: "/product-tour/04-answered-v7.webp",
+    alt: "An AIOS conversation transcript: the stips assistant and the borrower on a voice call, with both the voice and SMS threads listed behind it.",
   },
 ];
 
-const STORIES = [
-  {
-    stat: "14,000+",
-    statLabel: "lorem ipsum dolor sit amet",
-    quote:
-      "Consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    name: "LOREM IPSUM",
-    title: "DOLOR SIT AMET",
-  },
-  {
-    stat: "3.2x",
-    statLabel: "consectetur adipiscing elit sed",
-    quote:
-      "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure.",
-    name: "CONSECTETUR ADIPISCING",
-    title: "ELIT SED DO",
-  },
-  {
-    stat: "$4.1M",
-    statLabel: "tempor incididunt ut labore",
-    quote:
-      "Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum perspiciatis.",
-    name: "EIUSMOD TEMPOR",
-    title: "INCIDIDUNT UT",
-  },
-];
-
-const SECURITY_BADGES = ["Lorem", "Ipsum", "Dolor", "Sit amet", "Consectetur", "Adipiscing"];
-
+/* Four controls, not four adjectives. Each one is a thing an auditor can be
+   shown — a gate, a signature, a log, a switch — because the section has to
+   survive a security review, not just read well. */
 const SECURITY_POINTS = [
-  { title: "Lorem ipsum dolor", body: "Sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore." },
-  { title: "Et dolore magna aliqua", body: "Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi." },
-  { title: "Ut aliquip ex ea commodo", body: "Consequat duis aute irure dolor in reprehenderit in voluptate velit." },
-  { title: "Esse cillum dolore eu", body: "Fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt." },
+  {
+    title: "Every action is policy-gated",
+    body: "AIOS plans before it executes. Each tool call is checked against a deterministic policy engine, with per-tenant overrides, before it touches a system of record.",
+  },
+  {
+    title: "A person signs the steps that matter",
+    body: "Put an approval gate on any step. The run pauses, a named person decides, and the decision is recorded alongside the execution it authorized.",
+  },
+  {
+    title: "An immutable audit ledger",
+    body: "Every action, input, and output is written to an append-only log. Months after the fact, reconstruct exactly what ran, on whose authority, and why.",
+  },
+  {
+    title: "Kill switches and circuit breakers",
+    body: "Halt one execution or the entire tenant instantly. Breakers trip on their own when cost, error rate, or scope leaves the band you set.",
+  },
 ];
 
-const DISCOVER = [
-  { label: "OBSERVER", caption: "Lorem ipsum dolor sit amet. Consectetur, adipiscing and elit.", image: "Product view one" },
-  { label: "BLUEPRINT", caption: "Sed do eiusmod tempor. Incididunt, labore and dolore.", image: "Product view two" },
-  { label: "EXECUTOR", caption: "Magna aliqua ut enim. Minim, veniam and quis.", image: "Product view three" },
-  { label: "COMMUNICATOR", caption: "Nostrud exercitation ullamco. Laboris, nisi and aliquip.", image: "Product view four" },
-];
-
-const POSTS = [
-  { kind: "BLOG POST", date: "JUL 10, 2026", read: "9 MINS", title: "Lorem ipsum dolor sit amet consectetur adipiscing elit" },
-  { kind: "BLOG POST", date: "JUL 10, 2026", read: "5 MINS", title: "Sed do eiusmod tempor incididunt ut labore et dolore" },
-  { kind: "BLOG POST", date: "JUL 10, 2026", read: "7 MINS", title: "Magna aliqua ut enim ad minim veniam quis nostrud" },
+/* Restored from the pre-redesign home page, where it sat under the hero.
+   It belongs beside Trust & Security instead: who the models come from and
+   what the platform runs on is the same question as who governs it. */
+const PARTNER_GROUPS = [
+  {
+    eyebrow: "Working with",
+    items: [
+      { name: "OpenAI", file: "openai.svg" },
+      { name: "Anthropic", file: "anthropic.svg" },
+      { name: "Google", file: "google.svg" },
+      { name: "Microsoft", file: "microsoft.svg" },
+    ],
+  },
+  {
+    eyebrow: "Built on",
+    items: [
+      { name: "AWS", file: "amazonwebservices.svg" },
+      { name: "MongoDB", file: "mongodb.svg" },
+      { name: "Next.js", file: "nextjs.svg" },
+    ],
+  },
 ];
 
 /* Shared content container — a centered 1320px measure, matching skan.ai's
@@ -400,9 +434,6 @@ export default function Home() {
   const [formStatus, setFormStatus] = useState<DemoStatus>("idle");
   const [formMessage, setFormMessage] = useState("");
   const [activeStep, setActiveStep] = useState(0);
-  const [story, setStory] = useState(0);
-  const [discover, setDiscover] = useState(0);
-  const [post, setPost] = useState(0);
   /* Which act of the hero animation is on screen, so the background can
      change with it. HeroGraph reports it; see HERO_VIDEO_CALL. */
   const [heroAct, setHeroAct] = useState<HeroAct>("build");
@@ -490,7 +521,9 @@ export default function Home() {
     const errs = form.validateAll();
     const firstInvalid = REQUIRED_FIELDS.find((f) => errs[f]);
     if (firstInvalid) {
-      setFormStatus("error");
+      // Field-level problems stay on the fields. Only a submit that actually
+      // reached the API — or failed to — is worth a dialog over the page.
+      setFormStatus("idle");
       event.currentTarget.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
       return;
     }
@@ -522,8 +555,6 @@ export default function Home() {
       trackEvent("demo_form_submit", { status: "error" });
     }
   }
-
-  const wrap = (n: number, len: number) => ((n % len) + len) % len;
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-white text-[#0f1419]">
@@ -614,7 +645,7 @@ export default function Home() {
                 }`}
               />
             ) : !HERO_VIDEO ? (
-              <Ph label="Hero background image / video — 2400×1200" ratio="2 / 1" tone="dark" quiet className="h-full w-full" />
+              <Ph label="Hero background image / video, 2400×1200" ratio="2 / 1" tone="dark" quiet className="h-full w-full" />
             ) : null}
             {/* The shot already falls to black on the left, so this scrim only
                 needs to hold text contrast — not build the darkness. */}
@@ -646,7 +677,7 @@ export default function Home() {
                 at two lines and the payoff on one. */}
             <h1 className="hero-fade-up max-w-[24ch] text-[clamp(2.25rem,4.4vw,3.5rem)] font-normal leading-[1.1] tracking-[-0.02em]">
               <span className="block text-white/45">Your experts know how the work actually gets done.</span>
-              <span className="mt-1 block text-white">Now your agents do.</span>
+              <span className="mt-1 block text-white">AIOS makes it autonomous.</span>
             </h1>
 
             <p className="hero-fade-up mt-8 max-w-[46ch] text-[17px] leading-[1.6] text-white/70 [animation-delay:160ms]">
@@ -668,7 +699,6 @@ export default function Home() {
                 onClick={() => handleCtaClick("hero_secondary")}
                 className={BTN_SOLID}
               >
-                <Node />
                 Explore the platform
               </a>
             </div>
@@ -676,7 +706,12 @@ export default function Home() {
         </section>
 
         {/* ══ 02 · TRUSTED BY + BRACKETED STATS ══ */}
-        <section data-tone="light" className="bg-white pt-14">
+        {/* Tinted band, not white. Section 03 below is also light, and with
+            both on white the stats + equation ran straight into the "One
+            cognitive core" heading with nothing marking the seam. The tint is
+            the same one section 04 uses, so light sections alternate
+            white / tint down the page rather than needing a new color. */}
+        <section id="commitments" data-tone="light" className="bg-[#f7f6f3] pt-20 pb-16 md:pt-24 md:pb-20">
           <div className={GUTTER}>
           <Eyebrow>What we put behind it</Eyebrow>
 
@@ -685,7 +720,7 @@ export default function Home() {
               stat — the section is already bracketed by full-width hairlines,
               and a third horizontal line per column made it read as noise. The
               kind label carries the meaning the rail was only decorating. */}
-          <div className="grid py-12 md:grid-cols-3">
+          <div className="grid py-14 md:grid-cols-3 md:py-16">
             {TRUST_STATS.map((item, i) => (
               <div
                 key={item.stat}
@@ -703,6 +738,23 @@ export default function Home() {
             ))}
           </div>
           <div className="border-t border-slate-200" />
+
+          {/* The whole model in three terms, and the hinge into section 03:
+              the middle step everyone assumes they need is struck out. Kept
+              out of the stat grid above on purpose — those three are parallel
+              quantities, and an equation in one column breaks the reading. */}
+          <p className="reveal-up flex flex-wrap items-baseline justify-center gap-x-8 gap-y-2 py-12 text-[clamp(1.5rem,2.8vw,2.15rem)] font-normal leading-none tracking-[-0.02em] text-[#0f1419] md:gap-x-14 md:py-14">
+            <span>Knowledge in.</span>
+            {/* line-through takes the muted rule color, not the text color, so
+                the deleted term recedes twice over. */}
+            <span className="text-slate-400 line-through decoration-slate-300 decoration-[0.09em]">Brittle agents.</span>
+            <span>Autonomy out.</span>
+          </p>
+
+          {/* Closes the bracket the rule above the stats opened. The section
+              has bottom padding now, so this reads as a rule under the
+              equation rather than as the band's own edge. */}
+          <div className="border-t border-slate-200" />
           </div>
         </section>
 
@@ -714,31 +766,35 @@ export default function Home() {
             goes back in here, it belongs after this intro. */}
         <section id="problem" data-tone="light" className="bg-white pt-24 md:pt-32">
           <div className={GUTTER}>
-            <Eyebrow>One cognitive core, end to end</Eyebrow>
-
             {/* The claim on the left, the thing itself on the right. The
                 diagram is far too dense to read at column width, which is
                 what the modal is for — so the card is a control, not a
                 figure, and says so with the plus. */}
-            <div className="mt-12 grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
                 <h2 className="reveal-up max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.1] tracking-[-0.02em] text-[#0f1419]">
                   <span className="block">One cognitive core</span>
-                  <span className="mt-1 block text-slate-400">
-                    Every channel and every process draws on it.
+                  <span className="mt-2 block text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.2] text-slate-400">
+                    Every process. Every channel. One governed intelligence layer.
                   </span>
                 </h2>
 
                 <p className="reveal-up mt-8 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:80ms]">
-                  Most enterprise AI gets built one agent at a time. A phone bot. A chat bot. One for
-                  invoices, one for claims. Each has its own rules, its own tools, its own memory, and
-                  each one is another thing to keep alive. AIOS works the other way around. What your
-                  people know is captured once and kept in a single cognitive core, and every channel
-                  is just a door into it.{" "}
-                  <span className="font-medium text-[#0f1419]">
-                    Add a channel and every process is already there. Add a process and it already
-                    works on every channel.
-                  </span>
+                  Most enterprise AI is built one agent at a time: a phone agent, a chat agent, one for
+                  invoices, another for claims. Each brings its own rules, tools, memory, and
+                  operating burden.
+                </p>
+
+                <p className="reveal-up mt-5 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600 [animation-delay:120ms]">
+                  AIOS reverses that model. It captures what your people know once as governed,
+                  executable workflows in a shared cognitive core. Voice, SMS, web chat, APIs,
+                  schedules, and external agents are controlled doors into the same processes,
+                  policies, connectors, customer memory, and evolving context.
+                </p>
+
+                <p className="reveal-up mt-5 max-w-[62ch] text-[17px] font-medium leading-[1.6] text-[#0f1419] [animation-delay:160ms]">
+                  We don&apos;t build brittle agents. We capture what your experts already know and
+                  put it to work. If you can explain how your company runs, AIOS can run it.
                 </p>
               </div>
 
@@ -762,17 +818,17 @@ export default function Home() {
         </section>
 
         {/* ══ 04 · THE PLATFORM — tinted surface, flat square cards ══ */}
-        <section id="platform" data-tone="light" className="mt-28 bg-[#f2faf9] py-24 md:py-28">
+        <section id="platform" data-tone="light" className="mt-28 bg-[#f7f6f3] py-24 md:py-28">
           <div className={GUTTER}>
-          <div className="flex flex-wrap items-center justify-between gap-6">
-            <h2 className="reveal-up text-[clamp(2rem,4vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-              Five parts, one core
-            </h2>
-            <a href="/platform" className={`reveal-up ${BTN_LIGHT}`}>
-              <Node />
-              Explore the platform
-            </a>
-          </div>
+          {/* The heading alone. It carried an "Explore the platform" button
+              on the right until 2026-08-13 — the hero already sends anyone
+              who wants the tour there, and a second copy of that CTA at the
+              top of the cards asked the reader to leave the section before
+              they had read a word of it. */}
+          <h2 className="reveal-up text-[clamp(2rem,4vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+            <span className="block">The Operating System</span>
+            <span className="block">for Autonomous Intelligence.</span>
+          </h2>
 
           <div className="mt-14 grid gap-6 md:grid-cols-2">
             {PILLARS.map((pillar, i) => (
@@ -782,7 +838,7 @@ export default function Home() {
                 // half-width beside a gap. With an even count nothing
                 // spans, which is why this asks the length rather than
                 // hard-coding the widow.
-                className={`reveal-up bg-[#e6ebe8] p-10 md:p-12 ${
+                className={`reveal-up bg-[#ebe8e2] p-10 md:p-12 ${
                   i === PILLARS.length - 1 && PILLARS.length % 2 === 1 ? "md:col-span-2" : ""
                 }`}
                 style={{ animationDelay: `${i * 70}ms` }}
@@ -803,22 +859,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══ 05 · FULL-BLEED ACCENT STAT BAND ══ */}
-        <section data-tone="light" className="bg-cyan-400">
-          <div className={`grid gap-12 py-16 md:grid-cols-3 md:gap-6 ${GUTTER}`}>
-            {BAND_STATS.map((item) => (
-              <div key={item.stat} className="reveal-up pr-8">
-                <RailH tone="accent" />
-                <p className="mt-5 text-[clamp(1.75rem,3.2vw,2.5rem)] font-normal leading-none tracking-[-0.02em] text-[#0f1419]">
-                  {item.stat}
-                </p>
-                <p className="mt-3 text-[17px] text-[#0f1419]/80">{item.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ══ 06 · HOW IT WORKS — dark, sticky step tabs ══ */}
+        {/* ══ 05 · HOW IT WORKS — dark, sticky step tabs ══ */}
         <section id="how-it-works" data-tone="dark" className="relative bg-[#15181b] text-white">
           {/* Sticky tab bar */}
           {/* Pinned to the very top: the site nav is transparent and slides away
@@ -836,10 +877,11 @@ export default function Home() {
                   className="flex shrink-0 items-center gap-5 transition-opacity"
                   aria-current={i === activeStep}
                 >
-                  {/* Steps reuse the first three pillar icons — observe,
-                      design, run — which is exactly what the steps are. */}
+                  {/* Each step carries the pillar mark that matches what its
+                      screen shows — see `icon` on STEPS. Not the loop index:
+                      Approved needs the gate glyph, which sits at 4. */}
                   <span className={`transition-colors ${i === activeStep ? "text-cyan-400" : "text-cyan-400/30"}`}>
-                    <PillarIcon index={i} className="h-7 w-7" />
+                    <PillarIcon index={s.icon} className="h-7 w-7" />
                   </span>
                   <span
                     className={`text-[clamp(1.5rem,3vw,2.25rem)] font-normal leading-none tracking-[-0.02em] transition-colors ${
@@ -854,8 +896,14 @@ export default function Home() {
           </div>
 
           <div className={`pt-20 pb-8 ${GUTTER}`}>
-            <h2 className="reveal-up max-w-[22ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing
+            <Eyebrow tone="dark" className="reveal-up">
+              Omnichannel AI without the agent sprawl
+            </Eyebrow>
+            <h2 className="reveal-up mt-5 max-w-[24ch] text-[clamp(2.25rem,4.6vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em] [animation-delay:40ms]">
+              <span className="block">Teach one system how your company works.</span>
+              <span className="mt-2 block text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.2] text-white/40">
+                Then put that intelligence everywhere.
+              </span>
             </h2>
           </div>
 
@@ -870,14 +918,22 @@ export default function Home() {
               className={`scroll-mt-[100px] py-16 ${GUTTER}`}
             >
               <div className="grid items-start gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
-                <Ph label={s.image} ratio="4 / 3" tone="dark" className="reveal-up" />
+                {/* Each capture is normalized to 16:10 so the real interface
+                    stays intact rather than being cropped again in the page. */}
+                <Ph
+                  src={s.image}
+                  label={s.alt}
+                  ratio="16 / 10"
+                  tone="dark"
+                  className="reveal-up rounded-lg border border-white/10 bg-white shadow-[0_24px_80px_rgba(0,0,0,0.28)]"
+                />
                 <div className="reveal-up lg:pt-6 [animation-delay:80ms]">
                   <h3 className="max-w-[24ch] text-[clamp(1.5rem,2.6vw,2rem)] font-normal leading-[1.2] tracking-[-0.01em] text-white">
                     {s.caption}
                   </h3>
                   <p className="mt-6 max-w-[46ch] text-[17px] leading-[1.6] text-white/60">{s.body}</p>
-                  <p className="mt-8 flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-white/35">
-                    <Node />
+                  <p className="mt-8 flex items-center gap-3.5 text-[12px] tracking-[0] text-white/35">
+                    <LinkMark tone="dark" />
                     Step {String(i + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
                   </p>
                 </div>
@@ -887,220 +943,176 @@ export default function Home() {
           <div className="h-16" />
         </section>
 
-        {/* ══ 07 · CUSTOMER STORIES — carousel with peeking neighbors ══ */}
-        <section id="proof" data-tone="light" className="bg-white py-24 md:py-32">
-          <div className={`flex flex-wrap items-end justify-between gap-8 ${GUTTER}`}>
-            <div>
-              <h2 className="reveal-up max-w-[20ch] text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-                Lorem ipsum dolor sit amet consectetur
-              </h2>
-              <a href="#demo" className={`reveal-up mt-8 ${BTN_LIGHT}`}>
-                <Node />
-                See all stories
-              </a>
-            </div>
-            <ArrowPair
-              onPrev={() => setStory((n) => wrap(n - 1, STORIES.length))}
-              onNext={() => setStory((n) => wrap(n + 1, STORIES.length))}
-            />
-          </div>
-
-          {/* Card is 86% of the content measure with a 24px gap; the 7% lead-in
-              centers the active card and leaves the neighbours peeking. */}
-          <div className={`relative mt-16 overflow-hidden ${GUTTER}`}>
-            <div
-              className="flex gap-6 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(calc(7% - ${story} * (86% + 24px)))` }}
-            >
-              {STORIES.map((s, i) => (
-                <article key={s.name} className="relative w-[86%] shrink-0">
-                  <div className={`relative transition-opacity duration-500 ${i === story ? "opacity-100" : "opacity-45"}`}>
-                    <Ph label="Customer story still" ratio="16 / 8" tone="dark" />
-                    <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-12">
-                      <div className="self-start">
-                        <RailH tone="dark" className="w-40" />
-                        <p className="mt-3.5 text-[clamp(1.35rem,2.4vw,1.85rem)] font-normal leading-none text-white">
-                          {s.stat}
-                        </p>
-                      </div>
-                      <div>
-                        <blockquote className="max-w-[46ch] text-[clamp(1rem,1.6vw,1.35rem)] font-normal leading-[1.35] text-white">
-                          {s.quote}
-                        </blockquote>
-                        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-2">
-                          <span className="text-[12px] uppercase tracking-[0.14em] text-white/70">{s.name}</span>
-                          <span className="text-[12px] uppercase tracking-[0.14em] text-white/50">{s.title}</span>
-                        </div>
-                      </div>
-                      <span className="pointer-events-none absolute right-8 top-8 text-[12px] uppercase tracking-[0.14em] text-white/60 md:right-12 md:top-12">
-                        {s.statLabel}
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ 08 · ENTERPRISE SCALE & SECURITY ══ */}
-        <section id="security" data-tone="light" className="bg-white py-16 md:py-24">
+        {/* ══ 07 · TRUST & SECURITY ══
+            Reads top-down as claim → controls → attestations → supply chain.
+            The four controls come before the badge row on purpose: a
+            certification says someone audited the company, the controls say
+            what the software actually does on every run, and the second is
+            the thing a buyer's security team is really asking about. */}
+        <section id="security" data-tone="light" className="bg-white py-20 md:py-28">
           <div className={GUTTER}>
-          <div className="reveal-up relative py-2 pl-8">
-            <RailV nodeTop={14} />
-            <h2 className="max-w-[16ch] text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-              Lorem ipsum dolor sit amet
+          {/* No left rail on this section: the heading has to hold one line, so
+              it scales down on narrow viewports and a rail's node would float
+              beside a much shorter block than it was drawn for. */}
+          <div className="reveal-up">
+            {/* One line at every width — the clamp floor is what keeps it
+                unbroken on a phone, and nowrap stops it wrapping in between. */}
+            <h2 className="whitespace-nowrap text-[clamp(1.35rem,4.35vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
+              Autonomy you can hand to an auditor
             </h2>
+            <p className="mt-6 max-w-[62ch] text-[17px] leading-[1.6] text-slate-600">
+              Governance isn&rsquo;t a setting in AIOS. It&rsquo;s the path every execution runs
+              through. Nothing reaches a system of record without a policy allowing it, and
+              nothing happens that you can&rsquo;t reconstruct afterward.
+            </p>
           </div>
 
-          <a href="/platform" className="reveal-up mt-8 flex items-center gap-4 text-[16px] text-[#0f1419] hover:text-cyan-700">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="h-4 w-4">
-              <path d="m9 6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Learn more about lorem ipsum
-          </a>
-
-          <div className="mt-14 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-            {SECURITY_BADGES.map((badge) => (
-              <div key={badge} className="reveal-up grid h-[100px] place-items-center bg-[#e9edea]">
-                <span className="text-[13px] uppercase tracking-[0.14em] text-slate-500">{badge}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-20 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             {SECURITY_POINTS.map((point, i) => (
               <div key={point.title} className="reveal-up" style={{ animationDelay: `${i * 70}ms` }}>
-                <h3 className="max-w-[16ch] text-[clamp(1.25rem,2vw,1.6rem)] font-normal leading-[1.2] tracking-[-0.01em]">
+                <h3 className="max-w-[18ch] text-[clamp(1.25rem,2vw,1.6rem)] font-normal leading-[1.2] tracking-[-0.01em]">
                   {point.title}
                 </h3>
                 <p className="mt-5 max-w-[34ch] text-[16px] leading-[1.6] text-slate-600">{point.body}</p>
               </div>
             ))}
           </div>
-          </div>
-        </section>
 
-        {/* ══ 09 · DISCOVER THE PLATFORM — carousel ══ */}
-        <section data-tone="light" className="bg-white py-16 md:py-24">
-          <div className={`flex flex-wrap items-center justify-between gap-8 ${GUTTER}`}>
-            <h2 className="reveal-up text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-              Discover the lorem ipsum platform
-            </h2>
-            <ArrowPair
-              onPrev={() => setDiscover((n) => wrap(n - 1, DISCOVER.length))}
-              onNext={() => setDiscover((n) => wrap(n + 1, DISCOVER.length))}
-            />
-          </div>
-
-          <div className={`mt-14 overflow-hidden ${GUTTER}`}>
-            <div
-              className="flex gap-6 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(calc(${discover} * -1 * (32.6% + 24px)))` }}
-            >
-              {DISCOVER.map((item) => (
-                <article key={item.label} className="w-[85%] shrink-0 sm:w-[48%] lg:w-[32.6%]">
-                  <p className="flex items-center gap-4 text-[13px] font-medium uppercase tracking-[0.06em] text-[#0f1419]">
-                    <Node />
-                    {item.label}
-                  </p>
-                  <Ph label={item.image} ratio="4 / 3" className="mt-6" />
-                  <p className="mt-6 max-w-[34ch] text-[17px] leading-[1.5] text-[#0f1419]">{item.caption}</p>
-                  <a href="/platform" className="mt-5 flex items-center gap-3 text-[15px] text-slate-600 hover:text-cyan-700">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="h-4 w-4">
-                      <path d="m9 6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    Learn more
-                  </a>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ 10 · MORE TO … — post carousel ══ */}
-        <section data-tone="light" className="bg-white py-16 md:py-24">
-          <div className={GUTTER}>
-            <h2 className="reveal-up text-[clamp(2rem,4.2vw,3.25rem)] font-normal leading-[1.1] tracking-[-0.02em]">
-              More to lorem
-            </h2>
-          </div>
-
-          <div className={`mt-12 flex items-start gap-10 ${GUTTER}`}>
-            <div className="hidden shrink-0 pt-2 lg:block">
-              <ArrowPair
-                onPrev={() => setPost((n) => wrap(n - 1, POSTS.length))}
-                onNext={() => setPost((n) => wrap(n + 1, POSTS.length))}
-              />
-            </div>
-
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <div
-                className="flex gap-6 transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(calc(${post} * -1 * (32.6% + 24px)))` }}
-              >
-                {POSTS.map((p) => (
-                  <article key={p.title} className="w-[85%] shrink-0 sm:w-[48%] lg:w-[32.6%]">
-                    <Ph label="Article cover art" ratio="16 / 10" tone="accent" />
-                    <div className="mt-6 flex flex-wrap items-center gap-x-4 text-[12px] uppercase tracking-[0.12em] text-slate-500">
-                      <span className="text-[#0f1419]">{p.kind}</span>
-                      <Node />
-                      <span>{p.date}</span>
-                      <span className="ml-auto">{p.read}</span>
-                    </div>
-                    <h3 className="mt-4 max-w-[26ch] text-[clamp(1.15rem,1.8vw,1.5rem)] font-normal leading-[1.25] tracking-[-0.01em]">
-                      {p.title}
-                    </h3>
-                  </article>
+          {/* ── Working with / Built on ──
+              Restored from the pre-redesign home page, retoned for light.
+              Label on the left, marks flowing right, so the two groups read
+              as one compact band instead of two more stacked blocks. Mobile
+              keeps the original continuous marquee. Marks are monochrome —
+              this is a supply-chain statement, not a logo salad. */}
+          <div className="mt-16 border-t border-slate-200">
+            <div className="overflow-hidden py-8 md:hidden">
+              <p className="text-center text-[12px] uppercase tracking-[0.14em] text-slate-500">
+                Working with &middot; Built on
+              </p>
+              <div className="marquee-track mt-5">
+                {[0, 1].map((set) => (
+                  <ul key={set} className="flex shrink-0 items-center" aria-hidden={set === 1 || undefined}>
+                    {PARTNER_GROUPS.flatMap((g) => g.items).map((b) => (
+                      <li
+                        key={`${set}-${b.name}`}
+                        className="flex shrink-0 items-center border-l border-slate-200 px-7 first:border-l-0"
+                      >
+                        <PartnerLogo brand={b} />
+                      </li>
+                    ))}
+                  </ul>
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className={`mt-10 lg:hidden ${GUTTER}`}>
-            <ArrowPair
-              onPrev={() => setPost((n) => wrap(n - 1, POSTS.length))}
-              onNext={() => setPost((n) => wrap(n + 1, POSTS.length))}
-            />
+            {/* Side by side at 4fr/3fr — the original proportion, and the only
+                arrangement that fills the 1320 measure. It only fits from lg
+                up though: at tablet width the right column is too narrow for
+                three marks and "Next.js" runs off the edge, so md stacks the
+                two groups instead. */}
+            <div className="hidden md:block lg:grid lg:grid-cols-[4fr_3fr]">
+              {PARTNER_GROUPS.map((group, gi) => (
+                <div
+                  key={group.eyebrow}
+                  className={`py-8 lg:py-10 ${
+                    gi > 0 ? "border-t border-slate-200 lg:border-l lg:border-t-0 lg:pl-12" : "lg:pr-12"
+                  }`}
+                >
+                  <p className="text-[12px] uppercase tracking-[0.14em] text-slate-500">{group.eyebrow}</p>
+                  <ul className="mt-6 flex flex-wrap items-center gap-x-10 gap-y-4 lg:justify-between">
+                    {group.items.map((b) => (
+                      <li key={b.name}>
+                        <PartnerLogo brand={b} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
           </div>
         </section>
 
-        {/* ══ 11 · CLOSING CTA + LEAD FORM ══ */}
+        {/* ══ 08 · CLOSING CTA + LEAD FORM ══ */}
         <section id="demo" data-tone="dark" className="relative overflow-hidden bg-[#15181b] py-24 md:py-32">
-          {/* faint pixel dashes along the top and bottom edges, as on skan */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-3 opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 30px)" }} />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3 opacity-[0.07]" style={{ backgroundImage: "repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 30px)" }} />
+          {/* Background plate. Both scrims below stay — they are what keep
+              the form legible over moving footage. motion-reduce falls back
+              to the flat #15181b the section already paints. */}
+          {CTA_VIDEO ? (
+            <video
+              /* Nudged left. The section is wider than the plate's 16:9 at
+                 desktop widths, so it crops top/bottom and object-position
+                 has nothing to move — the shift has to be a transform. The
+                 scale is what keeps the right edge covered. */
+              className="absolute inset-0 h-full w-full origin-center -translate-x-[8%] scale-[1.16] object-cover motion-reduce:hidden"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            >
+              <source src={CTA_VIDEO.webm} type="video/webm" />
+              <source src={CTA_VIDEO.mp4} type="video/mp4" />
+            </video>
+          ) : null}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_0%,rgba(255,255,255,0.06),transparent_60%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-black/40" />
 
-          <div className={GUTTER}>
-            <h2 className="reveal-up max-w-[16ch] text-[clamp(2.25rem,4.8vw,3.75rem)] font-normal leading-[1.08] tracking-[-0.02em]">
-              <span className="text-white/45">Lorem ipsum dolor into</span>{" "}
-              <span className="text-white">sit amet consectetur</span>
-            </h2>
+          <div className={`relative ${GUTTER}`}>
+            {/* The form sits in its own frosted panel, centred in the
+                section, so it stays readable over moving footage. */}
+            <div className="reveal-up mx-auto w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0f1419]/55 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-2xl md:p-12">
+              <h2 className="mx-auto max-w-[18ch] text-center text-[clamp(2rem,4vw,3rem)] font-normal leading-[1.08] tracking-[-0.02em]">
+                <span className="text-white/45">Not hype.</span>{" "}
+                <span className="text-white">Real enterprise agentic AI.</span>
+              </h2>
+              <p className="mt-4 text-center text-lg text-slate-300 md:text-xl">See it now.</p>
 
-            <form noValidate className="reveal-up mt-12 grid max-w-xl gap-3 [animation-delay:120ms]" onSubmit={handleSubmit}>
-              <LeadFields form={form} />
-              <div className="mt-2 flex flex-wrap gap-3">
-                <button
-                  type="submit"
-                  disabled={formStatus === "loading"}
-                  onClick={() => handleCtaClick("demo_form")}
-                  className={`${BTN_DARK} disabled:cursor-not-allowed disabled:opacity-60`}
-                >
-                  <Node />
-                  {formStatus === "loading" ? "Submitting..." : "Request a demo"}
-                </button>
-                <a href="#platform" className={BTN_DARK}>
-                  <Node />
-                  Explore the platform
-                </a>
-              </div>
-              {formMessage ? (
-                <p className={`text-sm ${formStatus === "error" ? "text-slate-300" : "text-cyan-400"}`}>{formMessage}</p>
-              ) : null}
-            </form>
+              <form noValidate className="mt-10 grid gap-3" onSubmit={handleSubmit}>
+                <LeadFields form={form} />
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                  {/* Secondary to the point of being quiet — a text link, not
+                      a second button competing with submit. Clears the fields
+                      and validation state plus the submit result; a stale
+                      "thanks" over an empty form reads as if it sent again.
+                      Sits left of submit so the primary action ends the row. */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      form.reset();
+                      setFormStatus("idle");
+                      setFormMessage("");
+                    }}
+                    className="text-sm text-slate-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={formStatus === "loading"}
+                    onClick={() => handleCtaClick("demo_form")}
+                    className={`${BTN_DARK} disabled:cursor-not-allowed disabled:opacity-60`}
+                  >
+                    {formStatus === "loading" ? "Submitting..." : "Submit"}
+                  </button>
+                </div>
+                {/* The result is a dialog, not a line under the button — see
+                    FormStatusDialog. Nothing here changes the form's height. */}
+              </form>
+            </div>
           </div>
         </section>
       </main>
+
+      <FormStatusDialog
+        status={formStatus}
+        message={formMessage}
+        onClose={() => {
+          setFormStatus("idle");
+          setFormMessage("");
+        }}
+      />
 
       {/* ══ The architecture, full size ══
           Backdrop closes; the sheet stops the click so a drag across the

@@ -12,7 +12,7 @@
 :root {
   /* Surfaces */
   --bg-page: #fafaf9;          /* near-white — body (almost neutral, faintest warmth) */
-  --bg-deep: #050a14;          /* near-black ink — hero / footer */
+  --bg-deep: #15181b;          /* near-black ink — hero / footer */
   --bg-card: #ffffff;          /* card on off-white */
   --bg-tint: #ecfeff;          /* faint cyan tint for accent badges */
 
@@ -88,84 +88,6 @@ h6 {
 }
 
 /* ──────────────────────────────────────────────────────────
-   Vertical column rules — distyl-style architectural grid.
-   Apply to a full-bleed wrapper to draw 12 hairline columns
-   across the section, scoped to the max-w-7xl center.
-   ────────────────────────────────────────────────────────── */
-
-.col-rules {
-  position: relative;
-}
-
-.col-rules::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: linear-gradient(
-    to right,
-    transparent calc((100% - 1px) / 6),
-    var(--rule-warm) calc((100% - 1px) / 6),
-    var(--rule-warm) calc((100% - 1px) / 6 + 1px),
-    transparent calc((100% - 1px) / 6 + 1px)
-  );
-  background-size: calc(100% / 6) 100%;
-  /* Constrain to inner content width (max-w-7xl = 80rem) */
-  max-width: 80rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  opacity: 0.6;
-}
-
-.col-rules-dark::before {
-  background-image: linear-gradient(
-    to right,
-    transparent calc((100% - 1px) / 6),
-    var(--rule-dark) calc((100% - 1px) / 6),
-    var(--rule-dark) calc((100% - 1px) / 6 + 1px),
-    transparent calc((100% - 1px) / 6 + 1px)
-  );
-}
-
-/* Legacy grid-bg (cyan-tinted) — neutralized to slate hairline for
-   any legacy use; column rules above are the preferred treatment. */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* ──────────────────────────────────────────────────────────
-   Hero spiral position — mobile keeps the spiral inside the
-   viewport (right-anchored, vertically centered, no horizontal
-   push); large screens get the original right-of-frame offset.
-   ────────────────────────────────────────────────────────── */
-
-.hero-spiral-frame {
-  transform: translateY(-50%);
-}
-
-@media (min-width: 1024px) {
-  .hero-spiral-frame {
-    transform: translate(375px, calc(-50% - 20px));
-  }
-}
-
-/* ──────────────────────────────────────────────────────────
-   Hide scrollbars on the partners horizontal scroller (mobile).
-   ────────────────────────────────────────────────────────── */
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  scrollbar-width: none;
-}
-
-/* ──────────────────────────────────────────────────────────
    Logo marquee — seamless infinite scroll (mobile partners row).
    The track contains the logo set TWICE; animating from 0 to
    -50% returns to a position visually identical to the start.
@@ -211,76 +133,12 @@ h6 {
   will-change: opacity, transform, filter;
 }
 
-.hero-stagger {
-  opacity: 0;
-  transform: translateY(16px);
-  filter: blur(12px);
-  animation-name: hero-fade-up;
-  animation-duration: 1200ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  animation-fill-mode: forwards;
-  will-change: opacity, transform, filter;
-}
-
-.hero-message-copy {
-  opacity: 0;
-  transform: translateY(-12px);
-  filter: blur(8px);
-  transition: opacity 500ms ease, transform 500ms ease, filter 500ms ease;
-}
-
-.hero-message-copy--visible {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-}
-
 @keyframes hero-fade-up {
   to {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
   }
-}
-
-/* Hero rotation countdown ring — sweeps from empty to full over the
-   message hold time (HERO_ROTATE_MS in app/page.tsx). Remounted each
-   cycle via a React key so the sweep restarts in sync with the copy. */
-.hero-timer-progress {
-  stroke-dasharray: 56.549;
-  stroke-dashoffset: 56.549;
-  animation: hero-timer-sweep 11000ms linear forwards;
-  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5));
-}
-
-@keyframes hero-timer-sweep {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-/* ──────────────────────────────────────────────────────────
-   Hero story feed — a conversation-style conveyor over the hero
-   media, playing the AIOS loop: observe the work, draft the
-   workflow, run it.
-
-   A card enters at the bottom, holds, then steps up one slot as
-   the next arrives, dissolving at the top. All three run the SAME
-   keyframes, offset by a third of the cycle via animation-delay,
-   which produces a continuous feed with only three declarations.
-
-   Cards are a fixed height so the slot offsets are simple
-   constants; content is written to fit. The top-edge dissolve is
-   a mask on the container, not per-card opacity, so cards fade
-   against the video rather than dimming.
-
-   Slot offsets: 0 / -168px / -336px  (156px card + 12px gap).
-   These MUST match the card height set in BEAT_PANEL (page.tsx).
-   ────────────────────────────────────────────────────────── */
-
-.aios-feed {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.22) 20%, #000 46%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.22) 20%, #000 46%);
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -351,26 +209,6 @@ h6 {
   to {
     transform: scaleX(1);
     opacity: 1;
-  }
-}
-
-/* The very first component of the loop, arriving from below after the
-   blank beat on load. Only used once — every act after it slides in
-   from the right instead, because by then the flow has a direction. */
-.hg-rise {
-  animation: hg-rise 780ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes hg-rise {
-  from {
-    opacity: 0;
-    transform: translateY(44px);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -448,24 +286,6 @@ h6 {
   to {
     opacity: 0;
     transform: scale(2.6);
-  }
-}
-
-/* A label whose text has changed. Keyed on its own content in the
-   component, so React remounts it and this replays — a status that
-   switches mid-act should dissolve into the next one, not snap. */
-.hg-fade {
-  animation: hg-fade 460ms ease-out both;
-}
-
-@keyframes hg-fade {
-  from {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -611,18 +431,114 @@ h6 {
   }
 }
 
+/* The timeline arming itself during the overview: the same cyan fill that
+   marks progress through the five acts creeps up to the first mark and
+   arrives exactly as that act opens. A separate bar over the title said
+   the same thing twice and said it in the language of a page load.
+
+   Target and duration both come in inline — the fill has to land on the
+   first mark, and it has to land when the beat ends. */
+/* Departs at speed and eases into the mark. An ease-in start spent the
+   first second and a half barely moving, which over a run this long read
+   as nothing happening rather than as something setting off. */
+.hg-rail-arm {
+  animation: hg-rail-arm cubic-bezier(0, 0, 0.35, 1) both;
+}
+
+@keyframes hg-rail-arm {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--rail-to, 20%);
+  }
+}
+
+/* A light crossing a pillar tile. Three places use it, and all three are
+   the same 24px tile carrying the same glyph, which is the point: the
+   overview stack, the act card that opens on the timeline, and a mark
+   under the pointer. One gesture, meaning "this part, now".
+
+   It is always a single pass, never a loop. A repeating sheen is the
+   language of a skeleton screen — of something not ready yet — where one
+   pass across a thing that has just arrived is that thing coming to
+   life.
+
+   `.hg-shine` paints the band and parks it off the left edge; a modifier
+   is what actually runs it, so a tile can carry the band permanently and
+   still only glint when something has happened to it. */
+.hg-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.hg-shine::after {
+  content: "";
+  position: absolute;
+  /* Overscanned so the tilted band clears both corners before it is
+     clipped — at inset 0 the sweep enters and leaves as a wedge. */
+  inset: -60%;
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.78) 50%,
+    rgba(103, 232, 249, 0.55) 57%,
+    transparent 68%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+/* Cued: the overview pass, and the act card settling out of its morph.
+   `both`, so the band is parked off the left edge through the delay and
+   off the right edge afterwards — it is on the tile only for the 820ms
+   of the pass itself. */
+.hg-shine-run::after {
+  animation: hg-shine 820ms ease-in-out both;
+  animation-delay: var(--shine-delay, 0ms);
+}
+
+/* Under the pointer. Quicker than a cued pass, because it is answering a
+   hand rather than announcing a beat — and it outranks the cued rule
+   above on specificity, so hovering the open act glints it again rather
+   than being ignored.
+
+   The house easing is wrong here: it spends three quarters of its travel
+   in the first fifth of the time, which across a 24px mark is a flash
+   and not a sweep. Symmetric easing instead, so the light is actually on
+   the tile for most of the duration.
+
+   Keyboard gets it too: these marks take focus and the glint is the only
+   thing that says which one is about to play. */
+.hg-mark:hover .hg-shine::after,
+.hg-mark:focus-visible .hg-shine::after {
+  animation: hg-shine 560ms ease-in-out both;
+}
+
+@keyframes hg-shine {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* The band is nothing but its travel, so it goes rather than stops. */
+  .hg-shine::after {
+    display: none;
+  }
+
   /* The timeline is already frozen in JS; kill the entrance motion so
      the first beat renders flat rather than animating in. */
   .hg-enter,
-  .hg-rise,
   .hg-line,
   .hg-line-h,
   .hg-exit,
   .hg-cursor,
   .hg-click,
   .hg-mark-pulse,
-  .hg-fade,
   .hg-pulse,
   .hg-pulse-text,
   .hg-orbit,
@@ -643,85 +559,12 @@ h6 {
   }
 }
 
-.aios-feed-card {
-  opacity: 0;
-  animation: aios-feed 15s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  will-change: opacity, transform;
-}
-
-/* Staggered by a third of the cycle, so a new card lands every 5s
-   in order and the feed never bunches up. */
-.aios-feed-card:nth-child(2) {
-  animation-delay: 5s;
-}
-.aios-feed-card:nth-child(3) {
-  animation-delay: 10s;
-}
-
-@keyframes aios-feed {
-  0% { transform: translateY(50px); opacity: 0; }
-  4% { transform: translateY(0); opacity: 1; }
-  32% { transform: translateY(0); opacity: 1; }
-  36% { transform: translateY(-168px); opacity: 1; }
-  64% { transform: translateY(-168px); opacity: 1; }
-  68% { transform: translateY(-336px); opacity: 1; }
-  90% { transform: translateY(-336px); opacity: 1; }
-  /* Fully clear before the cycle wraps, so the jump back to the
-     bottom slot happens while the card is invisible. */
-  97%, 100% { transform: translateY(-400px); opacity: 0; }
-}
-
-/* The node on the newest card pulses. */
-.aios-feed-node {
-  animation: aios-node-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes aios-node-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55); }
-  50% { box-shadow: 0 0 0 5px rgba(34, 211, 238, 0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  /* Hold the finished conversation: each card parked in its slot. */
-  .aios-feed-card {
-    animation: none;
-    opacity: 1;
-  }
-
-  .aios-feed-card:nth-child(1) {
-    transform: translateY(-336px);
-  }
-  .aios-feed-card:nth-child(2) {
-    transform: translateY(-168px);
-  }
-  .aios-feed-card:nth-child(3) {
-    transform: translateY(0);
-  }
-
-  .aios-feed-node {
-    animation: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-fade-up,
-  .hero-stagger {
+  .hero-fade-up {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
-  }
-
-  .hero-message-copy {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-
-  .hero-timer-progress {
-    animation: none;
-    stroke-dashoffset: 0;
   }
 }
 
@@ -823,83 +666,6 @@ h6 {
 }
 
 /* ──────────────────────────────────────────────────────────
-   Bar fill / chart line draw
-   ────────────────────────────────────────────────────────── */
-
-.bar-fill {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.in-view .bar-fill {
-  transform: scaleX(1);
-}
-
-.chart-line {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  transition: stroke-dashoffset 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.in-view .chart-line {
-  stroke-dashoffset: 0;
-}
-
-.chart-area {
-  opacity: 0;
-  transition: opacity 1s ease 1.2s;
-}
-
-.in-view .chart-area {
-  opacity: 1;
-}
-
-/* ──────────────────────────────────────────────────────────
-   Feature illustration crossfade
-   ────────────────────────────────────────────────────────── */
-
-.feature-fade-enter {
-  animation: feature-fade-in 500ms ease forwards;
-}
-
-@keyframes feature-fade-in {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ──────────────────────────────────────────────────────────
-   Glow & float (used in dark hero only)
-   ────────────────────────────────────────────────────────── */
-
-.glow-pulse {
-  animation: glow-pulse 6s ease-in-out infinite;
-}
-
-.float-slow {
-  animation: float 8s ease-in-out infinite;
-}
-
-/* ──────────────────────────────────────────────────────────
-   Scrollytelling timeline (cyan-only — used in hero/dark zones)
-   ────────────────────────────────────────────────────────── */
-
-.feature-step {
-  min-height: 120vh;
-}
-
-.timeline-progress {
-  transition: height 0.3s ease-out;
-  background: linear-gradient(to bottom, var(--accent-on-dark), var(--accent-on-light));
-}
-
-/* ──────────────────────────────────────────────────────────
    Keyframes
    ────────────────────────────────────────────────────────── */
 
@@ -927,114 +693,14 @@ h6 {
   }
 }
 
-@keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.08);
-  }
-}
-
-@keyframes sweepPulse {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
-}
-
-/* ──────────────────────────────────────────────────────────
-   Pricing calculator slider — works on both surfaces
-   ────────────────────────────────────────────────────────── */
-
-input[type="range"].ui-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-}
-
-input[type="range"].ui-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 9999px;
-  background: var(--ink-primary);
-  box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.18);
-  border: none;
-  cursor: pointer;
-  transition: box-shadow 150ms ease;
-}
-
-input[type="range"].ui-slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 6px rgba(14, 116, 144, 0.26);
-}
-
-input[type="range"].ui-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 9999px;
-  background: var(--ink-primary);
-  box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.18);
-  border: none;
-  cursor: pointer;
-}
-
-input[type="range"].ui-slider:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 6px rgba(14, 116, 144, 0.40);
-}
-
-@keyframes blink-cursor {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-.typing-cursor {
-  display: inline-block;
-  width: 0.08em;
-  height: 0.9em;
-  margin-left: 0.06em;
-  vertical-align: -0.08em;
-  background: currentColor;
-  animation: blink-cursor 1s steps(1) infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .reveal-up,
   .scale-in,
   .cascade,
-  .row-fade,
-  .float-slow,
-  .glow-pulse {
+  .row-fade {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
-  }
-  .typing-cursor {
-    display: none;
-  }
-  .bar-fill {
-    transform: scaleX(1);
-  }
-  .chart-line {
-    stroke-dashoffset: 0;
-  }
-  .chart-area {
-    opacity: 1;
   }
 }
